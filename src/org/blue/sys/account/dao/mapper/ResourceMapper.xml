@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blue.sys.account.dao.ResourceMapper" >
+  <resultMap id="BaseResultMap" type="org.blue.sys.account.model.Resource" >
+    <id column="resource_id" property="id" jdbcType="BIGINT" />
+    <result column="resource_name" property="name" jdbcType="VARCHAR" />
+    <result column="resource_code" property="code" jdbcType="VARCHAR" />
+    <result column="resource_comment" property="comment" jdbcType="VARCHAR" />
+    <result column="resource_operates" property="operates" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    resource_id, resource_name, resource_code,resource_comment,resource_operates
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from Resource
+    where resource_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from Resource
+    where resource_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.blue.sys.account.model.Resource" useGeneratedKeys="true"
+		keyProperty="id">
+    insert into Resource ( resource_name, 
+      resource_enable
+      )
+    values (#{name,jdbcType=VARCHAR},#{enable,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.blue.sys.account.model.Resource" useGeneratedKeys="true"
+		keyProperty="id">
+    insert into Resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        resource_name,
+      </if>
+      resource_enable
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      #{enable,jdbcType=BIT}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.blue.sys.account.model.Resource" >
+    update Resource
+    <set >
+      <if test="name != null" >
+        resource_name=#{name,jdbcType=VARCHAR},
+      </if>
+      resource_enable=#{enable,jdbcType=BIT}
+    </set>
+    where resource_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.blue.sys.account.model.Resource" >
+    update Resource
+    set resource_name=#{name,jdbcType=VARCHAR},
+      resource_enable=#{enable,jdbcType=BIT}
+    where resource_id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

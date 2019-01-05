@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blue.sys.account.dao.AccountMapper">
+	<resultMap id="BaseResultMap" type="org.blue.sys.account.model.Account">
+		<id column="account_id" property="id" jdbcType="BIGINT" />
+		<result column="group_id" property="groupId" jdbcType="BIGINT" />
+		<result column="role_id" property="roleId" jdbcType="BIGINT" />
+		<result column="account_name" property="name" jdbcType="VARCHAR" />
+		<result column="account_openId" property="openId" jdbcType="VARCHAR" />
+		<result column="account_enable" property="enable" jdbcType="BIT" />
+		<result column="account_password" property="password" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		account_id, group_id, account_name,
+		account_openId,account_enable,account_password,role_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from account
+		where account_id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		account
+		where account_id =
+		#{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="org.blue.sys.account.model.Account" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into account (group_id,
+		account_name,
+		account_openId,
+		account_password,account_enable,role_id
+		)
+		values (
+		#{groupId,jdbcType=BIGINT},#{name,jdbcType=VARCHAR},
+		#{openId,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
+		,#{enable,jdbcType=BIT},#{roleId,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="org.blue.sys.account.model.Account"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into account
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="groupId >0">
+				group_id,
+			</if>
+			<if test="name != null">
+				account_name,
+			</if>
+			<if test="openId != null">
+				account_openId,
+			</if>
+			<if test="password != null">
+				account_password,
+			</if>
+			account_enable,
+			<if test="roleId > 0">
+				role_id
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="groupId >0">
+				#{groupId,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="openId != null">
+				#{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			#{enable,jdbcType=BIT},
+			<if test="roleId > 0">
+				#{roleId,jdbcType=BIGINT}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="org.blue.sys.account.model.Account">
+		update account
+		<set>
+			<if test="groupId >0">
+				group_id=#{groupId,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				account_name=#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="openId != null">
+				account_openId=#{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				account_password=#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="roleId > 0">
+				role_id=#{roleId,jdbcType=BIGINT},
+			</if>
+			account_enable=#{enable,jdbcType=BIT}
+		</set>
+		where account_id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="org.blue.sys.account.model.Account">
+		update account
+		set
+		group_id=#{groupId,jdbcType=BIGINT},
+		account_name=#{name,jdbcType=VARCHAR},
+		account_openId=#{openId,jdbcType=VARCHAR},
+		account_password=#{password,jdbcType=VARCHAR},
+		account_enable=#{enable,jdbcType=BIT},
+		role_id=#{roleId,jdbcType=BIGINT}
+		where account_id =
+		#{id,jdbcType=BIGINT}
+	</update>
+	<update id="setEnable">
+		update account
+		set
+		account_enable=#{enable,jdbcType=BIT}
+		where account_id =
+		#{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="getOpenIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+		select account_openId
+		from account where account_id =
+		#{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="org.blue.sys.account.model.Account">
+		select
+		<include refid="Base_Column_List" />
+		from account
+		<where>
+			<if test="groupId >0">
+				group_id=#{groupId,jdbcType=BIGINT}
+			</if>
+			<if test="name != null">
+				and account_name=#{name,jdbcType=VARCHAR}
+			</if>
+			<if test="openId != null">
+				and account_openId=#{openId,jdbcType=VARCHAR}
+			</if>
+			<if test="password != null">
+				and account_password=#{password,jdbcType=VARCHAR}
+			</if>
+			<if test="roleId > 0">
+				and role_id=#{roleId,jdbcType=BIGINT},
+			</if>
+			and account_enable=#{enable,jdbcType=BIT}
+		</where>
+	</select>
+
+	<select id="getByNameAndPassword" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from account
+		where
+		account_name=#{name,jdbcType=VARCHAR}
+		and
+		account_password=#{password,jdbcType=VARCHAR}
+		and account_enable=1
+
+	</select>
+</mapper>

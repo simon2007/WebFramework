@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.blue.sys.weixin.dao.AccessTokenMapper">
+    <!-- 
+CREATE TABLE `test`.`accesstoken` (
+  `id` INT(4) auto_increment ,
+  `token` VARCHAR(160) NULL,
+  `expirestime` TIMESTAMP NULL,
+  `addtime` TIMESTAMP NULL,
+  `appId` VARCHAR(32) NULL,
+  PRIMARY KEY (`id`))
+COMMENT = 'id';token-->
+
+  <resultMap id="BaseResultMap" type="org.blue.sys.weixin.model.AccessToken">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="expirestime" jdbcType="TIMESTAMP" property="expirestime" />
+    <result column="addtime" jdbcType="TIMESTAMP" property="addtime" />
+    <result column="appId" jdbcType="VARCHAR" property="appId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, token, expirestime, addtime,appId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from accesstoken
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from accesstoken
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="save" parameterType="org.blue.sys.weixin.model.AccessToken">
+    insert into accesstoken
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="expirestime != null">
+        expirestime,
+      </if>
+      
+        addtime,appId
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="expirestime != null">
+        #{expirestime,jdbcType=TIMESTAMP},
+      </if>
+     
+       now(),#{appId,jdbcType=VARCHAR},
+
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.blue.sys.weixin.model.AccessToken">
+    update accesstoken
+    <set>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="expirestime != null">
+        expirestime = #{expirestime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addtime != null">
+        addtime = #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appId !=null">
+      appId=#{appId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.blue.sys.weixin.model.AccessToken">
+    update accesstoken
+    set token = #{token,jdbcType=VARCHAR},
+      expirestime = #{expirestime,jdbcType=TIMESTAMP},
+      addtime = #{addtime,jdbcType=TIMESTAMP},
+      appId=#{appId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 删除旧的accesstoken -->
+    <delete id="deleteOldAccesstoken" >
+    delete from accesstoken
+        where  DATE_ADD(now(),INTERVAL -7 DAY) > expirestime
+    </delete>
+  
+  <!-- accesstoken已经过期了，但是数据库没更新 -->
+  <update id="letAccesstokenExpireByAppId" parameterType="java.lang.String">
+    update accesstoken
+    set available =0
+    where appId=#{appId,jdbcType=VARCHAR} and expirestime > NOW()
+  </update>
+  
+  <!-- 获取还没过期的token -->
+  <select id="selectUsefullToken" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from accesstoken
+    where available=1 and appId=#{appId,jdbcType=VARCHAR} and expirestime > NOW() limit 1
+  </select>
+  
+    <select id="getAppIdByAccessToken" resultType="string" parameterType="java.lang.String">
+    select 
+    appId
+    from accesstoken
+    where token=#{accessToken,jdbcType=VARCHAR} order by expirestime desc limit 1
+  </select>
+
+</mapper>

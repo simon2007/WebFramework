@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blue.sys.account.dao.GroupMapper" >
+  <resultMap id="BaseResultMap" type="org.blue.sys.account.model.Group" >
+    <id column="group_id" property="id" jdbcType="BIGINT" />
+    <result column="group_name" property="name" jdbcType="VARCHAR" />
+    <result column="group_enable" property="enable" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    group_id, group_name, group_enable
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from `group`
+    where group_id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from `group`
+    where group_id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.blue.sys.account.model.Group" useGeneratedKeys="true"
+		keyProperty="id">
+    insert into `group` ( group_name, 
+      group_enable
+      )
+    values (#{name,jdbcType=VARCHAR},#{enable,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.blue.sys.account.model.Group" useGeneratedKeys="true"
+		keyProperty="id">
+    insert into `group`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        group_name,
+      </if>
+      group_enable
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      #{enable,jdbcType=BIT}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.blue.sys.account.model.Group" >
+    update `group`
+    <set >
+      <if test="name != null" >
+        group_name=#{name,jdbcType=VARCHAR},
+      </if>
+      group_enable=#{enable,jdbcType=BIT}
+    </set>
+    where group_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.blue.sys.account.model.Group" >
+    update `group`
+    set group_name=#{name,jdbcType=VARCHAR},
+      group_enable=#{enable,jdbcType=BIT}
+    where group_id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="setEnable">
+   update `group`
+    set group_enable=#{enable,jdbcType=BIT}
+    where group_id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
