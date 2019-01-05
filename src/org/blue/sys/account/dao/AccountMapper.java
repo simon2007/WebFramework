@@ -18,4 +18,8 @@ public interface AccountMapper {
 	
 	String getOpenIdById(long userId);
 	Account getByNameAndPassword(@Param("name")String name,@Param("password") String password);
+	
+	int dropTable();
+	int truncateTable();
+	int createTable();
 }

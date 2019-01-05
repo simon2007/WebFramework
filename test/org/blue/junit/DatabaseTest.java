@@ -1,5 +1,7 @@
 package org.blue.junit;
 
+import javax.annotation.Resource;
+
 import org.blue.sys.account.service.AccountService;
 import org.blue.sys.account.service.GroupService;
 import org.junit.Test;
@@ -20,12 +22,16 @@ public class DatabaseTest {
 		System.out.println("encodingPassword="+ConfigTools.decrypt( encodingPassword));
 	}
 	
+	@Resource
 	private AccountService accountService;
+	
+	@Resource
 	private GroupService groupService;
 	
 	@Test
 	public void setup()
 	{
-		//accountService.
+		accountService.recreateTable();
+		groupService.recreateTable();
 	}
 }

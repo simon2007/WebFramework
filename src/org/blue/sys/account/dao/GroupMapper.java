@@ -14,4 +14,8 @@ public interface GroupMapper {
 	int updateByPrimaryKeySelective(Group group);
 	int updateByPrimaryKey(Group group);
 	int setEnable(@Param("id") long id,@Param("enable")boolean enable);
+	
+	int dropTable();
+	int truncateTable();
+	int createTable();
 }

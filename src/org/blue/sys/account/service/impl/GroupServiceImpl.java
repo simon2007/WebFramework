@@ -52,4 +52,12 @@ public class GroupServiceImpl implements GroupService {
 
 	}
 
+	@Override
+	public void recreateTable() {
+		groupMapper.dropTable();
+		 groupMapper.createTable();
+
+		 
+	}
+
 }

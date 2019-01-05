@@ -10,4 +10,5 @@ public interface GroupService {
 
 	int update(GroupVo user);
 
+	void recreateTable();
 }

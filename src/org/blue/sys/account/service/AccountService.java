@@ -25,4 +25,6 @@ public interface AccountService {
 	AccountVo getByNameAndPassword(String name, String password);
 	
 	int resetPassword(String name, String oldPassword,String newPassword);
+	
+	void recreateTable();
 }

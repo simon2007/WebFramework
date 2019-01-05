@@ -135,4 +135,10 @@ public class AccountServiceImpl implements AccountService{
 		return accountMapper.updateByPrimaryKey(account);
 	}
 
+	@Override
+	public void recreateTable() {
+		accountMapper.dropTable();
+		 accountMapper.createTable();
+	}
+
 }
