@@ -3,18 +3,18 @@
   <display-name>Archetype Created Web Application</display-name>
   <context-param>
     <param-name>log4jConfigLocation</param-name>
-    <param-value>classpath:/log4j.properties</param-value>
+    <param-value>classpath:log4j.properties</param-value>
   </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:/application.xml</param-value>
+    <param-value>classpath:application.xml</param-value>
   </context-param>
   <listener>
-    <listener-class>org.blue.framework.ZhaoContextLoaderListener</listener-class>
+    <listener-class>org.blue.webframework.framework.BlueContextLoaderListener</listener-class>
   </listener>
   <servlet>
     <servlet-name>spring-mvc</servlet-name>
-    <servlet-class>org.blue.framework.ControllerDispatcherServlet</servlet-class>
+    <servlet-class>org.blue.webframework.framework.ControllerDispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>classpath:/spring-mvc.xml</param-value>
@@ -73,7 +73,7 @@
     <location>/WEB-INF/views/common/500.jsp</location>
   </error-page>
   <error-page>
-    <exception-type>com.itonghui.plat.exception.BusinessException</exception-type>
+    <exception-type>org.blue.webframework.exception.BusinessException</exception-type>
     <location>/WEB-INF/views/common/abnormal.jsp</location>
   </error-page>
 </web-app>
