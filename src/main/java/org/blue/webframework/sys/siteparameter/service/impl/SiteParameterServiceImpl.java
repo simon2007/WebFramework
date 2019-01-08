@@ -1,7 +1,6 @@
 package org.blue.webframework.sys.siteparameter.service.impl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -111,7 +110,7 @@ class SiteParameterServiceImpl implements SiteParameterService {
 		siteParameter.setParamName(siteParameterVo.getParamName());
 		siteParameter.setParamId(siteParameterVo.getParamId());
 		siteParameter.setParamValue(siteParameterVo.getParamValue());
-		siteParameter.setRemoveTag(0);
+		siteParameter.setRemoveTag(false);
 		return siteParameter;
 	}
 
@@ -156,11 +155,12 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	@Override
 	public Date getParamValue(String paramName, Date defaultValue) {
 		String value = getParamValue(paramName, (String) null);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
 		if (StringHelper.isBlank(value))
 			return defaultValue;
 		try {
-			return sdf.parse(value);
+			return StringHelper.parseDate(value);
 		} catch (ParseException e) {
 			return defaultValue;
 		}
@@ -181,24 +181,33 @@ class SiteParameterServiceImpl implements SiteParameterService {
 
 	@Override
 	public void putParamValue(String paramName, int value) {
-
+		putParamValue(paramName,String.valueOf(value));
 	}
 
 	@Override
 	public void putParamValue(String paramName, long value) {
-		// TODO Auto-generated method stub
+		putParamValue(paramName,String.valueOf(value));
 
 	}
 
 	@Override
 	public void putParamValue(String paramName, String value) {
-		// TODO Auto-generated method stub
-
+		SiteParameter siteParameter = siteParameterMapper.selectByName(paramName);
+		if (siteParameter == null) {
+			siteParameter = new SiteParameter();
+			siteParameter.setParamName(paramName);
+			siteParameter.setParamValue(value);
+			siteParameter.setRemoveTag(false);
+			siteParameterMapper.insert(siteParameter);
+		} else {
+			siteParameter.setParamValue(value);
+			siteParameterMapper.updateByPrimaryKeySelective(siteParameter);
+		}
 	}
 
 	@Override
 	public void putParamValue(String paramName, Date value) {
-		// TODO Auto-generated method stub
+		putParamValue(paramName,StringHelper.toString(value));
 
 	}
 

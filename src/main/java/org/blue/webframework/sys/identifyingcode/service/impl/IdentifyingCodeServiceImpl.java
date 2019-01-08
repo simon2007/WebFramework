@@ -36,9 +36,9 @@ class IdentifyingCodeServiceImpl implements IdentifyingCodeService {
 		if (StringHelper.isBlank(phone))
 			throw new BusinessException("2003");
 
-		Integer sendNumber = siteParameterService.getParamValue("send_number", 15);
+		Integer sendNumber = siteParameterService.getParamValue("indentifying_code_send_number", 15);
 		int aliveTime = siteParameterService.getParamValue("indentifying_code_alive_time", 90);
-		int codeLength = siteParameterService.getParamValue("send_number_length", 4);
+		int codeLength = siteParameterService.getParamValue("indentifying_code_length", 4);
 
 		// 61秒内不能连续发送
 		if (identifyingCodeMapper.getTimeSpanFromNow(phone, null, null) < 61)
@@ -71,14 +71,16 @@ class IdentifyingCodeServiceImpl implements IdentifyingCodeService {
 
 	@Override
 	public void sendEmail(String email, String templetId) {
-		int codeLength = siteParameterService.getParamValue("send_number_length", 4);
+		int codeLength = siteParameterService.getParamValue("indentifying_code_length", 4);
 		int aliveTime = siteParameterService.getParamValue("indentifying_code_alive_time", 900);
+		String emailTemplateName=siteParameterService.getParamValue("indentifying_email_template","/pcview/email");
+		String emailSubject=siteParameterService.getParamValue("indentifying_email_template","验证码");
 
 		String checkCode = randomNumeric(codeLength);
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("code", checkCode);
-		emailService.sendEmailWithModelAndView(new String[] { email }, "验证码", "/pcview/email", map);
+		emailService.sendEmailWithModelAndView(new String[] { email }, emailSubject, emailTemplateName, map);
 		IdentifyingCode codeVo = new IdentifyingCode();
 		codeVo.setIdentifyingCode(checkCode);
 		codeVo.setPhone(email);
@@ -100,7 +102,8 @@ class IdentifyingCodeServiceImpl implements IdentifyingCodeService {
 	}
 
 	@Override
-	public int createTable() {
+	public int recreateTable() {
+		identifyingCodeMapper.dropTable();
 		return identifyingCodeMapper.createTable();
 	}
 

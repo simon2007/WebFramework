@@ -91,13 +91,16 @@
 
   </select>
   
-  <update id="createTable">
-  SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+	<update id="dropTable">
+		DROP TABLE IF EXISTS `th_identifying_code`
+	</update>
+	
+	<update id="truncateTable">
+        truncate table `th_identifying_code`
+    </update>
+    
+	<update id="createTable">
 
--- ----------------------------
--- Table structure for th_identifying_code
--- ----------------------------
 DROP TABLE IF EXISTS `th_identifying_code`;
 CREATE TABLE `th_identifying_code`  (
   `identifying_code_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -112,6 +115,5 @@ CREATE TABLE `th_identifying_code`  (
   INDEX `I_code`(`phone`, `identifying_code`, `alive_time`, `user_id`, `add_time`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
-SET FOREIGN_KEY_CHECKS = 1;
   </update>
 </mapper>

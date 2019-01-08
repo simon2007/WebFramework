@@ -17,12 +17,7 @@ public class SiteParameterServiceTest extends SpringTestRollBackBase {
 	@Test
 	public void siteParameterGetTest()
 	{
-		SiteParameterVo vo=new SiteParameterVo();
-		vo.setParamName("smtp");
-		vo.setParamValue("aaa");
-		vo.setParamComment("comment");
 		siteParameter.putParamValue("smtp", "abc");
-		siteParameter.saveSiteParameter(vo);
 		String smtp=siteParameter.getParamValue("smtp");
 		assertNotNull(smtp);
 		System.out.println(smtp);

@@ -97,13 +97,13 @@ public class EmailServiceImpl implements EmailService{
 	}
 
 	@Override
-	public void sendEmailWithModelAndView(String[] mutliTo, String subject, String viewName, Map<String, String> data) {
+	public void sendEmailWithModelAndView(String[] mutliTo, String subject, String viewName, Map<String, Object> data) {
 		String content=templateService.processViewTemplate(viewName, data);
 		sendEmail(mutliTo,subject,content);
 	}
 
 	@Override
-	public void sendEmailWithUrl(String[] mutliTo, String subject, String url, Map<String, String> data) {
+	public void sendEmailWithUrl(String[] mutliTo, String subject, String url, Map<String, Object> data) {
 		String content=templateService.processUrlTemplate(url, data);
 		sendEmail(mutliTo,subject,content);
 		

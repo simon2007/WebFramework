@@ -6,7 +6,7 @@
     <result column="PARAM_NAME" property="paramName" jdbcType="VARCHAR" />
     <result column="PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
     <result column="PARAM_COMMENT" property="paramComment" jdbcType="VARCHAR" />
-    <result column="REMOVE_TAG" property="removeTag" jdbcType="INTEGER" />
+    <result column="REMOVE_TAG" property="removeTag" jdbcType="BIT" />
   </resultMap>
   <!-- 启用缓存 -->
   <cache  type="org.blue.webframework.cache.QueryCache" flushInterval="36000000" />
@@ -22,11 +22,17 @@
   </select>
   <!-- 将if 判断去掉了 标签是针对JAVABEAN或者MAP的，String不能用标签 -->
   <select id="getParamValueByName" parameterType="java.lang.String" resultType="java.lang.String" useCache="true">
-		select param_value from site_parameter where remove_tag='0' and param_name = #{paramName,jdbcType=VARCHAR}
+		select param_value from site_parameter where remove_tag=0 and param_name = #{paramName,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap" useCache="true">
+		select
+		<include refid="Base_Column_List" />
+		from site_parameter where remove_tag=0 and param_name = #{paramName,jdbcType=VARCHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true">
-    update site_parameter set remove_tag='1'
+    update site_parameter set remove_tag=1
     where PARAM_ID = #{paramId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
@@ -81,7 +87,7 @@
       </if>
 
       <if test="removeTag != null" >
-        REMOVE_TAG = #{removeTag,jdbcType=INTEGER},
+        REMOVE_TAG = #{removeTag,jdbcType=BIT},
       </if>
     </set>
     where PARAM_ID = #{paramId,jdbcType=INTEGER}
@@ -91,27 +97,27 @@
     set PARAM_NAME = #{paramName,jdbcType=VARCHAR},
       PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
       PARAM_COMMENT = #{paramComment,jdbcType=VARCHAR},
-      REMOVE_TAG = #{removeTag,jdbcType=INTEGER}
+      REMOVE_TAG = #{removeTag,jdbcType=BIT}
     where PARAM_ID = #{paramId,jdbcType=INTEGER}
   </update>
   
   <select id="querySiteParameterList" resultMap="BaseResultMap" useCache="true">
-  	select param_name, param_value from site_parameter where remove_tag = '0'
+  	select param_name, param_value from site_parameter where remove_tag = 0
   </select>
   
   <update id="modifySiteParameterValueByName" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
   	update site_parameter set PARAM_VALUE = #{paramValue,jdbcType=VARCHAR} where PARAM_NAME = #{paramName,jdbcType=VARCHAR}
   </update>
   
-	<update id="dropTable">
+	<update id="dropTable" flushCache="true">
 		DROP TABLE IF EXISTS `site_parameter`
 	</update>
 	
-	<update id="truncateTable">
+	<update id="truncateTable" flushCache="true">
         truncate table `site_parameter`
     </update>
     
-	<update id="createTable">
+	<update id="createTable" flushCache="true">
 
 CREATE TABLE `site_parameter`  (
   `PARAM_ID` int(11) NOT NULL AUTO_INCREMENT,

@@ -33,5 +33,5 @@ public interface IdentifyingCodeService {
 	boolean vaildCode(String phoneOrEmail,String code);
 	
 
-	int createTable();
+	int recreateTable();
 }

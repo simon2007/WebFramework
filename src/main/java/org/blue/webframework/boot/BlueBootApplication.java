@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -37,6 +37,7 @@ import com.github.pagehelper.PageHelper;
 @EnableTransactionManagement
 @ComponentScan(value = "org.blue.webframework", lazyInit = true, excludeFilters = { @Filter(Controller.class),
 		@Filter(RestController.class) })
+@MapperScan(basePackages = {"org.blue.webframework.sys.*.dao","org.blue.webframework.biz.*.dao"})
 public class BlueBootApplication extends SpringBootServletInitializer {
 	protected final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
@@ -140,22 +141,10 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 	}
 
 	protected List<Resource> getMyBatisMapperLocations(String locationPattern) throws IOException {
-		System.out.println("getMapperLocations " + locationPattern);
 		List<Resource> ret = new ArrayList<Resource>();
 		for (String path : locationPattern.split(","))
 			ret.addAll(Arrays.asList(resolver.getResources(path)));
 		return ret;
 	}
 
-	protected String getMyBatisMapperBasePackage() {
-		return "org.blue.webframework.sys.*.dao,org.blue.webframework.biz.*.dao";
-	}
-
-	@Bean
-	@ConditionalOnMissingBean // 当容器里没有指定的Bean的情况下创建该对象
-	public MapperScannerConfigurer mapperScannerConfigurer() {
-		MapperScannerConfigurer config = new MapperScannerConfigurer();
-		config.setBasePackage(getMyBatisMapperBasePackage());
-		return config;
-	}
 }

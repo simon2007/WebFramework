@@ -14,7 +14,7 @@ public class SiteParameter implements java.io.Serializable{
 
     private String paramComment;
 
-    private Integer removeTag;
+    private Boolean removeTag;
 
     public int getParamId() {
         return paramId;
@@ -49,11 +49,11 @@ public class SiteParameter implements java.io.Serializable{
     }
 
 
-    public Integer getRemoveTag() {
+    public Boolean getRemoveTag() {
         return removeTag;
     }
 
-    public void setRemoveTag(Integer removeTag) {
+    public void setRemoveTag(Boolean removeTag) {
         this.removeTag = removeTag;
     }
 

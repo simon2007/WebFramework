@@ -40,5 +40,7 @@ public class DatabaseTest extends SpringTestBase {
 		accountService.recreateTable();
 		groupService.recreateTable();
 		roleService.recreateTable();
+		
+		siteParameterService.putParamValue("smtp", "smtp.qq.com");
 	}
 }

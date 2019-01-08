@@ -46,5 +46,7 @@ public interface IdentifyingCodeMapper {
      */
     int getCountInMinutes(@Param(value="phone")String phone,@Param(value="userId")String userId,@Param(value="minute") int minute);
     
-    int createTable();
+	int dropTable();
+	int truncateTable();
+	int createTable();
 }

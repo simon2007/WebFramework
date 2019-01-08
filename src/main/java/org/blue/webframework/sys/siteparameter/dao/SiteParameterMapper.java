@@ -6,6 +6,11 @@ import org.blue.webframework.sys.siteparameter.model.SiteParameter;
 
 
 public interface SiteParameterMapper {
+	/**
+	 * 根据id删除参数
+	 * @param paramId
+	 * @return
+	 */
     int deleteByPrimaryKey(int paramId);
 
     int insert(SiteParameter record);
@@ -13,6 +18,7 @@ public interface SiteParameterMapper {
     int insertSelective(SiteParameter record);
 
     SiteParameter selectByPrimaryKey(int paramId);
+    SiteParameter selectByName(String paramName);
 
     int updateByPrimaryKeySelective(SiteParameter record);
 

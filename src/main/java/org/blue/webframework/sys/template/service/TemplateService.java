@@ -1,8 +1,7 @@
 package org.blue.webframework.sys.template.service;
 
+import java.util.Locale;
 import java.util.Map;
-
-import org.springframework.util.MultiValueMap;
 
 /**
  * 模板类
@@ -17,20 +16,9 @@ public interface TemplateService {
 	 * @param map
 	 * @return 生成的内容
 	 */
-	public String processViewTemplate(String viewName, Map<String,? extends Object> map);
-	/**
-	 * 根据url去生成
-	 * @param url url
-	 * @param map 模板中的变量
-	 * @return 生成的内容
-	 */
-	public String processUrlTemplate(String url, MultiValueMap<String, String> map);
+	String processViewTemplate(String viewName, Map<String,  Object> variables,Locale locale);
 	
-	/**
-	 * 根据url去生成
-	 * @param url url
-	 * @param map 模板中的变量
-	 * @return 生成的内容
-	 */
-	public String processUrlTemplate(String url, Map<String, ? extends Object> map);
+	String processViewTemplate(String viewName, Map<String,  Object> variables);
+
+	String processUrlTemplate(String url, Map<String, Object> data);
 }

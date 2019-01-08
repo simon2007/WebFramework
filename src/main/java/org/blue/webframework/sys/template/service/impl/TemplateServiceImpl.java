@@ -1,79 +1,47 @@
 package org.blue.webframework.sys.template.service.impl;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import org.blue.webframework.exception.SystemException;
-import org.blue.webframework.sys.template.http.ServerHttpServletRequest;
-import org.blue.webframework.sys.template.http.ServerHttpServletResponse;
-import org.blue.webframework.sys.template.service.TemplateService;
-import org.blue.webframework.utils.Constants;
-import org.blue.webframework.utils.StringHelper;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
+import org.blue.webframework.exception.SystemException;
+import org.blue.webframework.sys.template.service.TemplateService;
+import org.blue.webframework.sys.template.util.ThymeleafHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service("TemplateService")
-class TemplateServiceImpl implements TemplateService,ApplicationContextAware {
+class TemplateServiceImpl implements TemplateService {
 
-	private InternalResourceViewResolver viewResolver;
 	private Logger logger = LogManager.getLogger(getClass());
 
-	public InternalResourceViewResolver getViewResolver(){
-		
-		if( viewResolver == null ) {
-			viewResolver = new InternalResourceViewResolver();
-			viewResolver.setPrefix("/WEB-INF/views/");
-			viewResolver.setSuffix(".jsp");
-			viewResolver.setServletContext(Constants.getServletContext());
-			viewResolver.setApplicationContext(applicationContext);
-			viewResolver.setAlwaysInclude(true);
-			viewResolver.setContentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-		}
-		
-		return viewResolver;
-	}
 
-	@Override
-	public String processViewTemplate(String viewName, Map<String, ? extends Object> map) {
-		if (StringHelper.isBlank(viewName))
-			return "";
+	@Autowired
+    private ApplicationContext applicationContext;
 
-		ServletContext context = Constants.getServletContext();
-		if (context == null) {
-			logger.error("ServletContext is null");
-			return "";
-		}
+	@Autowired(required=false)
+    private TemplateEngine templateEngine;
+    
 
-		ServerHttpServletRequest request = new ServerHttpServletRequest(context);
-		if (map != null) {
-			for (String key : map.keySet()) {
-				Object value = map.get(key);
-				if (value != null)
-					request.addParameter(key, value.toString());
-			}
-		}
-		ServerHttpServletResponse response = new ServerHttpServletResponse(request);
+    private TemplateEngine getTemplateEngine()
+    {
+    	if(templateEngine == null)
+    	templateEngine=new ThymeleafHelper().emailTemplateEngine(applicationContext);
+    	return templateEngine;
+    }
+    
+	
+	public String processViewTemplate(String viewName, Map<String, Object> variables, Locale locale) {
 		try {
 
-			// 查找对应的view
-			View view = getViewResolver().resolveViewName(viewName, Locale.CHINA);
-			if (view == null)
-				return "";
-			// 渲染
-			view.render(map, request, response);
-			String content = response.getContentAsString();
+			Context ctx = new Context(locale);
+			ctx.setVariables(variables);
+			String content = getTemplateEngine().process(viewName, ctx);
+			logger.info("viewName="+viewName);
 			return content;
 		} catch (Exception e) {
 			throw new SystemException("0003", e);
@@ -81,71 +49,15 @@ class TemplateServiceImpl implements TemplateService,ApplicationContextAware {
 	}
 
 	@Override
-	public String processUrlTemplate(String url, MultiValueMap<String, String> map) {
-		if (StringHelper.isBlank(url))
-			return "";
-		ServletContext context = Constants.getServletContext();
-		if (context == null) {
-			logger.error("ServletContext is null");
-			return "";
-		}
-		ServerHttpServletRequest request = new ServerHttpServletRequest(context);
-		if (map != null) {
-			for (String key : map.keySet()) {
-				List<String> values = map.get(key);
-				if (values == null)
-					continue;
-				String[] value = new String[values.size()];
-				values.toArray(value);
-				request.addParameter(key, value);
-			}
-		}
-
-		ServerHttpServletResponse response = new ServerHttpServletResponse(request);
-		try {
-			// 执行
-			response.execute(url);
-			String content = response.getContentAsString();
-			return content;
-		} catch (Exception e) {
-			throw new SystemException("0003",  e);
-		}
-
-	}
-
-	@Override
-	public String processUrlTemplate(String url, Map<String, ? extends Object> map) {
-		if (StringHelper.isBlank(url))
-			return "";
-		ServletContext context = Constants.getServletContext();
-		if (context == null) {
-			logger.error("ServletContext is null");
-			return "";
-		}
-		ServerHttpServletRequest request = new ServerHttpServletRequest(context);
-		if (map != null) {
-			for (String key : map.keySet()) {
-				Object value = map.get(key);
-				if (value != null)
-					request.addParameter(key, value.toString());
-			}
-		}
-		ServerHttpServletResponse response = new ServerHttpServletResponse(request);
-		try {
-			response.execute(url);
-			String content = response.getContentAsString();
-			return content;
-		} catch (Exception e) {
-			throw new SystemException("0003", e);
-		}
+	public String processViewTemplate(String viewName, Map<String, Object> variables) {
+		return processViewTemplate(viewName, variables, Locale.CHINA);
 	}
 
 
-	private ApplicationContext applicationContext;
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext=applicationContext;
-		
+	public String processUrlTemplate(String url, Map<String, Object> data) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

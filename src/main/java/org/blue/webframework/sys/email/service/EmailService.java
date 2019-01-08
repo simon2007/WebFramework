@@ -32,7 +32,7 @@ public interface EmailService {
 	* @param subject 邮件标题
 	* @param content 邮件内容
 	 */
-	public void sendEmailWithModelAndView(String[] mutliTo, String subject, String viewName,Map<String,String> data);
+	public void sendEmailWithModelAndView(String[] mutliTo, String subject, String viewName,Map<String,Object> data);
 	
-	public void sendEmailWithUrl(String[] mutliTo, String subject, String url,Map<String,String> data);
+	public void sendEmailWithUrl(String[] mutliTo, String subject, String url,Map<String,Object> data);
 }

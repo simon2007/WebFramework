@@ -1,6 +1,9 @@
 package org.blue.webframework.utils;
 
 import java.security.MessageDigest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -27,12 +30,10 @@ public final class StringHelper {
 	 * StringUtils.isBlank(&quot;  bob  &quot;) = false
 	 * </pre>
 	 * 
-	 * @param cs
-	 *            the CharSequence to check, may be null
+	 * @param cs the CharSequence to check, may be null
 	 * @return {@code true} if the CharSequence is null, empty or whitespace
 	 * @since 2.0
-	 * @since 3.0 Changed signature from isBlank(String) to
-	 *        isBlank(CharSequence)
+	 * @since 3.0 Changed signature from isBlank(String) to isBlank(CharSequence)
 	 */
 	public static boolean isBlank(CharSequence cs) {
 		if (isNullOrEmpty(cs)) {
@@ -44,27 +45,29 @@ public final class StringHelper {
 
 	/**
 	 * 强制转换
+	 * 
 	 * @param value 要转换的值
 	 * @return 转换后的值
 	 */
 	public static Long longParse(String value) {
 		try {
-			if(!isLong(value))
+			if (!isLong(value))
 				return 0l;
 			return Long.parseLong(value);
 		} catch (Exception e) {
 			return (long) 0;
 		}
 	}
-	
+
 	/**
 	 * 强制转换
+	 * 
 	 * @param value 要转换的值
 	 * @return 转换后的值
 	 */
 	public static int intParse(String value) {
 		try {
-			if(value == null){
+			if (value == null) {
 				return 0;
 			}
 			return Integer.parseInt(value);
@@ -75,6 +78,7 @@ public final class StringHelper {
 
 	/**
 	 * 是不是long类型
+	 * 
 	 * @param num 数值
 	 * @return 是否为long值
 	 */
@@ -87,34 +91,35 @@ public final class StringHelper {
 		return pattern.matcher(num).matches();
 
 	}
-	
+
 	/**
 	 * MD5加码 生成32位md5码
+	 * 
 	 * @param inStr 要生成的内容
 	 * @return md5码
 	 */
 	public static String string2MD5(String inStr) {
-			StringBuffer md5str = null;
-			try {
-				// 1 创建一个提供信息摘要算法的对象，初始化为md5算法对象
-				MessageDigest md = MessageDigest.getInstance("MD5");
+		StringBuffer md5str = null;
+		try {
+			// 1 创建一个提供信息摘要算法的对象，初始化为md5算法对象
+			MessageDigest md = MessageDigest.getInstance("MD5");
 
-				// 2 将消息变成byte数组, *一定要设置utf-8
-				byte[] input = inStr.getBytes("utf-8");
+			// 2 将消息变成byte数组, *一定要设置utf-8
+			byte[] input = inStr.getBytes("utf-8");
 
-				// 3 计算后获得字节数组,这就是那128位了
-				byte[] buff = md.digest(input);
+			// 3 计算后获得字节数组,这就是那128位了
+			byte[] buff = md.digest(input);
 
-				// 4 把数组每一字节（一个字节占八位）换成16进制连成md5字符串
-				md5str = bytesToHex(buff);
+			// 4 把数组每一字节（一个字节占八位）换成16进制连成md5字符串
+			md5str = bytesToHex(buff);
 
-				return md5str.toString();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "";
-			}
+			return md5str.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
-	
+
 	/**
 	 * 二进制转十六进制
 	 * 
@@ -137,5 +142,21 @@ public final class StringHelper {
 			md5str.append(Integer.toHexString(digital));
 		}
 		return md5str;
+	}
+
+	private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	/**
+	 * 将日期转换为日期类型
+	 * @param date 日期
+	 * @return 格式化好的日期类型
+	 */
+	public static String toString(Date date) {
+
+		return sdf.format(date);
+	}
+
+	public static Date parseDate(String dateString) throws ParseException {
+		return sdf.parse(dateString);
 	}
 }
