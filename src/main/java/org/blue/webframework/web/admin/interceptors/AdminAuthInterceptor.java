@@ -10,13 +10,13 @@ import org.blue.webframework.utils.ServerHelper;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-public class AdminAuthFilter implements HandlerInterceptor {
-	private final Logger logger = Logger.getLogger(AdminAuthFilter.class);
+public class AdminAuthInterceptor implements HandlerInterceptor {
+	private final Logger logger = Logger.getLogger(AdminAuthInterceptor.class);
 
 
 	private final PrivilegeService privilegeService;
 
-	public AdminAuthFilter(PrivilegeService privilegeService) {
+	public AdminAuthInterceptor(PrivilegeService privilegeService) {
 		this.privilegeService=privilegeService;
 	}
 
@@ -41,7 +41,7 @@ public class AdminAuthFilter implements HandlerInterceptor {
 			return false;
 		}
 		
-		if(!privilegeService.hasUserPermission(userId, "read", servletPath) && ! privilegeService.hasRolePermission(roleId, "read", servletPath))
+		if(!privilegeService.hasAccountPermissionWithName(userId, "read", servletPath) && ! privilegeService.hasRolePermissionWithName(roleId, "read", servletPath))
 		{
 			session.setAttribute("msg", "没有权限访问");
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "没有权限访问");

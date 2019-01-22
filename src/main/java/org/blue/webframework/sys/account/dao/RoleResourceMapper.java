@@ -12,11 +12,12 @@ public interface RoleResourceMapper {
 
 	int getCount(@Param("roleId") long roleId,@Param("operate")String operate,@Param("resourceId")long resourceId);
 	int getCountWidthCode(@Param("roleId") long roleId,@Param("operate")String operate,@Param("resourceCode")String resourceCode);
-	
+	int getCountWidthName(@Param("roleId")long roleId,@Param("operate") String operate,@Param("resourceName") String resourceName);
 	
 	int delete(@Param("roleId") long roleId,@Param("operate")String operate,@Param("resourceId")long resourceId);
 	
 	int dropTable();
 	int truncateTable();
 	int createTable();
+
 }

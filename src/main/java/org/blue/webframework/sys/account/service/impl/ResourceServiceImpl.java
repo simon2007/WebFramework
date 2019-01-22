@@ -47,6 +47,7 @@ class ResourceServiceImpl implements ResourceService{
 	public void add(ResourceVo resourceVo) {
 		Resource resource=vo2Model(resourceVo);
 		resourceMapper.insert(resource);
+		resourceVo.setId(resource.getId());
 	}
 
 	@Override

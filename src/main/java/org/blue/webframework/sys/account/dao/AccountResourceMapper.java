@@ -13,10 +13,12 @@ public interface AccountResourceMapper {
 	int getCount(@Param("accountId") long accountId,@Param("operate")String operate,@Param("resourceId")long resourceId);
 	
 	int getCountWidthCode(@Param("accountId") long accountId,@Param("operate")String operate,@Param("resourceCode")String resourceCode);
+	int getCountWidthName(@Param("accountId")long accountId,@Param("operate") String operate,@Param("resourceName") String resourceName);
 	
 	int delete(@Param("accountId") long accountId,@Param("operate")String operate,@Param("resourceId")long resourceId);
 	
 	int dropTable();
 	int truncateTable();
 	int createTable();
+
 }

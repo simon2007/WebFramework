@@ -31,7 +31,7 @@ public class BlueExceptionHandler  implements AsyncUncaughtExceptionHandler, Err
 	 */
 	@Override
 	public void handleUncaughtException(Throwable exception, Method method, Object... arg2) {
-
+		System.out.println("handleUncaughtException");
 		boolean needReportError = false;
 
 		StringWriter stringWriter = new StringWriter();
@@ -87,6 +87,7 @@ public class BlueExceptionHandler  implements AsyncUncaughtExceptionHandler, Err
 	 */
 	@Override
 	public void handleError(Throwable t) {
+		System.out.println("handleError");
 		handleUncaughtException(t,null);
 		
 	}

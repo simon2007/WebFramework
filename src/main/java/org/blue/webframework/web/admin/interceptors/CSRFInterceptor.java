@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-public class CSRFFilter implements HandlerInterceptor {
-	private final Logger logger = Logger.getLogger(CSRFFilter.class);
+public class CSRFInterceptor implements HandlerInterceptor {
+	private final Logger logger = Logger.getLogger(CSRFInterceptor.class);
 
 	private String createToken() {
 		return UUID.randomUUID().toString();

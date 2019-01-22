@@ -57,6 +57,13 @@
 		and role_id = #{roleId,jdbcType=BIGINT}
 	</select>
 	
+	<select id="getCountWidthName" resultType="java.lang.Integer">
+		select count(1) from role_resource inner join resource on resource.id = role_resource.resource_id
+		where  role_id = #{roleId,jdbcType=BIGINT}
+		and operate=#{operate,jdbcType=VARCHAR}
+		and #{resourceName,jdbcType=VARCHAR} like  CONCAT(resource.name,'.%')
+	</select>
+	
 	<delete id="delete">
 		delete role_resource
 		where resource_id=#{resourceId,jdbcType=BIGINT}

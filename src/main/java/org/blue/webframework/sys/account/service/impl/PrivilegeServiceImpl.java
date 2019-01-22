@@ -22,8 +22,18 @@ class PrivilegeServiceImpl implements PrivilegeService {
 	}
 
 	@Override
-	public boolean hasUserPermission(long userId, String operate, String resourceCode) {
-		return roleResourceMapper.getCountWidthCode(userId, operate, resourceCode)>0;
+	public boolean hasAccountPermission(long accountId, String operate, String resourceCode) {
+		return roleResourceMapper.getCountWidthCode(accountId, operate, resourceCode)>0;
+	}
+
+	@Override
+	public boolean hasRolePermissionWithName(long roleId, String operate, String resourceName) {
+		return roleResourceMapper.getCountWidthName(roleId, operate, resourceName)>0;
+	}
+
+	@Override
+	public boolean hasAccountPermissionWithName(long accountId, String operate, String resourceName) {
+		return accountResourceMapper.getCountWidthName(accountId, operate, resourceName)>0;
 	}
 
 }

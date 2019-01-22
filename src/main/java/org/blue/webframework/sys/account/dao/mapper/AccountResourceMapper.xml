@@ -58,6 +58,13 @@
 		and account_id = #{accountId,jdbcType=BIGINT}
 	</select>
 	
+	<select id="getCountWidthName" resultType="java.lang.Integer">
+		select count(1) from account_resource inner join resource on resource.id = account_resource.resource_id
+		where account_id = #{accountId,jdbcType=BIGINT}
+		and operate=#{operate,jdbcType=VARCHAR}
+		and #{resourceName,jdbcType=VARCHAR} like  CONCAT(resource.name,'.%')
+	</select>
+	
 	<delete id="delete">
 		delete account_resource
 		where resource_id=#{resourceId,jdbcType=BIGINT}

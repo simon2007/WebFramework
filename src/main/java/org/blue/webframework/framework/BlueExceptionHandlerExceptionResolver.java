@@ -15,8 +15,6 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.blue.webframework.exception.BaseException;
 import org.blue.webframework.exception.SystemException;
 import org.blue.webframework.exception.UIException;
-import org.blue.webframework.framework.webservice.ResultModel;
-import org.blue.webframework.framework.webservice.ResultModel.Result;
 import org.blue.webframework.sys.email.service.EmailService;
 import org.blue.webframework.utils.ServerHelper;
 import org.blue.webframework.utils.StringHelper;
@@ -25,14 +23,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
+import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 
 /**
  * 统一异常处理器
@@ -41,8 +37,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
  *
  */
 public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExceptionResolver {
-
-	private HandlerMethodReturnValueHandler webApiconverter;
 
 	public BlueExceptionHandlerExceptionResolver() {
 		setWarnLogCategory("exceptionHandler");
@@ -68,7 +62,7 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 		writer.write("user-agent:" + userAgent + newLine);
 		try {
 			HttpSession session = request.getSession();
-			writer.write("SESSION_ACCOUNT_ID:" + ServerHelper.getCurrentAccountId(session)+ newLine);
+			writer.write("SESSION_ACCOUNT_ID:" + ServerHelper.getCurrentAccountId(session) + newLine);
 			writer.write("SESSION_ROLE_ID:" + ServerHelper.getCurrentRoleId(session) + newLine);// 用户id
 			writer.write("SESSION_ACCOUNT_NAME:" + ServerHelper.getCurrentCurrentAccountName(session) + newLine);// 用户id
 		} catch (Exception e) {
@@ -95,7 +89,8 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 			writer.write("msg:" + baseException.getMessage() + newLine);
 			if (ex instanceof SystemException)
 				needReportError = true;// 系统异常要上报
-		} else if (ex instanceof ClientAbortException || (ex.getCause() != null && ex.getCause() instanceof ClientAbortException))
+		} else if (ex instanceof ClientAbortException
+				|| (ex.getCause() != null && ex.getCause() instanceof ClientAbortException))
 			needReportError = false;
 		else
 			needReportError = true;// 其他异常要上报
@@ -117,16 +112,17 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 
 			String subject = "服务器出错";
 			InetAddress addr = InetAddress.getLocalHost();
-			subject += ",ip:" + addr.getHostAddress().toString();// 获得本机IP　　
-			subject += ",name:" + addr.getHostName().toString();// 获得本机IP　
-			emailService.sendEmailNew( subject, msg.replace(newLine, "<br/>").replace(" ", "&nbsp;"));
+			subject += ",ip:" + addr.getHostAddress().toString();// 获得本机IP
+			subject += ",name:" + addr.getHostName().toString();// 获得本机IP
+			emailService.sendEmailNew(subject, msg.replace(newLine, "<br/>").replace(" ", "&nbsp;"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	protected ModelAndView doResolveHandlerMethodException(HttpServletRequest request, HttpServletResponse response, HandlerMethod handlerMethod, Exception exception) {
+	protected ModelAndView doResolveHandlerMethodException(HttpServletRequest request, HttpServletResponse response,
+			HandlerMethod handlerMethod, Exception exception) {
 		try {
 			if (handlerMethod == null)
 				return null;
@@ -157,15 +153,10 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 			}
 
 			ResponseBody responseBodyAnn = AnnotationUtils.findAnnotation(method, ResponseBody.class);
-			if (responseBodyAnn != null)
+			if (responseBodyAnn != null || AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), RestController.class)!=null)
 				return handleResponseBody(exception, handlerMethod, request, response);
 
-			// if (null == returnValue) {
-			// returnValue = new ModelAndView();
-			// if (null == returnValue.getViewName()) {
-			// returnValue.setViewName(defaultErrorView);
-			// }
-			// }/
+
 			return handleResponseError(exception, handlerMethod, request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -183,33 +174,24 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 	 * @return
 	 * @throws Exception
 	 */
-	private ModelAndView handleResponseBody(Exception exception, HandlerMethod handlerMethod, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private ModelAndView handleResponseBody(Exception exception, HandlerMethod handlerMethod,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String packageName = handlerMethod.getBeanType().getPackage().getName();
+		ModelAndView modelAndView = new ModelAndView(new FastJsonJsonView());
+		// 构建异常返回参数
 
-		// 根据包名判断是否是webservice，包名绑定
-		if ( packageName.startsWith("org.blue.webservice")) {
+		if (exception instanceof BaseException) {
+			BaseException baseException = (BaseException) exception;
+			modelAndView.addObject("code", baseException.getCode());
+			// 增加详细参数
+			if (!baseException.getDetails().isEmpty())
+				modelAndView.addObject("data", baseException.getDetails());
+		} else
+			modelAndView.addObject("code", "9999");
 
-			if (webApiconverter != null) {
-				// 构建异常返回参数
-				ResultModel model = new ResultModel();
-				model.setResult(new Result());
-				if (exception instanceof BaseException) {
-					BaseException baseException = (BaseException) exception;
-					model.getResult().setCode(baseException.getCode());
-					// 增加详细参数
-					if (!baseException.getDetails().isEmpty())
-						model.setData(baseException.getDetails());
-				} else
-					model.getResult().setCode("9999");
+		modelAndView.addObject("message", exception.getMessage());
 
-				model.getResult().setMessage(exception.getMessage());
-
-				return handleReturnValue(webApiconverter, handlerMethod, request, response, model);
-			}
-		}
-
-		return super.doResolveHandlerMethodException(request, response, handlerMethod, exception);
+		return modelAndView;
 
 	}
 
@@ -222,14 +204,15 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 	 * @param response
 	 * @return
 	 */
-	private ModelAndView handleResponseError(Exception exception, HandlerMethod handlerMethod, HttpServletRequest request, HttpServletResponse response) {
+	private ModelAndView handleResponseError(Exception exception, HandlerMethod handlerMethod,
+			HttpServletRequest request, HttpServletResponse response) {
 
 		if (exception instanceof IllegalStateException) {
 			if (request.getSession(false) == null) {
 				HttpSession session = request.getSession(true);
 				if (session.isNew()) {
 					// session过期,直接跳首页
-					session.setAttribute("exceptionMsg", "登录已经过期，请重新登录");
+					session.setAttribute("msg", "登录已经过期，请重新登录");
 					return new ModelAndView("redirect:/");
 				}
 
@@ -242,7 +225,7 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 			if (StringHelper.isBlank(view)) {
 				// 默认跳首页
 				view = "redirect:/index";
-				request.getSession().setAttribute("exceptionMsg", uiException.getMessage());
+				request.getSession().setAttribute("msg", uiException.getMessage());
 			}
 			ModelAndView modelAndView = new ModelAndView(view);
 			modelAndView.addAllObjects(uiException.getDetails());
@@ -259,36 +242,6 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 		}
 		return modelAndView;
 
-	}
-
-	/**
-	 * Exception格式化成可以被客服的识别的信息
-	 * 
-	 * @param converter
-	 * @param handlerMethod
-	 * @param request
-	 * @param response
-	 * @param value
-	 * @return
-	 * @throws Exception
-	 */
-	private ModelAndView handleReturnValue(HandlerMethodReturnValueHandler converter, HandlerMethod handlerMethod, HttpServletRequest request, HttpServletResponse response, Object value)
-			throws Exception {
-
-		// 处理异常
-		ServletWebRequest webRequest = new ServletWebRequest(request, response);
-		ModelAndViewContainer mavContainer = new ModelAndViewContainer();
-		webApiconverter.handleReturnValue(value, handlerMethod.getReturnType(), mavContainer, webRequest);
-		ModelAndView mav = new ModelAndView().addAllObjects(mavContainer.getModel());
-		mav.setViewName(mavContainer.getViewName());
-		if (!mavContainer.isViewReference())
-			mav.setView((View) mavContainer.getView());
-		return mav;
-	}
-
-	// api处理器，从外面注入进来，暂时没啥好办法
-	public void setWebApiProcessor(WebApiMethodResultConverter converter) {
-		this.webApiconverter = converter;
 	}
 
 }
