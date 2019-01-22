@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @SpringBootTest(classes= {HouseKeeperBoot.class})
 @RunWith(SpringRunner.class)
 @Transactional()

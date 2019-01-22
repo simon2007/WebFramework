@@ -30,7 +30,11 @@ class TemplateServiceImpl implements TemplateService {
     private TemplateEngine getTemplateEngine()
     {
     	if(templateEngine == null)
+    	{
+    		if(logger.isDebugEnabled())
+    			logger.debug("create default");
     	templateEngine=new ThymeleafHelper().emailTemplateEngine(applicationContext);
+    	}
     	return templateEngine;
     }
     

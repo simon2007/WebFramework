@@ -124,6 +124,8 @@ class AccountServiceImpl implements AccountService{
 	@Override
 	public AccountVo getByNameAndPassword(String name, String password) {
 		Account account=accountMapper.getByNameAndPassword(name,StringHelper.string2MD5( password));
+		if(account==null)
+			return null;
 		return model2Vo(account);
 	}
 

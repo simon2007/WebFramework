@@ -7,7 +7,10 @@ import org.blue.webframework.boot.BlueBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
 
@@ -15,6 +18,7 @@ import org.springframework.core.io.Resource;
 @SpringBootApplication
 @ComponentScan("org.blue.housekeeper")
 @MapperScan(basePackages="org.blue.housekeeper.biz.*.dao")
+@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class, ThymeleafAutoConfiguration.class})
 public class HouseKeeperBoot extends BlueBootApplication {
 	@Override
 	protected List<Resource> getMyBatisMapperLocations(String locationPattern) throws IOException {

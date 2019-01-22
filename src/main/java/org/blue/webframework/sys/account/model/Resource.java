@@ -3,6 +3,9 @@ package org.blue.webframework.sys.account.model;
 public class Resource {
 	private long id;
 	private String name;
+	private String code;
+	private String comment;
+	private String operates;
 
 	public long getId() {
 		return id;
@@ -18,6 +21,30 @@ public class Resource {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getOperates() {
+		return operates;
+	}
+
+	public void setOperates(String operates) {
+		this.operates = operates;
 	}
 
 }

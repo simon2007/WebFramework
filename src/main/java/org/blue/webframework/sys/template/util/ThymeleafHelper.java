@@ -23,8 +23,6 @@ public class ThymeleafHelper {
 	public TemplateEngine emailTemplateEngine(ApplicationContext applicationContext) {
 		final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 
-		// Resolver for TEXT emails
-		templateEngine.addTemplateResolver(textTemplateResolver(applicationContext));
 		// Resolver for HTML emails (except the editable one)
 		templateEngine.addTemplateResolver(htmlTemplateResolver(applicationContext));
 		// Resolver for HTML editable emails (which will be treated as a String)
@@ -34,18 +32,7 @@ public class ThymeleafHelper {
 		return templateEngine;
 	}
 
-	private ITemplateResolver textTemplateResolver(ApplicationContext applicationContext) {
-		final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-		templateResolver.setOrder(Integer.valueOf(1));
-		templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
-		templateResolver.setPrefix("/WEB-INF/thymeleaf/");
-		templateResolver.setSuffix(".txt");
-		templateResolver.setTemplateMode(TemplateMode.TEXT);
-		templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
-		templateResolver.setCacheable(false);
-		templateResolver.setApplicationContext(applicationContext);
-		return templateResolver;
-	}
+
 
 	private ITemplateResolver htmlTemplateResolver(ApplicationContext applicationContext) {
 		final SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();

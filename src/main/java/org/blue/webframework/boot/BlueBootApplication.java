@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.sql.DataSource;
 
@@ -20,12 +18,13 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -34,6 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageHelper;
 
+
+
+
+@EnableAsync
+@EnableScheduling
 @EnableTransactionManagement
 @ComponentScan(value = "org.blue.webframework", lazyInit = true, excludeFilters = { @Filter(Controller.class),
 		@Filter(RestController.class) })
@@ -43,7 +47,6 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-
 		return application.sources(getClass());
 	}
 
@@ -51,17 +54,6 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 	@Bean
 	public PlatformTransactionManager txManager(DataSource dataSource) {
 		return new DataSourceTransactionManager(dataSource);
-	}
-
-	@Bean
-	public ScheduledExecutorService scheduledExecutorService() {
-		ScheduledExecutorService ss = Executors.newScheduledThreadPool(5);
-		return ss;
-	}
-
-	@Bean
-	public TaskScheduler taskScheduler() {
-		return new ConcurrentTaskScheduler();
 	}
 
 	protected Properties loadProperties(String resource) throws IOException {
@@ -122,7 +114,7 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 
 		sqlSessionFactoryBean.setPlugins(new Interceptor[] { createPageHelper() });
 		sqlSessionFactoryBean.setConfigurationProperties(createMyBatisConfigProperties());
-
+		org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 		return sqlSessionFactoryBean;
 	}
 
@@ -147,4 +139,14 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 		return ret;
 	}
 
+	
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("messages","error");
+        messageSource.setDefaultEncoding("utf-8");
+
+		return messageSource;
+
+    }
 }

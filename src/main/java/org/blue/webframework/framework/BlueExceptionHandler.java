@@ -7,14 +7,13 @@ import java.net.InetAddress;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.blue.webframework.exception.BaseException;
 import org.blue.webframework.exception.SystemException;
 import org.blue.webframework.sys.email.service.EmailService;
-import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.util.ErrorHandler;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -23,10 +22,13 @@ import com.alibaba.fastjson.JSONObject;
  * @author Long
  *
  */
-public class BlueExceptionHandler implements AsyncUncaughtExceptionHandler {
+public class BlueExceptionHandler  implements AsyncUncaughtExceptionHandler, ErrorHandler {
 	private String newLine = "\r\n";
 	private Logger logger = LogManager.getLogger(getClass());
 
+	/**
+	 * 异步任务异常处理
+	 */
 	@Override
 	public void handleUncaughtException(Throwable exception, Method method, Object... arg2) {
 
@@ -67,20 +69,26 @@ public class BlueExceptionHandler implements AsyncUncaughtExceptionHandler {
 	@Resource
 	private EmailService emailService;
 
-	@Resource
-	private SiteParameterService siteParameterService;
-
 	private void reportException(Throwable ex, String msg) {
 		try {
-			String[] mutliTo = siteParameterService.getParamValue("errorMailTo", "simon2007@163.com").split(",");
+
 			String subject = "服务器异步执行出错";
 			InetAddress addr = InetAddress.getLocalHost();
 			subject += ",ip:" + addr.getHostAddress().toString();// 获得本机IP　　
 			subject += ",name:" + addr.getHostName().toString();// 获得本机IP　
-			emailService.sendEmailNew(mutliTo, subject, msg.replace(newLine, "<br/>").replace(" ", "&nbsp;"));
+			emailService.sendEmailNew( subject, msg.replace(newLine, "<br/>").replace(" ", "&nbsp;"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 定时任务异常处理
+	 */
+	@Override
+	public void handleError(Throwable t) {
+		handleUncaughtException(t,null);
+		
 	}
 
 }

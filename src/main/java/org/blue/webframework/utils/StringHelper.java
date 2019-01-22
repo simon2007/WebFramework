@@ -99,6 +99,8 @@ public final class StringHelper {
 	 * @return md5码
 	 */
 	public static String string2MD5(String inStr) {
+		if(inStr==null)
+			return "";
 		StringBuffer md5str = null;
 		try {
 			// 1 创建一个提供信息摘要算法的对象，初始化为md5算法对象

@@ -1,12 +1,10 @@
 package org.blue.webframework.exception;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
-import org.springframework.util.ResourceUtils;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
  * 异常的基类
@@ -22,44 +20,32 @@ public abstract class BaseException extends RuntimeException {
 	private static final long serialVersionUID = -2434707176688774880L;
 	private final Map<String, Object> details = new HashMap<String, Object>();
 
-	private static Properties errProperty = new Properties();
+	private static ResourceBundleMessageSource messageSource;
 
-	static {
-		FileInputStream fis = null;
-		try {
-			File file = ResourceUtils.getFile("classpath:errorcode.properties");
-			if (file.exists()) {
-				fis = new FileInputStream(file);
-				errProperty.load(fis);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fis != null)
-					fis.close();
-			} catch (Exception e) {
+	private static ResourceBundleMessageSource messageSource() {
+		if (messageSource != null)
+			return messageSource;
+		messageSource = new ResourceBundleMessageSource();
+		messageSource.setBasenames("messages", "errorcode");
+		messageSource.setDefaultEncoding("utf-8");
 
-			}
-		}
+		return messageSource;
 	}
 
 	public static String getMsg(String code) {
-		if (errProperty.containsKey(code))
-			return errProperty.getProperty(code);
 
-		return "出错了";
+		return messageSource().getMessage(code, null, "出错啦", Locale.getDefault());
 	}
 
 	private final String code;
 
 	public BaseException(String code) {
-		super( getMsg(code));
-		this.code=code;
+		super(getMsg(code));
+		this.code = code;
 	}
 
 	public BaseException(String code, Exception e) {
-		super( getMsg(code), e);
+		super(getMsg(code), e);
 		this.code = code;
 	}
 

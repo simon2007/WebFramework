@@ -1,5 +1,6 @@
 package org.blue.webframework.web.admin.tag;
 
+import org.blue.webframework.utils.ServerHelper;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.AbstractElementTagProcessor;
@@ -30,12 +31,13 @@ public class PermissionTagProcessor extends AbstractElementTagProcessor {
 	protected void doProcess(final ITemplateContext context, final IProcessableElementTag tag,
 			final IElementTagStructureHandler structureHandler) {
 
-		String roleId = tag.getAttributeValue("roleId");
-		String userId = tag.getAttributeValue("userId");
+
+		Long roleId = ServerHelper.getCurrentRoleId();
+		Long accountId = ServerHelper.getCurrentAccountId();
 		String resource = tag.getAttributeValue("resource");
 		String action = tag.getAttributeValue("action");
 
-		System.out.println("userId="+ userId + " roleId="+roleId + " resource="+resource + " action="+action);
+
 		if (!"admin".equals(roleId))
 			structureHandler.removeElement();
 		else

@@ -11,16 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.blue.webframework.exception.BaseException;
 import org.blue.webframework.exception.SystemException;
 import org.blue.webframework.exception.UIException;
 import org.blue.webframework.framework.webservice.ResultModel;
 import org.blue.webframework.framework.webservice.ResultModel.Result;
 import org.blue.webframework.sys.email.service.EmailService;
-import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
+import org.blue.webframework.utils.ServerHelper;
 import org.blue.webframework.utils.StringHelper;
-
-import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -69,14 +68,9 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 		writer.write("user-agent:" + userAgent + newLine);
 		try {
 			HttpSession session = request.getSession();
-			writer.write("SESSION_CUST_ID:" + session.getAttribute("SESSION_CUST_ID") + newLine);
-			writer.write("SESSION_USER_ID:" + session.getAttribute("SESSION_USER_ID") + newLine);
-			writer.write("SESSION_USER_TYPE:" + session.getAttribute("SESSION_USER_TYPE") + newLine);// 用户类型
-			writer.write("SESSION_CUST_TYPE:" + session.getAttribute("SESSION_CUST_TYPE") + newLine);// 用户类型
-			writer.write("SESSION_CONTACT_NAME:" + session.getAttribute("SESSION_CONTACT_NAME") + newLine);// 联系人姓名
-			writer.write("SESSION_ROLE_ID:" + session.getAttribute("SESSION_ROLE_ID") + newLine);// 用户id
-			writer.write("SESSION_USER_NAME:" + session.getAttribute("SESSION_USER_NAME") + newLine);// 用户名称
-			writer.write("SESSION_CUST_NAME:" + session.getAttribute("SESSION_CUST_NAME") + newLine);// 如果前两个都为空，则取这个
+			writer.write("SESSION_ACCOUNT_ID:" + ServerHelper.getCurrentAccountId(session)+ newLine);
+			writer.write("SESSION_ROLE_ID:" + ServerHelper.getCurrentRoleId(session) + newLine);// 用户id
+			writer.write("SESSION_ACCOUNT_NAME:" + ServerHelper.getCurrentCurrentAccountName(session) + newLine);// 用户id
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
@@ -118,17 +112,14 @@ public class BlueExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 	@Resource
 	private EmailService emailService;
 
-	@Resource
-	private SiteParameterService siteParameterService;
-
 	private void reportException(HttpServletRequest request, Throwable ex, String msg) {
 		try {
-			String[] mutliTo = siteParameterService.getParamValue("errorMailTo", "simon2007@163.com").split(",");
+
 			String subject = "服务器出错";
 			InetAddress addr = InetAddress.getLocalHost();
 			subject += ",ip:" + addr.getHostAddress().toString();// 获得本机IP　　
 			subject += ",name:" + addr.getHostName().toString();// 获得本机IP　
-			emailService.sendEmailNew(mutliTo, subject, msg.replace(newLine, "<br/>").replace(" ", "&nbsp;"));
+			emailService.sendEmailNew( subject, msg.replace(newLine, "<br/>").replace(" ", "&nbsp;"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

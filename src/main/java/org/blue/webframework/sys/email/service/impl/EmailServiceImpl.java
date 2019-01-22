@@ -12,6 +12,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.blue.webframework.sys.email.service.EmailService;
 import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
 import org.blue.webframework.sys.template.service.TemplateService;
@@ -20,7 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("EmailService")
-public class EmailServiceImpl implements EmailService{
+class EmailServiceImpl implements EmailService{
+	private final Logger logger = LogManager.getLogger(getClass());
 
 	@Resource
 	private SiteParameterService siteParameterService;
@@ -29,20 +32,22 @@ public class EmailServiceImpl implements EmailService{
 	private TemplateService templateService;
 	
 	
+	
+	
 	private Session getMailSession()
 	{
 		Properties properties = new Properties();
 
-		properties.put("mail.smtp.host", siteParameterService.getParamValue("smtp"));
+		properties.put("mail.smtp.host", siteParameterService.getParamValue("smtp",""));
 		// 验证
 		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.port", siteParameterService.getParamValue("smtpport"));
+		properties.put("mail.smtp.port", siteParameterService.getParamValue("smtpport","25"));
 		properties.put("mail.transport.protocol", "smtp");
 		properties.put("mail.smtp.starttls.enable", "true");// Enable TLS
 		// 根据属性新建一个邮件会话
 		Session mailSession = Session.getInstance(properties, new Authenticator() {
 			public PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(siteParameterService.getParamValue("smtpuser"),siteParameterService.getParamValue("smtppwd"));
+				return new PasswordAuthentication(siteParameterService.getParamValue("smtpuser",""),siteParameterService.getParamValue("smtppwd",""));
 			}
 		});
 		mailSession.setDebug(false);
@@ -92,7 +97,12 @@ public class EmailServiceImpl implements EmailService{
 	 * @Date:2014年8月5日20:32:10
 	 */
 	@Override
-	public void sendEmailNew(String[] mutliTo, String subject, String content) {
+	public void sendEmailNew( String subject, String content,String... mutliTo) {
+		if(mutliTo == null || mutliTo.length<=0)
+		{
+			logger.info("mutliTo is empty, use errorMailTo");
+			mutliTo = siteParameterService.getParamValue("errorMailTo", "simon2007@163.com").split(",");
+		}
 		sendEmail(mutliTo,subject,content);
 	}
 

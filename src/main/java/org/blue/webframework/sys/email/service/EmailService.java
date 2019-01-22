@@ -21,7 +21,7 @@ public interface EmailService {
 	* @param subject 邮件标题
 	* @param content 邮件内容
 	 */
-	public void sendEmailNew(String[] mutliTo, String subject, String content);
+	public void sendEmailNew( String subject, String content,String... mutliTo);
 	
 	/**
 	* @Title: sendEmailNew 

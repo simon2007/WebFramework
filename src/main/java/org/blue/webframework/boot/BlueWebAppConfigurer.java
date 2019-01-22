@@ -1,32 +1,27 @@
 package org.blue.webframework.boot;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.blue.webframework.framework.BlueExceptionHandlerExceptionResolver;
+import org.blue.webframework.sys.account.service.PrivilegeService;
 import org.blue.webframework.web.admin.interceptors.AdminAuthFilter;
-import org.blue.webframework.web.admin.tag.PrivilegeDialect;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.blue.webframework.web.admin.interceptors.CSRFFilter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.MediaType;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
-import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.dialect.SpringStandardDialect;
-import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-import org.thymeleaf.templatemode.TemplateMode;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+
+import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 
 public class BlueWebAppConfigurer implements WebMvcConfigurer {
 
@@ -38,58 +33,36 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
 
-		registry.enableContentNegotiation(new MappingJackson2JsonView());
+		registry.enableContentNegotiation(new FastJsonJsonView());
 	}
 	
-	/**
-	 * 设置视图解析器
-	 * @param templateEngine
-	 * @return
-	 */
-	@Bean
-	public ViewResolver viewResolver(SpringTemplateEngine templateEngine){
-	    ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-	    resolver.setTemplateEngine(templateEngine);
-	    return resolver;
-	}
+	
+	/* ******************************************************************* */
+    /*  GENERAL CONFIGURATION ARTIFACTS                                    */
+    /*  Static Resources, i18n Messages, Formatters (Conversion Service)   */
+    /* ******************************************************************* */
 
-	 @Autowired
-	 private   WebApplicationContext webApplicationConnect;
-	 
-	/**
-	 * 设置模板引擎
-	 * @param templateResolver
-	 * @return
-	 */
-	@Bean
-	public SpringTemplateEngine templateEngine(){
-		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-		templateResolver.setPrefix("/WEB-INF/thymeleaf/");//设置地址前缀
-		templateResolver.setSuffix(".html");//设置后缀
-		templateResolver.setCacheable(false);//设置不缓存
-		templateResolver.setTemplateMode( TemplateMode.HTML);
-		templateResolver.setCharacterEncoding("UTF-8");
-		templateResolver.setApplicationContext(webApplicationConnect);
-	    
-		Set<IDialect> additionalDialects=new LinkedHashSet<IDialect>();
-        //自定义方言
-        additionalDialects.add(new PrivilegeDialect());
-        additionalDialects.add(new SpringStandardDialect());
+    @Override
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 
-	    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-	    templateEngine.setTemplateResolver(templateResolver);
-	 // Message source, internationalization specific to emails
-        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
-        templateEngine.setDialects(additionalDialects);
-	    
-	    return templateEngine;
-	}
+        registry.addResourceHandler("/images/**").addResourceLocations("/static/images/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
+    }
 
-	@Bean
-    public ResourceBundleMessageSource emailMessageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("mail/MailMessages");
-        return messageSource;
+
+
+    @Override
+    public void addFormatters(final FormatterRegistry registry) {
+  
+        registry.addFormatter(dateFormatter());
+    }
+
+
+
+    @Bean
+    public DateFormatter dateFormatter() {
+        return new DateFormatter();
     }
 
 
@@ -108,22 +81,36 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 
 	}
 
-	@Bean(name = "multipartResolver")
-	public CommonsMultipartResolver commonsMultipartResolver() {
-		return new CommonsMultipartResolver();
-	}
-
+	@Resource
+	private PrivilegeService privilegeService;
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// 可添加多个
-		registry.addInterceptor(new AdminAuthFilter()).addPathPatterns("/admin/**");
+		registry.addInterceptor(new AdminAuthFilter(privilegeService)).addPathPatterns("/admin/**").excludePathPatterns("/admin/login");
+		registry.addInterceptor(new CSRFFilter()).addPathPatterns("/admin/**");
+        registry.addInterceptor(localeChangeInterceptor());
 	}
+	
+
+	@Bean  
+    public LocaleChangeInterceptor localeChangeInterceptor() {  
+        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();  
+        lci.setParamName("lang");  
+        return lci;  
+    } 
 
 	@Override
 	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
 
-		resolvers.add(new BlueExceptionHandlerExceptionResolver());
+		resolvers.add(exceptionHandlerExceptionResolver());
 		// resolvers.add(new BlueExceptionHandler());
 	}
 
+	
+	@Bean
+	public BlueExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver()
+	{
+		return new BlueExceptionHandlerExceptionResolver();
+	}
 }

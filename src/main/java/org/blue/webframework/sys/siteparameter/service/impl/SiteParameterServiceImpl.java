@@ -56,6 +56,8 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	@Override
 	public String getParamValue(String paramName, String defaultValue) {
 		String value = siteParameterMapper.getParamValueByName(paramName);
+		if(StringHelper.isBlank(value))
+			return defaultValue;
 		return value;
 	}
 

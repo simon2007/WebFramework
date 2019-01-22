@@ -1,18 +1,22 @@
 package org.blue.webframework.sys.account.dao;
 
 import org.apache.ibatis.annotations.Param;
-import org.blue.webframework.sys.account.model.Role;
 import org.blue.webframework.sys.account.model.RoleResource;
-
-import com.github.pagehelper.Page;
 public interface RoleResourceMapper {
 
-    Page<Role> selectAll(RoleResource role);
-	Role selectByPrimaryKey(long id);
+	RoleResource selectByPrimaryKey(long id);
 	int deleteByPrimaryKey(long id);
 	int insert(RoleResource role);
-	int insertSelective(RoleResource role);
-	int updateByPrimaryKeySelective(RoleResource role);
-	int updateByPrimaryKey(RoleResource role);
-	int hasPermission(@Param("roleId") long roleId,@Param("operate")String operate,long resourceId);
+	
+	int updateByPrimaryKeySelective(RoleResource roleResource);
+
+	int getCount(@Param("roleId") long roleId,@Param("operate")String operate,@Param("resourceId")long resourceId);
+	int getCountWidthCode(@Param("roleId") long roleId,@Param("operate")String operate,@Param("resourceCode")String resourceCode);
+	
+	
+	int delete(@Param("roleId") long roleId,@Param("operate")String operate,@Param("resourceId")long resourceId);
+	
+	int dropTable();
+	int truncateTable();
+	int createTable();
 }
