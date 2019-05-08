@@ -29,4 +29,8 @@ public class RoleVo {
 	public void setEnable(boolean enable) {
 		this.enable = enable;
 	}
+	@Override
+	public String toString() {
+		return "{id:"+id + ",name:"+name+"}";
+	}
 }

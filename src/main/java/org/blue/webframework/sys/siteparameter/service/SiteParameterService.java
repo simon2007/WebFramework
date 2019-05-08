@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.blue.webframework.sys.siteparameter.vo.SiteParameterVo;
 
+import com.github.pagehelper.Page;
+
 /************************************************
  * @All right reserved.
  * @Create Date: 2014-7-1 21:08:00
@@ -43,7 +45,7 @@ public interface SiteParameterService {
 	 * 
 	 * @param siteParameterId 网站参数主键.<br>
 	 *            
-	 * @return int 0 表示删除失败， 1 表示删除成功.<br>
+	 * @return long 0 表示删除失败， 1 表示删除成功.<br>
 	 */
 	public int deleteSiteParameterById(int siteParameterId);
 	
@@ -54,15 +56,29 @@ public interface SiteParameterService {
 	 * 
 	 * @return SiteParameterViewVo 单网站参数记录信息.<br>
 	 */
-	public SiteParameterVo getSiteParameterById(int siteParameterId);
+	SiteParameterVo getSiteParameterById(int siteParameterId);
 
 
 
-	public void putParamValue(String paramName, int value);
-	public void putParamValue(String paramName, long value);
-	public void putParamValue(String paramName, String value);
-	public void putParamValue(String paramName, Date value);
-	
+	/**
+	 * 
+	 * @param paramName
+	 * @param value
+	 */
+	void putParamValue(String paramName, int value);
+	/**
+	 * 
+	 * @param paramName
+	 * @param value
+	 * @param comment
+	 */
+	void putParamValue(String paramName, int value,String comment);
+	void putParamValue(String paramName, long value);
+	void putParamValue(String paramName, long value,String comment);
+	void putParamValue(String paramName, String value);
+	void putParamValue(String paramName, String value,String comment);
+	void putParamValue(String paramName, Date value);
+	void putParamValue(String paramName, Date value,String comment);
 	/**
 	 * 获取参数
 	 * @param paramName
@@ -88,5 +104,6 @@ public interface SiteParameterService {
 	public Date getParamValue(String paramName, Date defaultValue);
 	
 
+	Page<SiteParameterVo> getParametersAsPage(String value,int page,int pageSize);
 	void recreateTable();
 }

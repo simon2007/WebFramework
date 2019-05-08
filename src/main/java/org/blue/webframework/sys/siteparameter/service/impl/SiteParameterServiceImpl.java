@@ -13,6 +13,9 @@ import org.blue.webframework.sys.siteparameter.vo.SiteParameterVo;
 import org.blue.webframework.utils.StringHelper;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
 /************************************************
  * @All right reserved.
  * @Create Date: 2012-8-16 21:08:00
@@ -89,14 +92,31 @@ class SiteParameterServiceImpl implements SiteParameterService {
 			return;
 		}
 
-		if (siteParameterVo.getParamName() == null)
+		if (siteParameterVo.getName() == null)
 			throw new BusinessException("0011");
 
-		if (siteParameterVo.getParamValue() == null)
+		if (siteParameterVo.getValue() == null)
 			throw new BusinessException("0011");
 
 	}
-
+	/**
+	 * 将SiteParameterVo 转化成 SiteParameter.
+	 * 
+	 * @Date Jul 10, 2014 4:18:31 PM
+	 * @param siteParameterVo 查询条件
+	 * @return SiteParameter
+	 */
+	private SiteParameterVo makeSiteParameterVo(SiteParameter siteParameter) {
+		if (siteParameter == null)
+			throw new BusinessException("0011");
+		SiteParameterVo siteParameterVo = new SiteParameterVo();
+		siteParameterVo.setComment(siteParameter.getComment());
+		siteParameterVo.setName(siteParameter.getName());
+		siteParameterVo.setId(siteParameter.getId());
+		siteParameterVo.setValue(siteParameter.getValue());
+		return siteParameterVo;
+	}
+	
 	/**
 	 * 将SiteParameterVo 转化成 SiteParameter.
 	 * 
@@ -108,10 +128,10 @@ class SiteParameterServiceImpl implements SiteParameterService {
 		if (siteParameterVo == null)
 			throw new BusinessException("0011");
 		SiteParameter siteParameter = new SiteParameter();
-		siteParameter.setParamComment(siteParameterVo.getParamComment());
-		siteParameter.setParamName(siteParameterVo.getParamName());
-		siteParameter.setParamId(siteParameterVo.getParamId());
-		siteParameter.setParamValue(siteParameterVo.getParamValue());
+		siteParameter.setComment(siteParameterVo.getComment());
+		siteParameter.setName(siteParameterVo.getName());
+		siteParameter.setId(siteParameterVo.getId());
+		siteParameter.setValue(siteParameterVo.getValue());
 		siteParameter.setRemoveTag(false);
 		return siteParameter;
 	}
@@ -170,8 +190,7 @@ class SiteParameterServiceImpl implements SiteParameterService {
 
 	@Override
 	public SiteParameterVo getSiteParameterById(int siteParameterId) {
-		// TODO Auto-generated method stub
-		return null;
+		return makeSiteParameterVo(siteParameterMapper.selectByPrimaryKey(siteParameterId));
 	}
 
 	@Override
@@ -182,10 +201,20 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	}
 
 	@Override
+	public void putParamValue(String paramName, int value,String comment) {
+		putParamValue(paramName,String.valueOf(value),comment);
+	}
+	
+	@Override
 	public void putParamValue(String paramName, int value) {
 		putParamValue(paramName,String.valueOf(value));
 	}
 
+	@Override
+	public void putParamValue(String paramName, long value,String comment) {
+		putParamValue(paramName,String.valueOf(value),comment);
+
+	}
 	@Override
 	public void putParamValue(String paramName, long value) {
 		putParamValue(paramName,String.valueOf(value));
@@ -197,20 +226,49 @@ class SiteParameterServiceImpl implements SiteParameterService {
 		SiteParameter siteParameter = siteParameterMapper.selectByName(paramName);
 		if (siteParameter == null) {
 			siteParameter = new SiteParameter();
-			siteParameter.setParamName(paramName);
-			siteParameter.setParamValue(value);
+			siteParameter.setName(paramName);
+			siteParameter.setValue(value);
 			siteParameter.setRemoveTag(false);
 			siteParameterMapper.insert(siteParameter);
 		} else {
-			siteParameter.setParamValue(value);
+			siteParameter.setValue(value);
 			siteParameterMapper.updateByPrimaryKeySelective(siteParameter);
 		}
 	}
 
 	@Override
+	public void putParamValue(String paramName, String value,String comment) {
+		SiteParameter siteParameter = siteParameterMapper.selectByName(paramName);
+		if (siteParameter == null) {
+			siteParameter = new SiteParameter();
+			siteParameter.setName(paramName);
+			siteParameter.setValue(value);
+			siteParameter.setRemoveTag(false);
+			siteParameter.setComment(comment);
+			siteParameterMapper.insert(siteParameter);
+		} else {
+			siteParameter.setValue(value);
+			siteParameter.setComment(comment);
+			siteParameterMapper.updateByPrimaryKeySelective(siteParameter);
+		}
+	}
+	
+	@Override
 	public void putParamValue(String paramName, Date value) {
 		putParamValue(paramName,StringHelper.toString(value));
 
+	}
+
+	@Override
+	public void putParamValue(String paramName, Date value,String comment) {
+		putParamValue(paramName,StringHelper.toString(value),comment);
+
+	}
+	
+	@Override
+	public Page<SiteParameterVo> getParametersAsPage(String value,int page, int pageSize) {
+		PageHelper.startPage(page, pageSize);
+		return siteParameterMapper.selectList(value);
 	}
 
 }

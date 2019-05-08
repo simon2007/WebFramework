@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.blue.webframework.sys.account.dao.RoleResourceMapper">
+	<!-- 启用缓存 -->
+	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.RoleResource">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="role_id" property="roleId" jdbcType="BIGINT" />
@@ -18,12 +20,14 @@
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from role_resource
-		where id = #{id,jdbcType=BIGINT}
+		where id =
+		#{id,jdbcType=BIGINT}
 	</delete>
 	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.RoleResource"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into role_resource ( role_id, resource_id,operate)
-		values (#{roleId,jdbcType=BIGINT},#{resourceId,jdbcType=BIGINT},#{operate,jdbcType=VARCHAR})
+		values
+		(#{roleId,jdbcType=BIGINT},#{resourceId,jdbcType=BIGINT},#{operate,jdbcType=VARCHAR})
 	</insert>
 
 	<update id="updateByPrimaryKeySelective"
@@ -45,29 +49,38 @@
 
 	<select id="getCount" resultType="java.lang.Integer">
 		select count(1) from role_resource
-		where resource_id=#{resourceId,jdbcType=BIGINT}
+		where
+		resource_id=#{resourceId,jdbcType=BIGINT}
 		and operate=#{operate,jdbcType=VARCHAR}
-		and role_id = #{roleId,jdbcType=BIGINT}
+		and role_id =
+		#{roleId,jdbcType=BIGINT}
 	</select>
 
 	<select id="getCountWidthCode" resultType="java.lang.Integer">
-		select count(1) from role_resource inner join resource on resource.id = role_resource.resource_id
-		where resource.code=#{resourceCode,jdbcType=VARCHAR}
+		select count(1) from role_resource inner join
+		resource on resource.id = role_resource.resource_id
+		where
+		resource.code=#{resourceCode,jdbcType=VARCHAR}
 		and operate=#{operate,jdbcType=VARCHAR}
-		and role_id = #{roleId,jdbcType=BIGINT}
+		and role_id =
+		#{roleId,jdbcType=BIGINT}
 	</select>
-	
+
 	<select id="getCountWidthName" resultType="java.lang.Integer">
-		select count(1) from role_resource inner join resource on resource.id = role_resource.resource_id
-		where  role_id = #{roleId,jdbcType=BIGINT}
-		and operate=#{operate,jdbcType=VARCHAR}
-		and #{resourceName,jdbcType=VARCHAR} like  CONCAT(resource.name,'.%')
+		select count(1) from role_resource inner join
+		resource on resource.id = role_resource.resource_id
+		where role_id = #{roleId,jdbcType=BIGINT}
+		and
+		operate=#{operate,jdbcType=VARCHAR}
+		and #{resourceName,jdbcType=VARCHAR} like
+		CONCAT(resource.name,'.%')
 	</select>
-	
+
 	<delete id="delete">
 		delete role_resource
 		where resource_id=#{resourceId,jdbcType=BIGINT}
-		and operate=#{operate,jdbcType=VARCHAR}
+		and
+		operate=#{operate,jdbcType=VARCHAR}
 		and role_id = #{roleId,jdbcType=BIGINT}
 	</delete>
 
@@ -82,11 +95,15 @@
 	<update id="createTable">
 		CREATE TABLE `role_resource` (
 		`id` bigint(20) NOT NULL AUTO_INCREMENT,
-		`role_id` bigint(20) NULL DEFAULT NULL,
+		`role_id`
+		bigint(20) NULL DEFAULT NULL,
 		`resource_id` bigint(20) NULL DEFAULT NULL,
-		`operate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+		`operate` varchar(32)
+		CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		PRIMARY KEY (`id`) USING BTREE
-		) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
-		= Dynamic;
+		)
+		ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
+		=
+		Dynamic;
 	</update>
 </mapper>

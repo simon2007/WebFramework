@@ -121,6 +121,10 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 	protected Properties createMyBatisConfigProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("logImpl", "LOG4J");
+		//开启延迟加载 ，默认值为true
+		properties.setProperty("lazyLoadingEnabled", "true");
+		//二级缓存的总开关
+		properties.setProperty("cacheEnabled", "true");
 		// 驼峰转换
 		properties.setProperty("mapUnderscoreToCamelCase", "true");
 		return properties;

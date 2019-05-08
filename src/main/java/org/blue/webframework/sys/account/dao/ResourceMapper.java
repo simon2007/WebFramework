@@ -13,4 +13,6 @@ public interface ResourceMapper {
 	int dropTable();
 	int truncateTable();
 	int createTable();
+	
+	Resource selectByCode(String resourceCode);
 }

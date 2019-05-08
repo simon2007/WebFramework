@@ -46,4 +46,8 @@ public class ResourceVo {
 	public void setOperates(String operates) {
 		this.operates = operates;
 	}
+	@Override
+	public String toString() {
+		return "{id:"+id + ",name:"+name+"}";
+	}
 }

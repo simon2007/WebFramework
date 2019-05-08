@@ -2,16 +2,16 @@ package org.blue.webframework.junit;
 
 import javax.annotation.Resource;
 
-import org.blue.webframework.sys.account.service.AccountResourceService;
 import org.blue.webframework.sys.account.service.AccountService;
 import org.blue.webframework.sys.account.service.GroupService;
+import org.blue.webframework.sys.account.service.PrivilegeService;
 import org.blue.webframework.sys.account.service.ResourceService;
-import org.blue.webframework.sys.account.service.RoleResourceService;
 import org.blue.webframework.sys.account.service.RoleService;
 import org.blue.webframework.sys.account.vo.AccountVo;
 import org.blue.webframework.sys.account.vo.GroupVo;
 import org.blue.webframework.sys.account.vo.ResourceVo;
 import org.blue.webframework.sys.account.vo.RoleVo;
+import org.blue.webframework.sys.attach.service.AttachService;
 import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
@@ -46,11 +46,10 @@ public class DatabaseTest extends SpringTestBase {
 	private ResourceService resourceService;
 	
 	@Resource
-	private RoleResourceService roleResourceService;
-	
+	private PrivilegeService privilegeService;
+
 	@Resource
-	private AccountResourceService accountResourceService;
-	
+	private AttachService attachService;
 	
 	
 	@Test
@@ -61,9 +60,9 @@ public class DatabaseTest extends SpringTestBase {
 		groupService.recreateTable();
 		roleService.recreateTable();
 		resourceService.recreateTable();
-		roleResourceService.recreateTable();
-		accountResourceService.recreateTable();
-		
+		privilegeService.recreateTable();
+		attachService.recreateTable();
+
 		
 		siteParameterService.putParamValue("smtp", "smtp.qq.com");
 		
@@ -95,6 +94,6 @@ public class DatabaseTest extends SpringTestBase {
 		resourceVo.setOperates("read");
 		resourceService.add(resourceVo);
 		
-		roleResourceService.grant(adminRole.getId(), "read", resourceVo.getId());
+		privilegeService.grantRole(adminRole.getId(), "read", resourceVo.getId());
 	}
 }

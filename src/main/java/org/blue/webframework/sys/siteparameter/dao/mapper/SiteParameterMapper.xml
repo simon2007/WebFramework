@@ -1,133 +1,178 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.blue.webframework.sys.siteparameter.dao.SiteParameterMapper" >
-  <resultMap id="BaseResultMap" type="org.blue.webframework.sys.siteparameter.model.SiteParameter" >
-    <id column="PARAM_ID" property="paramId" jdbcType="INTEGER" />
-    <result column="PARAM_NAME" property="paramName" jdbcType="VARCHAR" />
-    <result column="PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
-    <result column="PARAM_COMMENT" property="paramComment" jdbcType="VARCHAR" />
-    <result column="REMOVE_TAG" property="removeTag" jdbcType="BIT" />
-  </resultMap>
-  <!-- 启用缓存 -->
-  <cache  type="org.blue.webframework.cache.QueryCache" flushInterval="36000000" />
-  
-  <sql id="Base_Column_List" >
-    PARAM_ID, PARAM_NAME, PARAM_VALUE, PARAM_COMMENT, REMOVE_TAG
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" useCache="true" >
-    select 
-    <include refid="Base_Column_List" />
-    from site_parameter
-    where PARAM_ID = #{paramId,jdbcType=INTEGER}
-  </select>
-  <!-- 将if 判断去掉了 标签是针对JAVABEAN或者MAP的，String不能用标签 -->
-  <select id="getParamValueByName" parameterType="java.lang.String" resultType="java.lang.String" useCache="true">
-		select param_value from site_parameter where remove_tag=0 and param_name = #{paramName,jdbcType=VARCHAR}
-  </select>
+<mapper namespace="org.blue.webframework.sys.siteparameter.dao.SiteParameterMapper">
+	<resultMap id="BaseResultMap"
+		type="org.blue.webframework.sys.siteparameter.model.SiteParameter">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="REMOVE_TAG" property="removeTag" jdbcType="BIT" />
+	</resultMap>
+	<!-- 启用缓存 -->
+	<cache type="org.blue.webframework.cache.QueryCache" flushInterval="36000000" />
 
-  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap" useCache="true">
+	<sql id="Base_Column_List">
+		id, name, value, comment, REMOVE_TAG
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer"
+		useCache="true">
 		select
 		<include refid="Base_Column_List" />
-		from site_parameter where remove_tag=0 and param_name = #{paramName,jdbcType=VARCHAR}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true">
-    update site_parameter set remove_tag=1
-    where PARAM_ID = #{paramId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
-    insert into site_parameter (PARAM_NAME, PARAM_VALUE, 
-      PARAM_COMMENT, REMOVE_TAG)
-    values ( #{paramName,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}, 
-      #{paramComment,jdbcType=VARCHAR}, #{removeTag,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
-    insert into site_parameter
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="paramName != null" >
-        PARAM_NAME,
-      </if>
-      <if test="paramValue != null" >
-        PARAM_VALUE,
-      </if>
-      <if test="paramComment != null" >
-        PARAM_COMMENT,
-      </if>
-      <if test="removeTag != null" >
-        REMOVE_TAG,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="paramName != null" >
-        #{paramName,jdbcType=VARCHAR},
-      </if>
-      <if test="paramValue != null" >
-        #{paramValue,jdbcType=VARCHAR},
-      </if>
-      <if test="paramComment != null" >
-        #{paramComment,jdbcType=VARCHAR},
-      </if>
-      <if test="removeTag != null" >
-        #{removeTag,jdbcType=INTEGER},
-      </if>
+		from site_parameter
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 将if 判断去掉了 标签是针对JAVABEAN或者MAP的，String不能用标签 -->
+	<select id="getParamValueByName" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select value from site_parameter where remove_tag=0 and
+		name = #{name,jdbcType=VARCHAR}
+	</select>
 
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
-    update site_parameter
-    <set >
-      <if test="paramName != null" >
-        PARAM_NAME = #{paramName,jdbcType=VARCHAR},
-      </if>
-      <if test="paramValue != null" >
-        PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
-      </if>
-      <if test="paramComment != null" >
-        PARAM_COMMENT = #{paramComment,jdbcType=VARCHAR},
-      </if>
+	<select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from site_parameter where remove_tag=0 and name = #{name,jdbcType=VARCHAR}
+	</select>
 
-      <if test="removeTag != null" >
-        REMOVE_TAG = #{removeTag,jdbcType=BIT},
-      </if>
-    </set>
-    where PARAM_ID = #{paramId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
-    update site_parameter
-    set PARAM_NAME = #{paramName,jdbcType=VARCHAR},
-      PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
-      PARAM_COMMENT = #{paramComment,jdbcType=VARCHAR},
-      REMOVE_TAG = #{removeTag,jdbcType=BIT}
-    where PARAM_ID = #{paramId,jdbcType=INTEGER}
-  </update>
-  
-  <select id="querySiteParameterList" resultMap="BaseResultMap" useCache="true">
-  	select param_name, param_value from site_parameter where remove_tag = 0
-  </select>
-  
-  <update id="modifySiteParameterValueByName" parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter" flushCache="true">
-  	update site_parameter set PARAM_VALUE = #{paramValue,jdbcType=VARCHAR} where PARAM_NAME = #{paramName,jdbcType=VARCHAR}
-  </update>
-  
-	<update id="dropTable" flushCache="true">
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update site_parameter set
+		remove_tag=1
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
+		insert into
+		site_parameter (name, value,
+		comment, REMOVE_TAG)
+		values (
+		#{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR},
+		#{comment,jdbcType=VARCHAR},
+		#{removeTag,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
+		insert into site_parameter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="value != null">
+				value,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="removeTag != null">
+				REMOVE_TAG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="removeTag != null">
+				#{removeTag,jdbcType=INTEGER},
+			</if>
+
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
+		update site_parameter
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				value = #{value,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+
+			<if test="removeTag != null">
+				REMOVE_TAG = #{removeTag,jdbcType=BIT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
+		update site_parameter
+		set name = #{name,jdbcType=VARCHAR},
+		value = #{value,jdbcType=VARCHAR},
+		comment = #{comment,jdbcType=VARCHAR},
+		REMOVE_TAG = #{removeTag,jdbcType=BIT}
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="querySiteParameterList" resultMap="BaseResultMap">
+		select name, value
+		from site_parameter where remove_tag = 0
+	</select>
+
+	<update id="modifySiteParameterValueByName"
+		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
+		update site_parameter set value = #{value,jdbcType=VARCHAR} where
+		name =
+		#{name,jdbcType=VARCHAR}
+	</update>
+
+	<update id="dropTable">
 		DROP TABLE IF EXISTS `site_parameter`
 	</update>
-	
-	<update id="truncateTable" flushCache="true">
-        truncate table `site_parameter`
-    </update>
-    
-	<update id="createTable" flushCache="true">
 
-CREATE TABLE `site_parameter`  (
-  `PARAM_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `PARAM_NAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `PARAM_VALUE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `PARAM_COMMENT` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `REMOVE_TAG` bit(1) NULL DEFAULT 0,
-  PRIMARY KEY (`PARAM_ID`) USING BTREE,
-  INDEX `name_value`(`PARAM_NAME`, `PARAM_VALUE`, `REMOVE_TAG`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+	<update id="truncateTable">
+		truncate table `site_parameter`
+	</update>
 
-  </update>
+	<update id="createTable">
+
+		CREATE TABLE `site_parameter` (
+		`id` int(11) NOT NULL
+		AUTO_INCREMENT,
+		`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL
+		DEFAULT NULL,
+		`value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL
+		DEFAULT NULL,
+		`comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL
+		DEFAULT NULL,
+		`REMOVE_TAG` bit(1) NULL DEFAULT 0,
+		PRIMARY KEY (`id`) USING BTREE,
+		INDEX
+		`name_value`(`name`, `value`, `REMOVE_TAG`) USING BTREE
+		) ENGINE = InnoDB AUTO_INCREMENT
+		= 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
+		= Dynamic;
+
+	</update>
+
+
+	<resultMap id="VoResultMap"
+		type="org.blue.webframework.sys.siteparameter.vo.SiteParameterVo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectList" resultMap="VoResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from site_parameter
+		<where>
+			<if test="name !=null">
+				name like #{name,jdbcType=VARCHAR}
+			</if>
+		</where>
+
+	</select>
 </mapper>

@@ -56,4 +56,8 @@ public class AccountVo {
 		this.groupId = groupId;
 	}
 	
+	@Override
+	public String toString() {
+		return "{id:"+id + ",name:"+name+"}";
+	}
 }

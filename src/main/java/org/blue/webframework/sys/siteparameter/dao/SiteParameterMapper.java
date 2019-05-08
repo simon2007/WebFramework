@@ -3,6 +3,9 @@ package org.blue.webframework.sys.siteparameter.dao;
 import java.util.List;
 
 import org.blue.webframework.sys.siteparameter.model.SiteParameter;
+import org.blue.webframework.sys.siteparameter.vo.SiteParameterVo;
+
+import com.github.pagehelper.Page;
 
 
 public interface SiteParameterMapper {
@@ -33,4 +36,6 @@ public interface SiteParameterMapper {
 	int dropTable();
 	int truncateTable();
 	int createTable();
+
+	Page<SiteParameterVo> selectList(String value);
 }

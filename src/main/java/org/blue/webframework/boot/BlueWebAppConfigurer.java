@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.blue.webframework.framework.BlueExceptionHandlerExceptionResolver;
+import org.blue.webframework.framework.BlueExceptionHandler;
 import org.blue.webframework.framework.result.WebApiResultConverter;
 import org.blue.webframework.sys.account.service.PrivilegeService;
 import org.blue.webframework.web.admin.interceptors.AdminAuthInterceptor;
@@ -12,6 +12,7 @@ import org.blue.webframework.web.admin.interceptors.CSRFInterceptor;
 import org.blue.webframework.web.admin.tag.PrivilegeDialect;
 import org.blue.webframework.web.admin.tag.SpringDialect;
 import org.blue.webframework.web.webapi.interceptors.SecureInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.DateFormatter;
@@ -58,10 +59,11 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 	public SpringTemplateEngine thymeleafEngine() {
 		SpringTemplateEngine springTemplateEngine = new SpringTemplateEngine();
 		springTemplateEngine.setDialect(new SpringDialect());
-		springTemplateEngine.addDialect(new PrivilegeDialect());
+		springTemplateEngine.addDialect(new PrivilegeDialect(privilegeService));
 
 		springTemplateEngine.setEnableSpringELCompiler(true);
 		springTemplateEngine.setTemplateResolver(templateResolver());
+		
 		return springTemplateEngine;
 	}
 
@@ -70,6 +72,7 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 		ThymeleafViewResolver thymeleafViewResolver = new ThymeleafViewResolver() ;
 		thymeleafViewResolver.setTemplateEngine(thymeleafEngine());
 		thymeleafViewResolver.setViewNames(new String[] { "*.html", "*.xhtml" });
+		thymeleafViewResolver.setCache(false);
 		return thymeleafViewResolver;
 	}
 
@@ -79,6 +82,7 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 		templateResolver.setPrefix("/WEB-INF/thymeleaf/");
 		templateResolver.setSuffix(".html");
 		templateResolver.setTemplateMode("HTML5");
+		templateResolver.setCacheable(false);
 		return templateResolver;
 
 	}
@@ -143,15 +147,15 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 		return lci;
 	}
 
+	@Autowired
+	private BlueExceptionHandler blueExceptionHandler;
+	
 	@Override
 	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
 
-		resolvers.add(exceptionHandlerExceptionResolver());
+		resolvers.add(blueExceptionHandler);
 		// resolvers.add(new BlueExceptionHandler());
 	}
 
-	@Bean
-	public BlueExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver() {
-		return new BlueExceptionHandlerExceptionResolver();
-	}
+
 }

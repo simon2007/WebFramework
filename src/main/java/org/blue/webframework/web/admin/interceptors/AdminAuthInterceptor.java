@@ -23,7 +23,7 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		logger.info("request请求地址path[" + request.getServletPath() + "] uri[" + request.getRequestURI() + "]");
+		//logger.info("request请求地址path[" + request.getServletPath() + "] uri[" + request.getRequestURI() + "]");
 
 	}
 
@@ -31,7 +31,7 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String servletPath=request.getServletPath();
-		logger.info("request preHandle请求地址path[" + servletPath + "] uri[" + request.getRequestURI() + "]");
+		logger.info("path[" + servletPath + "] uri[" + request.getRequestURI() + "]");
 		HttpSession session = request.getSession();
 		Long userId = ServerHelper.getCurrentAccountId(session);
 		Long roleId = ServerHelper.getCurrentRoleId(session);
