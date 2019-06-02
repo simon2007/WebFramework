@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.blue.webframework.sys.email.service.EmailService;
 import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
 import org.blue.webframework.sys.template.service.TemplateService;
-
+import org.blue.webframework.utils.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,10 @@ class EmailServiceImpl implements EmailService{
 	@Autowired
 	private TemplateService templateService;
 	
-	
+	private boolean isEmailEnabled()
+	{
+		return siteParameterService.getParamValue("smtp_enabled",false);
+	}
 	
 	
 	private Session getMailSession()
@@ -98,24 +101,45 @@ class EmailServiceImpl implements EmailService{
 	 */
 	@Override
 	public void sendEmailNew( String subject, String content,String... mutliTo) {
+		if(!isEmailEnabled())return;
 		if(mutliTo == null || mutliTo.length<=0)
 		{
-			logger.info("mutliTo is empty, use errorMailTo");
-			mutliTo = siteParameterService.getParamValue("errorMailTo", "simon2007@163.com").split(",");
+			logger.error("mutliTo is empty, use errorMailTo");
+			return;
 		}
 		sendEmail(mutliTo,subject,content);
 	}
 
 	@Override
 	public void sendEmailWithModelAndView(String[] mutliTo, String subject, String viewName, Map<String, Object> data) {
+		if(!isEmailEnabled())return;
 		String content=templateService.processViewTemplate(viewName, data);
 		sendEmail(mutliTo,subject,content);
 	}
 
 	@Override
 	public void sendEmailWithUrl(String[] mutliTo, String subject, String url, Map<String, Object> data) {
+		if(!isEmailEnabled())return;
 		String content=templateService.processUrlTemplate(url, data);
 		sendEmail(mutliTo,subject,content);
+		
+	}
+
+
+	@Override
+	public void sendErrorEmail(String subject, String content, String... mutliTo) {
+		if(!isEmailEnabled())return;
+		if(mutliTo == null || mutliTo.length<=0)
+		{
+			logger.error("mutliTo is empty, use errorMailTo");
+			String errorMailTo=siteParameterService.getParamValue("errorMailTo","");
+			if(errorMailTo == null || StringHelper.isBlank(errorMailTo))
+				return;
+			mutliTo = errorMailTo.split(",");
+		}
+		sendEmail(mutliTo,subject,content);
+
+
 		
 	}
 	

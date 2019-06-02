@@ -151,7 +151,7 @@ public class BlueExceptionHandler extends ExceptionHandlerExceptionResolver
 				InetAddress addr = InetAddress.getLocalHost();
 				subject += ",ip:" + addr.getHostAddress().toString();// 获得本机IP
 				subject += ",name:" + addr.getHostName().toString();// 获得本机IP
-				emailService.sendEmailNew(subject, msg.replace("\n\r", "<br/>").replace(" ", "&nbsp;"));
+				emailService.sendErrorEmail(subject, msg.replace("\n\r", "<br/>").replace(" ", "&nbsp;"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -169,7 +169,7 @@ public class BlueExceptionHandler extends ExceptionHandlerExceptionResolver
 
 			reportLogMessage(exception, request, null);
 			if (handlerMethod == null)
-				return super.doResolveException(request, response, handlerMethod, exception);
+				return super.doResolveHandlerMethodException(request, response, handlerMethod, exception);
 
 			Method method = handlerMethod.getMethod();
 			if (method == null)
@@ -261,7 +261,7 @@ public class BlueExceptionHandler extends ExceptionHandlerExceptionResolver
 		}
 
 		// 默认处理页面
-		ModelAndView modelAndView = new ModelAndView("/common/500");
+		ModelAndView modelAndView = new ModelAndView("/error");
 		modelAndView.addObject("exception", exception);
 		if (exception instanceof BaseException) {
 			BaseException baseException = (BaseException) exception;

@@ -106,4 +106,12 @@ public interface SiteParameterService {
 
 	Page<SiteParameterVo> getParametersAsPage(String value,int page,int pageSize);
 	void recreateTable();
+
+	/**
+	 * 获取参数
+	 * @param paramName
+	 * @param defaultValue
+	 * @return
+	 */
+	public boolean getParamValue(String paramName, boolean defaultValue);
 }

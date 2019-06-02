@@ -10,12 +10,16 @@ import org.blue.webframework.utils.ServerHelper;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * 拦截器
+ */
 public class AdminAuthInterceptor implements HandlerInterceptor {
+	//log4j日志
 	private final Logger logger = Logger.getLogger(AdminAuthInterceptor.class);
-
-
+	
+	
 	private final PrivilegeService privilegeService;
-
+	
 	public AdminAuthInterceptor(PrivilegeService privilegeService) {
 		this.privilegeService=privilegeService;
 	}
@@ -35,16 +39,21 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 		Long userId = ServerHelper.getCurrentAccountId(session);
 		Long roleId = ServerHelper.getCurrentRoleId(session);
+		
+		//判断用户是否登录
 		if (userId == null || userId <= 0) {
 			session.setAttribute("msg", "请重新登录");
 			response.sendRedirect(request.getContextPath()+"/admin/login");
+			//拦截
 			return false;
 		}
 		
+		//判断账户是否有权限
 		if(!privilegeService.hasAccountPermissionWithName(userId, "read", servletPath) && ! privilegeService.hasRolePermissionWithName(roleId, "read", servletPath))
 		{
 			session.setAttribute("msg", "没有权限访问");
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "没有权限访问");
+			//拦截
 			return false;
 		}
 

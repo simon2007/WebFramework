@@ -7,7 +7,7 @@
 		<result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
 		<result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
 		<result column="DESC" property="desc" jdbcType="VARCHAR" />
-		<result column="REMOVE_TAG" property="removeTag" jdbcType="Bit" />
+		<result column="REMOVE_TAG" property="removeTag" jdbcType="BIT" />
 		<result column="Account_ID" property="accountId" jdbcType="VARCHAR" />
 		<result column="ADD_DATE" property="addDate" jdbcType="TIMESTAMP" />
 
@@ -68,7 +68,7 @@
 		)
 		values (#{name,jdbcType=VARCHAR},
 		#{fileType,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR},
-		#{removeTag,jdbcType=BIT}, #{AccountId,jdbcType=BigInt},
+		#{removeTag,jdbcType=BIT}, #{AccountId,jdbcType=BIGINT},
 		#{addDate,jdbcType=TIMESTAMP}
 		)
 	</insert>
@@ -184,7 +184,7 @@
 		`file_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		`file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		`file_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-		`add_date` TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+		`add_date` TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
 		`desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		`account_id` bigint(20) NULL DEFAULT NULL,
 		`remove_tag` bit(1) NULL DEFAULT b'1',

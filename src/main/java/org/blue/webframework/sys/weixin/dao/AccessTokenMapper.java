@@ -32,4 +32,8 @@ public interface AccessTokenMapper {
 	    void deleteOldAccesstoken();
 
 		String getAppIdByAccessToken(String accessToken);
+		
+		int dropTable();
+		int truncateTable();
+		int createTable();
 	}

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.blue.webframework.sys.weixin.dao.AccessTokenMapper">
-    <!-- 
-CREATE TABLE `test`.`accesstoken` (
-  `id` INT(4) auto_increment ,
-  `token` VARCHAR(160) NULL,
-  `expirestime` TIMESTAMP NULL,
-  `addtime` TIMESTAMP NULL,
-  `appId` VARCHAR(32) NULL,
-  PRIMARY KEY (`id`))
-COMMENT = 'id';token-->
-
   <resultMap id="BaseResultMap" type="org.blue.webframework.sys.weixin.model.AccessToken">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="token" jdbcType="VARCHAR" property="token" />
@@ -118,4 +108,26 @@ COMMENT = 'id';token-->
     where token=#{accessToken,jdbcType=VARCHAR} order by expirestime desc limit 1
   </select>
 
+
+	<update id="dropTable">
+		DROP TABLE IF EXISTS `accesstoken`
+	</update>
+
+	<update id="truncateTable">
+		truncate table `accesstoken`
+	</update>
+
+	<update id="createTable">
+
+		CREATE TABLE `accesstoken` (
+  `id` INT(4) auto_increment ,
+  `token` VARCHAR(160) NULL,
+  `expirestime` TIMESTAMP NULL,
+  `addtime` TIMESTAMP NULL default CURRENT_TIMESTAMP(0),
+  `appId` VARCHAR(32) NULL,
+  PRIMARY KEY (`id`))
+		) ENGINE = InnoDB AUTO_INCREMENT		= 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
+		= Dynamic;
+
+	</update>
 </mapper>

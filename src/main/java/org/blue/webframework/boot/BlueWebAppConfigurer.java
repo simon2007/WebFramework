@@ -1,6 +1,9 @@
 package org.blue.webframework.boot;
 
+import java.util.HashMap;
+
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -20,19 +23,26 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafView;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 
 public class BlueWebAppConfigurer implements WebMvcConfigurer {
-
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**").allowedOrigins("*").allowCredentials(true).maxAge(3600);
+	}
+	
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
@@ -71,18 +81,35 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 	public ThymeleafViewResolver thymeleafViewResolver() {
 		ThymeleafViewResolver thymeleafViewResolver = new ThymeleafViewResolver() ;
 		thymeleafViewResolver.setTemplateEngine(thymeleafEngine());
+		thymeleafViewResolver.setCharacterEncoding("UTF-8");
 		thymeleafViewResolver.setViewNames(new String[] { "*.html", "*.xhtml" });
-		thymeleafViewResolver.setCache(false);
+		thymeleafViewResolver.setCache(true);
+		
+		Map<String, Object> oldStaticVariables = thymeleafViewResolver.getStaticVariables();
+        Map<String, Object> staticVariables =new HashMap<String,Object>(oldStaticVariables);
+        staticVariables.put("global", createGlobal());
 		return thymeleafViewResolver;
+	}
+	
+	protected Object createGlobal()
+	{
+		return new HashMap<String,Object>();
 	}
 
 	@Bean
 	public SpringResourceTemplateResolver templateResolver() {
 		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-		templateResolver.setPrefix("/WEB-INF/thymeleaf/");
+		String url=getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+
+		if(url.contains(".jar") )
+			templateResolver.setPrefix("classpath:/META-INF/resources/WEB-INF/thymeleaf/");
+		else
+			templateResolver.setPrefix("/WEB-INF/thymeleaf/");
+		
 		templateResolver.setSuffix(".html");
-		templateResolver.setTemplateMode("HTML5");
-		templateResolver.setCacheable(false);
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setCharacterEncoding("UTF-8");
+		templateResolver.setCacheable(true);
 		return templateResolver;
 
 	}
@@ -94,7 +121,6 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-
 		registry.addResourceHandler("/images/**").addResourceLocations("/static/images/");
 		registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
 		registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
@@ -128,11 +154,12 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 	}
 
 	@Resource
-	private PrivilegeService privilegeService;
+	protected PrivilegeService privilegeService;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		// 可添加多个
+
+		//可添加多个
 		registry.addInterceptor(new AdminAuthInterceptor(privilegeService)).addPathPatterns("/admin/**")
 				.excludePathPatterns("/admin/login");
 		registry.addInterceptor(new CSRFInterceptor()).addPathPatterns("/admin/**");

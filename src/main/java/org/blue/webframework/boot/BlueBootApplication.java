@@ -10,6 +10,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.plugin.Interceptor;
+import org.blue.webframework.exception.BaseException;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -146,11 +147,7 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 	
     @Bean
     public ResourceBundleMessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("messages","error");
-        messageSource.setDefaultEncoding("utf-8");
-
-		return messageSource;
+		return BaseException.messageSource();
 
     }
 }

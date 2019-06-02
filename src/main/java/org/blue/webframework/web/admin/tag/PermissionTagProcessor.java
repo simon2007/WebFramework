@@ -35,10 +35,10 @@ public class PermissionTagProcessor extends AbstractElementTagProcessor {
 
 		Long roleId = ServerHelper.getCurrentRoleId();
 		Long accountId = ServerHelper.getCurrentAccountId();
-		String resource = tag.getAttributeValue("resource");
+		String code = tag.getAttributeValue("code");
 		String action = tag.getAttributeValue("action");
 
-		if (!privilegeService.hasAccountPermission(accountId, action, resource) && ! privilegeService.hasRolePermission(roleId, action, resource))
+		if (!privilegeService.hasAccountPermission(accountId, action, code) && ! privilegeService.hasRolePermission(roleId, action, code))
 			structureHandler.removeElement();
 		else
 			structureHandler.removeTags();

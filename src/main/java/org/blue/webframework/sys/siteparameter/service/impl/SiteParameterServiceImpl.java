@@ -59,7 +59,7 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	@Override
 	public String getParamValue(String paramName, String defaultValue) {
 		String value = siteParameterMapper.getParamValueByName(paramName);
-		if(StringHelper.isBlank(value))
+		if (StringHelper.isBlank(value))
 			return defaultValue;
 		return value;
 	}
@@ -99,6 +99,7 @@ class SiteParameterServiceImpl implements SiteParameterService {
 			throw new BusinessException("0011");
 
 	}
+
 	/**
 	 * 将SiteParameterVo 转化成 SiteParameter.
 	 * 
@@ -116,7 +117,7 @@ class SiteParameterServiceImpl implements SiteParameterService {
 		siteParameterVo.setValue(siteParameter.getValue());
 		return siteParameterVo;
 	}
-	
+
 	/**
 	 * 将SiteParameterVo 转化成 SiteParameter.
 	 * 
@@ -178,7 +179,6 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	public Date getParamValue(String paramName, Date defaultValue) {
 		String value = getParamValue(paramName, (String) null);
 
-
 		if (StringHelper.isBlank(value))
 			return defaultValue;
 		try {
@@ -201,23 +201,24 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	}
 
 	@Override
-	public void putParamValue(String paramName, int value,String comment) {
-		putParamValue(paramName,String.valueOf(value),comment);
+	public void putParamValue(String paramName, int value, String comment) {
+		putParamValue(paramName, String.valueOf(value), comment);
 	}
-	
+
 	@Override
 	public void putParamValue(String paramName, int value) {
-		putParamValue(paramName,String.valueOf(value));
+		putParamValue(paramName, String.valueOf(value));
 	}
 
 	@Override
-	public void putParamValue(String paramName, long value,String comment) {
-		putParamValue(paramName,String.valueOf(value),comment);
+	public void putParamValue(String paramName, long value, String comment) {
+		putParamValue(paramName, String.valueOf(value), comment);
 
 	}
+
 	@Override
 	public void putParamValue(String paramName, long value) {
-		putParamValue(paramName,String.valueOf(value));
+		putParamValue(paramName, String.valueOf(value));
 
 	}
 
@@ -237,7 +238,7 @@ class SiteParameterServiceImpl implements SiteParameterService {
 	}
 
 	@Override
-	public void putParamValue(String paramName, String value,String comment) {
+	public void putParamValue(String paramName, String value, String comment) {
 		SiteParameter siteParameter = siteParameterMapper.selectByName(paramName);
 		if (siteParameter == null) {
 			siteParameter = new SiteParameter();
@@ -252,23 +253,31 @@ class SiteParameterServiceImpl implements SiteParameterService {
 			siteParameterMapper.updateByPrimaryKeySelective(siteParameter);
 		}
 	}
-	
+
 	@Override
 	public void putParamValue(String paramName, Date value) {
-		putParamValue(paramName,StringHelper.toString(value));
+		putParamValue(paramName, StringHelper.toString(value));
 
 	}
 
 	@Override
-	public void putParamValue(String paramName, Date value,String comment) {
-		putParamValue(paramName,StringHelper.toString(value),comment);
+	public void putParamValue(String paramName, Date value, String comment) {
+		putParamValue(paramName, StringHelper.toString(value), comment);
 
 	}
-	
+
 	@Override
-	public Page<SiteParameterVo> getParametersAsPage(String value,int page, int pageSize) {
+	public Page<SiteParameterVo> getParametersAsPage(String value, int page, int pageSize) {
 		PageHelper.startPage(page, pageSize);
 		return siteParameterMapper.selectList(value);
+	}
+
+	@Override
+	public boolean getParamValue(String paramName, boolean defaultValue) {
+		String value = getParamValue(paramName, (String) null);
+		if (StringHelper.isBlank(value))
+			return defaultValue;
+		return Boolean.parseBoolean(value);
 	}
 
 }

@@ -11,4 +11,7 @@ public interface WeixinUserMapper {
 
 	    WeixinUser selectByUnionIdAndAppId(@Param("appId")String appId,@Param("unionId")String unionId);
 	    WeixinUser selectByOpenIdAndAppId(@Param("appId")String appId,@Param("openId")String openId);
+		int dropTable();
+		int truncateTable();
+		int createTable();
 	}

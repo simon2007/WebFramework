@@ -100,7 +100,7 @@
 				nickName = #{nickName,jdbcType=VARCHAR},
 			</if>
 			<if test="sex != null">
-				sex = #{sex,jdbcType=TIMESTAMP},
+				sex = #{sex,jdbcType=BIT},
 			</if>
 			<if test="province != null">
 				province = #{province,jdbcType=TIMESTAMP},
@@ -124,4 +124,25 @@
 		#{appId,jdbcType=VARCHAR}
 	</update>
 
+	<update id="dropTable">
+		DROP TABLE IF EXISTS `weixinuser`
+	</update>
+
+	<update id="truncateTable">
+		truncate table `weixinuser`
+	</update>
+
+	<update id="createTable">
+
+		CREATE TABLE `weixinuser` (
+  `id` INT(4) auto_increment ,
+  `nickName` VARCHAR(160) NULL,
+  `sex` BIT(1) NULL,
+  `addtime` TIMESTAMP NULL default CURRENT_TIMESTAMP(0),
+  `appId` VARCHAR(32) NULL,
+  PRIMARY KEY (`id`))
+		) ENGINE = InnoDB AUTO_INCREMENT		= 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
+		= Dynamic;
+
+	</update>
 </mapper>

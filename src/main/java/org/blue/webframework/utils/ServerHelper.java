@@ -67,7 +67,7 @@ public class ServerHelper {
 		return request.getSession();
 	}
 
-	public static final String CurrentAccountKey = "currentAccount";
+	public static final String CurrentAccountKey = "__currentAccount__";
 
 	public static Long getCurrentAccountId() {
 		HttpSession session = getSession();
@@ -83,6 +83,11 @@ public class ServerHelper {
 		return account;
 	}
 
+	/**
+	 * 从session中获取用户数据
+	 * @param session
+	 * @return 用户id
+	 */
 	public static Long getCurrentAccountId(HttpSession session) {
 		AccountVo account = getCurrentAccount(session);
 		if (account == null)

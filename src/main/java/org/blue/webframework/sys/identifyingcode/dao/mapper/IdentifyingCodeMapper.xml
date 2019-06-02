@@ -108,7 +108,7 @@ CREATE TABLE `th_identifying_code`  (
   `identifying_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `alive_time` int(11) NULL DEFAULT NULL,
-  `add_time` timestamp(0) NULL DEFAULT NULL,
+  `add_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
   `alive_flag` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `user_id` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`identifying_code_id`) USING BTREE,

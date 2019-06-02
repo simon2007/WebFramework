@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.blue.webframework.sys.account.dao.AccountMapper">
+	<!-- 启用缓存 -->
+	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.Account">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="group_id" property="groupId" jdbcType="BIGINT" />
@@ -9,37 +11,44 @@
 		<result column="openId" property="openId" jdbcType="VARCHAR" />
 		<result column="enable" property="enable" jdbcType="BIT" />
 		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, group_id, name,
-		openId,enable,password,role_id
+		openId,enable,password,role_id,avatar,created_time
 	</sql>
+
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
 		from account
 		where id = #{id,jdbcType=BIGINT}
 	</select>
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from
 		account
 		where id =
 		#{id,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.Account" useGeneratedKeys="true"
-		keyProperty="id">
-		insert into account (group_id,
-		name,
-		openId,
-		password,enable,role_id
-		)
-		values (
+
+	<!-- 插入用户数据 -->
+	<!-- int insert(Account account) -->
+	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.Account" useGeneratedKeys="true" keyProperty="id">
+		insert into account (
+		group_id,name,
+		openId,password,
+		enable,role_id,
+		avatar
+		)values (
 		#{groupId,jdbcType=BIGINT},#{name,jdbcType=VARCHAR},
-		#{openId,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
-		,#{enable,jdbcType=BIT},#{roleId,jdbcType=BIGINT})
+		#{openId,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
+		#{enable,jdbcType=BIT},#{roleId,jdbcType=BIGINT},
+		#{avatar,jdbcType=VARCHAR})
 	</insert>
-	<insert id="insertSelective" parameterType="org.blue.webframework.sys.account.model.Account"
-		useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="insertSelective" parameterType="org.blue.webframework.sys.account.model.Account" useGeneratedKeys="true" keyProperty="id">
 		insert into account
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="groupId >0">
@@ -56,7 +65,10 @@
 			</if>
 			enable,
 			<if test="roleId > 0">
-				role_id
+				role_id,
+			</if>
+			<if test="avatar !=null">
+				avatar
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -72,12 +84,16 @@
 			<if test="password != null">
 				#{password,jdbcType=VARCHAR},
 			</if>
-			#{enable,jdbcType=BIT},
+				#{enable,jdbcType=BIT},
 			<if test="roleId > 0">
-				#{roleId,jdbcType=BIGINT}
+				#{roleId,jdbcType=BIGINT},
+			</if>
+			<if test="avatar !=null">
+				#{avatar,jdbcType=VARCHAR}
 			</if>
 		</trim>
 	</insert>
+	
 	<update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.Account">
 		update account
 		<set>
@@ -96,10 +112,14 @@
 			<if test="roleId > 0">
 				role_id=#{roleId,jdbcType=BIGINT},
 			</if>
+			<if test="avatar !=null">
+				avatar=#{avatar,jdbcType=VARCHAR},
+			</if>
 			enable=#{enable,jdbcType=BIT}
 		</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
+	
 	<update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.account.model.Account">
 		update account
 		set
@@ -108,10 +128,12 @@
 		openId=#{openId,jdbcType=VARCHAR},
 		password=#{password,jdbcType=VARCHAR},
 		enable=#{enable,jdbcType=BIT},
-		role_id=#{roleId,jdbcType=BIGINT}
+		role_id=#{roleId,jdbcType=BIGINT},
+		avatar=#{avatar,jdbcType=VARCHAR}
 		where id =
 		#{id,jdbcType=BIGINT}
 	</update>
+	
 	<update id="setEnable">
 		update account
 		set
@@ -126,31 +148,36 @@
 		#{id,jdbcType=BIGINT}
 	</select>
 
-	<select id="selectAll" resultMap="BaseResultMap"
-		parameterType="org.blue.webframework.sys.account.model.Account">
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="org.blue.webframework.sys.account.model.Account">
 		select
 		<include refid="Base_Column_List" />
 		from account
 		<where>
 			<if test="groupId >0">
-				group_id=#{groupId,jdbcType=BIGINT}
+				group_id=#{groupId,jdbcType=BIGINT},
 			</if>
 			<if test="name != null">
-				and name=#{name,jdbcType=VARCHAR}
+				and name=#{name,jdbcType=VARCHAR},
 			</if>
 			<if test="openId != null">
-				and openId=#{openId,jdbcType=VARCHAR}
+				and openId=#{openId,jdbcType=VARCHAR},
 			</if>
 			<if test="password != null">
-				and password=#{password,jdbcType=VARCHAR}
+				and password=#{password,jdbcType=VARCHAR},
 			</if>
 			<if test="roleId > 0">
 				and role_id=#{roleId,jdbcType=BIGINT},
+			</if>
+			<if test="avatar !=null">
+				and avatar=#{avatar,jdbcType=VARCHAR},
 			</if>
 			and enable=#{enable,jdbcType=BIT}
 		</where>
 	</select>
 
+	<!-- 根据用户名和密码查询用户数据 -->
+	<!-- 应用于：登录，重置密码 -->
+	<!-- Account getByNameAndPassword(@Param("name")String name,@Param("password") String password); -->
 	<select id="getByNameAndPassword" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -162,28 +189,37 @@
 		and enable=1
 
 	</select>
-	
+
+	<!-- 删除表account用户表 -->
+	<!-- int dropTable() -->
 	<update id="dropTable">
 		DROP TABLE IF EXISTS `account`
 	</update>
-	
+
+	<!-- 清空account表 -->
+	<!-- int truncateTable()-->
 	<update id="truncateTable">
-        truncate table `account`
-    </update>
-    
+		truncate table `account`
+	</update>
+
+	<!-- 创建（更新）account 表 -->
+	<!-- int createTable();-->
 	<update id="createTable">
-CREATE TABLE `account`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `group_id` bigint(20) NULL DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `openId` varchar(11) NULL DEFAULT NULL,
-  `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `role_id` bigint(20) NULL DEFAULT NULL,
-  `enable` bit(1) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `f_roleId_groupId`(`group_id`, `role_id`) USING BTREE,
-  INDEX `f_openid`(`openId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
-	
+		CREATE TABLE `account` (
+		`id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '用户id',
+		`group_id` bigint(10) NULL DEFAULT NULL COMMENT '用户组id',
+		`role_id` bigint(10) NULL DEFAULT NULL COMMENT '角色id',
+		`name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录名',
+		`password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
+		`openId` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信的openid',
+		`enable` bit(1) NULL DEFAULT NULL COMMENT '是否启用',
+		`avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',
+		`created_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+		PRIMARY KEY (`id`) USING BTREE,
+		INDEX `f_roleId_groupId`(`group_id`, `role_id`) USING BTREE COMMENT '权限检查',
+		INDEX `f_openid`(`openId`) USING BTREE COMMENT '微信登录',
+		INDEX `f_usernamePassword`(`name`, `password`) USING BTREE COMMENT '登录'
+		) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
 	</update>
 </mapper>

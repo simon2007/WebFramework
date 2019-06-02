@@ -3,8 +3,7 @@
 <mapper namespace="org.blue.webframework.sys.account.dao.AccountResourceMapper">
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
-	<resultMap id="BaseResultMap"
-		type="org.blue.webframework.sys.account.model.AccountResource">
+	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.AccountResource">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="account_id" property="accountId" jdbcType="BIGINT" />
 		<result column="resource_id" property="resourceId" jdbcType="BIGINT" />
@@ -25,14 +24,13 @@
 		where id =
 		#{id,jdbcType=BIGINT}
 	</delete>
-	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.AccountResource"
-		useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.AccountResource" useGeneratedKeys="true" keyProperty="id">
 		insert into account_resource ( role_id, resource_id,operate)
-		values (#{roleId,jdbcType=BIGINT},#{resourceId,jdbcType=BIGINT},#{operate,jdbcType=VARCHAR})
+		values
+		(#{roleId,jdbcType=BIGINT},#{resourceId,jdbcType=BIGINT},#{operate,jdbcType=VARCHAR})
 	</insert>
 
-	<update id="updateByPrimaryKeySelective"
-		parameterType="org.blue.webframework.sys.account.model.AccountResource">
+	<update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.AccountResource">
 		update account_resource
 		<set>
 			<if test="roleId != null">
@@ -62,7 +60,8 @@
 		resource on resource.id = account_resource.resource_id
 		where
 		resource.code=#{resourceCode,jdbcType=VARCHAR}
-		and operate=#{operate,jdbcType=VARCHAR}
+		and
+		operate=#{operate,jdbcType=VARCHAR}
 		and account_id
 		= #{accountId,jdbcType=BIGINT}
 	</select>
@@ -72,7 +71,8 @@
 		resource on resource.id = account_resource.resource_id
 		where account_id =
 		#{accountId,jdbcType=BIGINT}
-		and operate=#{operate,jdbcType=VARCHAR}
+		and
+		operate=#{operate,jdbcType=VARCHAR}
 		and
 		#{resourceName,jdbcType=VARCHAR} like CONCAT(resource.name,'.%')
 	</select>
@@ -95,13 +95,11 @@
 
 	<update id="createTable">
 		CREATE TABLE `account_resource` (
-		`id` bigint(20) NOT NULL AUTO_INCREMENT,
-		`account_id` bigint(20) NULL DEFAULT NULL,
-		`resource_id` bigint(20) NULL DEFAULT NULL,
-		`operate`
-		varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-		PRIMARY KEY (`id`)
-		USING BTREE
+		`id` bigint(10) NOT NULL AUTO_INCREMENT,
+		`account_id` bigint(10) NULL DEFAULT NULL COMMENT '账户id',
+		`resource_id` bigint(10) NULL DEFAULT NULL COMMENT '资源id',
+		`operate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作',
+		PRIMARY KEY (`id`) USING BTREE
 		) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci
 		ROW_FORMAT
 		= Dynamic;

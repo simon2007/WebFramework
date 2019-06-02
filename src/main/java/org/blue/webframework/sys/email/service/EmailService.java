@@ -32,7 +32,25 @@ public interface EmailService {
 	* @param subject 邮件标题
 	* @param content 邮件内容
 	 */
+	public void sendErrorEmail( String subject, String content,String... mutliTo);
+	
+	/**
+	* @Title: 根据模板名称发送 
+	* @Description: 进行邮件发送的方法
+	* @Date: Aug 5, 2014 4:27:34 PM
+	* @param mutliTo controler中传递过来的String数组
+	* 				 包括关于邮件发送的一系列数据
+	* @param subject 邮件标题
+	* @param content 邮件内容
+	 */
 	public void sendEmailWithModelAndView(String[] mutliTo, String subject, String viewName,Map<String,Object> data);
 	
+	/**
+	 * 根据本地url解析之后发送
+	 * @param mutliTo 接收者
+	 * @param subject 标题
+	 * @param url url
+	 * @param data 数据
+	 */
 	public void sendEmailWithUrl(String[] mutliTo, String subject, String url,Map<String,Object> data);
 }

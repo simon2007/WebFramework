@@ -137,18 +137,15 @@
 	<update id="createTable">
 
 		CREATE TABLE `site_parameter` (
-		`id` int(11) NOT NULL
-		AUTO_INCREMENT,
-		`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL
-		DEFAULT NULL,
-		`value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL
-		DEFAULT NULL,
-		`comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL
-		DEFAULT NULL,
+		`id` int(11) NOT NULL		AUTO_INCREMENT,
+		`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL		DEFAULT NULL,
+		`value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL		DEFAULT NULL,
+		`comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL		DEFAULT NULL,
+		`createTime` timestamp(0) NULL default CURRENT_TIMESTAMP(0),
+		`updateTime` timestamp(0) NULL default CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
 		`REMOVE_TAG` bit(1) NULL DEFAULT 0,
 		PRIMARY KEY (`id`) USING BTREE,
-		INDEX
-		`name_value`(`name`, `value`, `REMOVE_TAG`) USING BTREE
+		INDEX		`name_value`(`name`, `value`, `REMOVE_TAG`) USING BTREE
 		) ENGINE = InnoDB AUTO_INCREMENT
 		= 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
 		= Dynamic;

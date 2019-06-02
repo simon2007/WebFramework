@@ -1,6 +1,12 @@
 package org.blue.webframework.sys.account.model;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private String name;
 	private boolean enable;

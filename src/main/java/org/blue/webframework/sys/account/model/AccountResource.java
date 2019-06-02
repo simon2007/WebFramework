@@ -1,6 +1,12 @@
 package org.blue.webframework.sys.account.model;
 
-public class AccountResource {
+import java.io.Serializable;
+
+public class AccountResource implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private long accountId;
 	private String operate;

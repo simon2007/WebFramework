@@ -34,6 +34,7 @@ class ResourceServiceImpl implements ResourceService{
 
 	private Resource vo2Model(ResourceVo resoureVo) {
 		Resource resource = new Resource();
+		System.err.println(resoureVo.getId());
 		resource.setId(resoureVo.getId());
 		resource.setName(resoureVo.getName());
 		resource.setCode(resoureVo.getCode());
@@ -42,18 +43,19 @@ class ResourceServiceImpl implements ResourceService{
 		return resource;
 	}
 
-	
+
 	@Override
 	public void add(ResourceVo resourceVo) {
 		Resource resource=vo2Model(resourceVo);
 		resourceMapper.insert(resource);
+		System.err.println(resource.getId());
 		resourceVo.setId(resource.getId());
 	}
 
 	@Override
 	public ResourceVo selectById(Long id) {
 		Resource resource=resourceMapper.selectByPrimaryKey(id);
-		
+
 		return model2Vo(resource);
 	}
 

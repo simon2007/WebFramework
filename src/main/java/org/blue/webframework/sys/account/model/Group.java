@@ -1,6 +1,12 @@
 package org.blue.webframework.sys.account.model;
 
-public class Group {
+import java.io.Serializable;
+
+public class Group implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private String name;
 	private boolean enable;

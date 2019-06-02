@@ -21,6 +21,11 @@ public class BusinessException extends BaseException {
 
 	}
 
+	public BusinessException(String code,Object[] args) {
+		super(code,args);
+
+	}
+	
 	/**
 	 * 
 	 * @param code
@@ -31,4 +36,8 @@ public class BusinessException extends BaseException {
 
 	}
 	
+	public BusinessException(String code,Object[] args,Exception e) {
+		super(code,args,e);
+
+	}
 }
