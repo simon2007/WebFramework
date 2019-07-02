@@ -37,8 +37,8 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
 		String servletPath=request.getServletPath();
 		logger.info("path[" + servletPath + "] uri[" + request.getRequestURI() + "]");
 		HttpSession session = request.getSession();
-		Long userId = ServerHelper.getCurrentAccountId(session);
-		Long roleId = ServerHelper.getCurrentRoleId(session);
+		Integer userId = ServerHelper.getCurrentAccountId(session);
+		Integer roleId = ServerHelper.getCurrentRoleId(session);
 		
 		//判断用户是否登录
 		if (userId == null || userId <= 0) {

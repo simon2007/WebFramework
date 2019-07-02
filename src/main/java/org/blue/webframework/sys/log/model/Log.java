@@ -3,25 +3,25 @@ package org.blue.webframework.sys.log.model;
 import java.util.Date;
 
 public class Log {
-	private long id;
-	private long userId;
+	private int id;
+	private int accountId;
 	private String content;
 	private Date createtime;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public long getUserId() {
-		return userId;
+	public int getAccountId() {
+		return accountId;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setAccountId(int accountId) {
+		this.accountId = accountId;
 	}
 
 	public String getContent() {

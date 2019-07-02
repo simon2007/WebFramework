@@ -12,14 +12,16 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 /**
  * webapi的json格式
- * @author Long
+ * @author Lilongwu
  *
  */
 public class WebApiResultConverter extends FastJsonHttpMessageConverter {
 
 	public WebApiResultConverter() {
 		FastJsonConfig fastJsonConfig=new FastJsonConfig();
-		fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue);
+		fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullListAsEmpty,SerializerFeature.WriteNullStringAsEmpty);
+
+		fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 		setFastJsonConfig(fastJsonConfig);
 	}
 	

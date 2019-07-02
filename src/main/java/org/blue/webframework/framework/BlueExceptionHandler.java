@@ -15,6 +15,7 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.blue.webframework.exception.BaseException;
+import org.blue.webframework.exception.BusinessException;
 import org.blue.webframework.exception.SystemException;
 import org.blue.webframework.exception.UIException;
 import org.blue.webframework.sys.email.service.EmailService;
@@ -34,7 +35,7 @@ import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 /**
  * 异步异常处理
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class BlueExceptionHandler extends ExceptionHandlerExceptionResolver

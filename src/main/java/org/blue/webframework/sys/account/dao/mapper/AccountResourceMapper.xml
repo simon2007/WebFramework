@@ -4,100 +4,126 @@
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.AccountResource">
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="account_id" property="accountId" jdbcType="BIGINT" />
-		<result column="resource_id" property="resourceId" jdbcType="BIGINT" />
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account_id" property="accountId" jdbcType="INTEGER" />
+		<result column="resource_id" property="resourceId" jdbcType="INTEGER" />
 		<result column="operate" property="operate" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		id, account_id, resource_id,operate
 	</sql>
+
+	<!-- 根据id查询账户资源 -->
+	<!-- AccountResource selectByPrimaryKey(int id) -->
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
 		<include refid="Base_Column_List" />
-		from account_resource
-		where id = #{id,jdbcType=BIGINT}
+		from sys_account_resource
+		where id = #{id,jdbcType=INTEGER}
 	</select>
+
+	<!-- 根据id删除账户资源数据 -->
+	<!-- int deleteByPrimaryKey(int id) -->
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-		delete from account_resource
-		where id =
-		#{id,jdbcType=BIGINT}
+		delete from sys_account_resource
+		where id =#{id,jdbcType=INTEGER}
 	</delete>
+
+	<!-- 插入账户资源数据 -->
+	<!-- int insert(AccountResource accountResource) -->
 	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.AccountResource" useGeneratedKeys="true" keyProperty="id">
-		insert into account_resource ( role_id, resource_id,operate)
+		insert into sys_account_resource ( role_id, resource_id,operate)
 		values
-		(#{roleId,jdbcType=BIGINT},#{resourceId,jdbcType=BIGINT},#{operate,jdbcType=VARCHAR})
+		(#{roleId,jdbcType=INTEGER},#{resourceId,jdbcType=INTEGER},#{operate,jdbcType=VARCHAR})
 	</insert>
 
+	<!-- 根据id修改账户资源数据 -->
+	<!-- int updateByPrimaryKeySelective(AccountResource roleResource) -->
 	<update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.AccountResource">
-		update account_resource
+		update sys_account_resource
 		<set>
 			<if test="roleId != null">
-				role_id=#{roleId,jdbcType=BIGINT},
+				role_id=#{roleId,jdbcType=INTEGER},
 			</if>
 			<if test="resourceId != null">
-				resource_id=#{resourceId,jdbcType=BIGINT},
+				resource_id=#{resourceId,jdbcType=INTEGER},
 			</if>
 			<if test="operate != null">
 				operate=#{operate,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where id = #{id,jdbcType=BIGINT}
+		where id = #{id,jdbcType=INTEGER}
 	</update>
 
+	<!-- 根据账户id查询该账户资源总数  -->
+	<!-- int getCount(@Param("accountId") int accountId,
+	                  @Param("operate")String operate,
+	                  @Param("resourceId")int resourceId) -->
 	<select id="getCount" resultType="java.lang.Integer">
-		select count(1) from account_resource
+		select count(1) from sys_account_resource
 		where
-		resource_id=#{resourceId,jdbcType=BIGINT}
+		resource_id=#{resourceId,jdbcType=INTEGER}
 		and operate=#{operate,jdbcType=VARCHAR}
 		and account_id =
-		#{accountId,jdbcType=BIGINT}
+		#{accountId,jdbcType=INTEGER}
 	</select>
 
+	<!-- 根据资源编码、操作、账户id查询该账户资源总数 -->
+	<!-- int getCountWidthCode(@Param("accountId") int accountId,
+	                           @Param("operate")String operate,
+	                           @Param("resourceCode")String resourceCode) -->
 	<select id="getCountWidthCode" resultType="java.lang.Integer">
-		select count(1) from account_resource inner join
-		resource on resource.id = account_resource.resource_id
+		select count(1) from sys_account_resource inner join
+		sys_resource on sys_resource.id = sys_account_resource.resource_id
 		where
-		resource.code=#{resourceCode,jdbcType=VARCHAR}
+		sys_resource.code=#{resourceCode,jdbcType=VARCHAR}
 		and
 		operate=#{operate,jdbcType=VARCHAR}
-		and account_id
-		= #{accountId,jdbcType=BIGINT}
+		and account_id= #{accountId,jdbcType=INTEGER}
 	</select>
 
+	<!-- 根据账户id、操作、资源名查询该账户资源总数 -->
+	<!-- int getCountWidthName(@Param("accountId")int accountId,
+	                           @Param("operate") String operate,
+	                           @Param("resourceName") String resourceName) -->
 	<select id="getCountWidthName" resultType="java.lang.Integer">
-		select count(1) from account_resource inner join
-		resource on resource.id = account_resource.resource_id
-		where account_id =
-		#{accountId,jdbcType=BIGINT}
+		select count(1) from sys_account_resource inner join
+		sys_resource on sys_resource.id = sys_account_resource.resource_id
+		where account_id =#{accountId,jdbcType=INTEGER}
 		and
 		operate=#{operate,jdbcType=VARCHAR}
 		and
 		#{resourceName,jdbcType=VARCHAR} like CONCAT(resource.name,'.%')
 	</select>
 
+
+	<!-- 根据资源id、操作、账户id删除账户资源数据 -->
+	<!-- int delete(@Param("accountId") int accountId,
+	                @Param("operate")String operate,
+	                @Param("resourceId")int resourceId); -->
 	<delete id="delete">
-		delete account_resource
-		where resource_id=#{resourceId,jdbcType=BIGINT}
+		delete sys_account_resource
+		where resource_id=#{resourceId,jdbcType=INTEGER}
 		and
 		operate=#{operate,jdbcType=VARCHAR}
-		and account_id = #{accountId,jdbcType=BIGINT}
+		and account_id = #{accountId,jdbcType=INTEGER}
 	</delete>
 
+
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `account_resource`
+		DROP TABLE IF EXISTS `sys_account_resource`
 	</update>
 
 	<update id="truncateTable">
-		truncate table `account_resource`
+		truncate table `sys_account_resource`
 	</update>
 
 	<update id="createTable">
-		CREATE TABLE `account_resource` (
-		`id` bigint(10) NOT NULL AUTO_INCREMENT,
-		`account_id` bigint(10) NULL DEFAULT NULL COMMENT '账户id',
-		`resource_id` bigint(10) NULL DEFAULT NULL COMMENT '资源id',
+		CREATE TABLE `sys_account_resource` (
+		`id` int(32) NOT NULL AUTO_INCREMENT,
+		`account_id` int(32) NULL DEFAULT NULL COMMENT '账户id',
+		`resource_id` int(32) NULL DEFAULT NULL COMMENT '资源id',
 		`operate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作',
 		PRIMARY KEY (`id`) USING BTREE
 		) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci

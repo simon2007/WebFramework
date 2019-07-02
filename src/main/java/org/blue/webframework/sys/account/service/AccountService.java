@@ -5,7 +5,7 @@ import org.blue.webframework.sys.account.vo.AccountVo;
 import com.github.pagehelper.Page;
 /**
  * 账户管理接口
- * @author long
+ * @author Lilongwu
  *
  */
 public interface AccountService {
@@ -15,14 +15,14 @@ public interface AccountService {
 	 * @param userId
 	 * @return
 	 */
-	String getOpenIdById(long userId);
+	String getOpenIdById(int userId);
 
 	/**
 	 * 根据用户的id获取用户信息
 	 * @param userId
 	 * @return
 	 */
-	AccountVo getUserById(long userId);
+	AccountVo getUserById(int userId);
 	
 	/**
 	 * 新增用户
@@ -44,14 +44,14 @@ public interface AccountService {
 	 * @param userId
 	 * @return
 	 */
-	int delete(long userId);
+	int delete(int userId);
 	
 	/**
 	  * 启用或者禁用用户
 	 * @param userId
 	 * @param enable
 	 */
-	void setEnable(long userId,boolean enable);
+	void setEnable(int userId,boolean enable);
 	
 	/**
 	 * 获取用户列表，分页显示
@@ -72,9 +72,9 @@ public interface AccountService {
 
 	/**
 	 * 根据用户名和密码获取用户信息
-	 * @param name
-	 * @param password
-	 * @return
+	 * @param name 用户名
+	 * @param password 密码
+	 * @return 用户信息
 	 */
 	AccountVo getByNameAndPassword(String name, String password);
 	
@@ -85,7 +85,7 @@ public interface AccountService {
 	 * @param newPassword
 	 * @return
 	 */
-	int resetPassword(String name, String oldPassword,String newPassword);
+	void resetPassword(String name, String oldPassword,String newPassword);
 	
 	/**
 	 * 创建用户表

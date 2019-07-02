@@ -31,18 +31,24 @@ class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleVo getById(long id) {
+	public RoleVo getById(int id) {
+		//根据id查询的角色信息
 		Role role = roleMapper.selectByPrimaryKey(id);
+		//判断是否为null
 		if (role == null)
 			return null;
+		//非null，返回角色数据
 		return model2Vo(role);
 	}
 
 	@Override
 	public int add(RoleVo roleVo) {
 		Role role = vo2Model(roleVo);
+		//执行添加角色数据
 		int ret= roleMapper.insert(role);
+		//封装角色id
 		roleVo.setId(role.getId());
+
 		return ret;
 	}
 

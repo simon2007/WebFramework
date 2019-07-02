@@ -13,7 +13,7 @@ import org.blue.webframework.sys.weixin.vo.WeixinUserInfoVo;
 /**
  * 微信服务
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public interface WeixinService {
@@ -117,7 +117,7 @@ public interface WeixinService {
 	 * @param msgtype 消息类型
 	 * @param content 消息内容
 	 */
-	void sendCustomMessageByCustId(long userId,String msgtype,JSONObject content);
+	void sendCustomMessageByCustId(int userId,String msgtype,JSONObject content);
 
 	/**
 	 * @param appid appId
@@ -133,7 +133,7 @@ public interface WeixinService {
 	 * @param msgtype 消息类型
 	 * @param msg 消息
 	 */
-	void sendCustomMessageByUserId(String accessToken, long userId, String msgtype, JSONObject msg);
+	void sendCustomMessageByUserId(String accessToken, int userId, String msgtype, JSONObject msg);
 	
 	/**
 	 * 删除过期的token

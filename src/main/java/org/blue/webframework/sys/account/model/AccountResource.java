@@ -7,24 +7,24 @@ public class AccountResource implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private long id;
-	private long accountId;
+	private int id;
+	private int accountId;
 	private String operate;
-	private long resourceId;
+	private int resourceId;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public long getAccountId() {
+	public int getAccountId() {
 		return accountId;
 	}
 
-	public void setAccountId(long accountId) {
+	public void setAccountId(int accountId) {
 		this.accountId = accountId;
 	}
 
@@ -36,11 +36,11 @@ public class AccountResource implements Serializable{
 		this.operate = operate;
 	}
 
-	public long getResourceId() {
+	public int getResourceId() {
 		return resourceId;
 	}
 
-	public void setResourceId(long resourceId) {
+	public void setResourceId(int resourceId) {
 		this.resourceId = resourceId;
 	}
 

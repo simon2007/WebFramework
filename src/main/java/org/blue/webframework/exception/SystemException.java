@@ -2,7 +2,7 @@ package org.blue.webframework.exception;
 
 /**
  * 系统异常，接收到这个异常说明有bug
- * @author Long
+ * @author Lilongwu
  *
  */
 public class SystemException extends BaseException{

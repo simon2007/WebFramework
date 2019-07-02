@@ -4,9 +4,9 @@
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.Account">
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="group_id" property="groupId" jdbcType="BIGINT" />
-		<result column="role_id" property="roleId" jdbcType="BIGINT" />
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="openId" property="openId" jdbcType="VARCHAR" />
 		<result column="enable" property="enable" jdbcType="BIT" />
@@ -19,37 +19,43 @@
 		openId,enable,password,role_id,avatar,created_time
 	</sql>
 
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	<!-- 根据id查询账户数据-->
+	<!-- Account selectByPrimaryKey(int userId) -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
-		from account
-		where id = #{id,jdbcType=BIGINT}
+		from sys_account
+		where id = #{id,jdbcType=INTEGER}
 	</select>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+	<!-- 根据id删除账户数据-->
+	<!-- int deleteByPrimaryKey(int userId); -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from
-		account
+		sys_account
 		where id =
-		#{id,jdbcType=BIGINT}
+		#{id,jdbcType=INTEGER}
 	</delete>
 
 	<!-- 插入用户数据 -->
 	<!-- int insert(Account account) -->
 	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.Account" useGeneratedKeys="true" keyProperty="id">
-		insert into account (
+		insert into sys_account (
 		group_id,name,
 		openId,password,
 		enable,role_id,
 		avatar
 		)values (
-		#{groupId,jdbcType=BIGINT},#{name,jdbcType=VARCHAR},
+		#{groupId,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},
 		#{openId,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
-		#{enable,jdbcType=BIT},#{roleId,jdbcType=BIGINT},
+		#{enable,jdbcType=BIT},#{roleId,jdbcType=INTEGER},
 		#{avatar,jdbcType=VARCHAR})
 	</insert>
 
+	<!-- 插入用户数据 -->
+	<!-- int insert(Account account) -->
 	<insert id="insertSelective" parameterType="org.blue.webframework.sys.account.model.Account" useGeneratedKeys="true" keyProperty="id">
-		insert into account
+		insert into sys_account
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="groupId >0">
 				group_id,
@@ -73,7 +79,7 @@
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="groupId >0">
-				#{groupId,jdbcType=BIGINT},
+				#{groupId,jdbcType=INTEGER},
 			</if>
 			<if test="name != null">
 				#{name,jdbcType=VARCHAR},
@@ -86,19 +92,21 @@
 			</if>
 				#{enable,jdbcType=BIT},
 			<if test="roleId > 0">
-				#{roleId,jdbcType=BIGINT},
+				#{roleId,jdbcType=INTEGER},
 			</if>
 			<if test="avatar !=null">
 				#{avatar,jdbcType=VARCHAR}
 			</if>
 		</trim>
 	</insert>
-	
+
+	<!-- 根据id更新账户数据 -->
+	<!-- int updateByPrimaryKeySelective(Account account) -->
 	<update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.Account">
-		update account
+		update sys_account
 		<set>
 			<if test="groupId >0">
-				group_id=#{groupId,jdbcType=BIGINT},
+				group_id=#{groupId,jdbcType=INTEGER},
 			</if>
 			<if test="name != null">
 				name=#{name,jdbcType=VARCHAR},
@@ -110,51 +118,60 @@
 				password=#{password,jdbcType=VARCHAR},
 			</if>
 			<if test="roleId > 0">
-				role_id=#{roleId,jdbcType=BIGINT},
+				role_id=#{roleId,jdbcType=INTEGER},
 			</if>
 			<if test="avatar !=null">
 				avatar=#{avatar,jdbcType=VARCHAR},
 			</if>
 			enable=#{enable,jdbcType=BIT}
 		</set>
-		where id = #{id,jdbcType=BIGINT}
+		where id = #{id,jdbcType=INTEGER}
 	</update>
-	
+
+	<!-- 根据id更新账户数据 -->
+	<!-- int int updateByPrimaryKey(Account account) -->
 	<update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.account.model.Account">
-		update account
+		update sys_account
 		set
-		group_id=#{groupId,jdbcType=BIGINT},
+		group_id=#{groupId,jdbcType=INTEGER},
 		name=#{name,jdbcType=VARCHAR},
 		openId=#{openId,jdbcType=VARCHAR},
 		password=#{password,jdbcType=VARCHAR},
 		enable=#{enable,jdbcType=BIT},
-		role_id=#{roleId,jdbcType=BIGINT},
+		role_id=#{roleId,jdbcType=INTEGER},
 		avatar=#{avatar,jdbcType=VARCHAR}
 		where id =
-		#{id,jdbcType=BIGINT}
+		#{id,jdbcType=INTEGER}
 	</update>
-	
+
+	<!-- 根据id设置是否启用该账户 -->
+	<!-- int setEnable(@Param("userId") int userId,
+	                   @Param("enable")boolean enable) -->
 	<update id="setEnable">
-		update account
+		update sys_account
 		set
 		enable=#{enable,jdbcType=BIT}
 		where id =
-		#{id,jdbcType=BIGINT}
+		#{id,jdbcType=INTEGER}
 	</update>
 
-	<select id="getOpenIdById" parameterType="java.lang.Long" resultType="java.lang.String">
+	<!-- 根据id查询微信的openid -->
+	<!-- String getOpenIdById(int userId) -->
+	<select id="getOpenIdById" parameterType="java.lang.Integer" resultType="java.lang.String">
 		select openId
-		from account where id =
-		#{id,jdbcType=BIGINT}
+		from sys_account where id =
+		#{id,jdbcType=INTEGER}
 	</select>
 
+	<!-- 查询所有匹配的账户数据 -->
+	<!-- Page<Account> selectAll(Account account) -->
 	<select id="selectAll" resultMap="BaseResultMap" parameterType="org.blue.webframework.sys.account.model.Account">
 		select
 		<include refid="Base_Column_List" />
-		from account
+		from sys_account
 		<where>
 			<if test="groupId >0">
-				group_id=#{groupId,jdbcType=BIGINT},
+				group_id=#{groupId,jdbcType=INTEGER},
 			</if>
 			<if test="name != null">
 				and name=#{name,jdbcType=VARCHAR},
@@ -166,7 +183,7 @@
 				and password=#{password,jdbcType=VARCHAR},
 			</if>
 			<if test="roleId > 0">
-				and role_id=#{roleId,jdbcType=BIGINT},
+				and role_id=#{roleId,jdbcType=INTEGER},
 			</if>
 			<if test="avatar !=null">
 				and avatar=#{avatar,jdbcType=VARCHAR},
@@ -181,7 +198,7 @@
 	<select id="getByNameAndPassword" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from account
+		from sys_account
 		where
 		name=#{name,jdbcType=VARCHAR}
 		and
@@ -193,25 +210,25 @@
 	<!-- 删除表account用户表 -->
 	<!-- int dropTable() -->
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `account`
+		DROP TABLE IF EXISTS `sys_account`
 	</update>
 
 	<!-- 清空account表 -->
 	<!-- int truncateTable()-->
 	<update id="truncateTable">
-		truncate table `account`
+		truncate table `sys_account`
 	</update>
 
 	<!-- 创建（更新）account 表 -->
 	<!-- int createTable();-->
 	<update id="createTable">
-		CREATE TABLE `account` (
-		`id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '用户id',
-		`group_id` bigint(10) NULL DEFAULT NULL COMMENT '用户组id',
-		`role_id` bigint(10) NULL DEFAULT NULL COMMENT '角色id',
+		CREATE TABLE `sys_account` (
+		`id` int(32) NOT NULL AUTO_INCREMENT COMMENT '用户id',
+		`group_id` int(32) NULL DEFAULT NULL COMMENT '用户组id',
+		`role_id` int(32) NULL DEFAULT NULL COMMENT '角色id',
 		`name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录名',
 		`password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
-		`openId` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信的openid',
+		`openId` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信的openid',
 		`enable` bit(1) NULL DEFAULT NULL COMMENT '是否启用',
 		`avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',
 		`created_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

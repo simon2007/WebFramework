@@ -6,11 +6,11 @@ public class AccountVo {
 	private String avatar;
 	private Date createdTime;
 	private boolean enable;
-	private long groupId;
-	private long id;
+	private int groupId;
+	private int id;
 	private String name;
 	private String openId;
-	private long roleId;
+	private int roleId;
 	
 	
 	public String getAvatar() {
@@ -25,11 +25,11 @@ public class AccountVo {
 		return enable;
 	}
 
-	public long getGroupId() {
+	public int getGroupId() {
 		return groupId;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -41,7 +41,7 @@ public class AccountVo {
 		return openId;
 	}
 
-	public long getRoleId() {
+	public int getRoleId() {
 		return roleId;
 	}
 
@@ -57,11 +57,11 @@ public class AccountVo {
 		this.enable = enable;
 	}
 
-	public void setGroupId(long groupId) {
+	public void setGroupId(int groupId) {
 		this.groupId = groupId;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -73,7 +73,7 @@ public class AccountVo {
 		this.openId = openId;
 	}
 
-	public void setRoleId(long roleId) {
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
 	

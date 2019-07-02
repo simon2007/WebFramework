@@ -2,7 +2,7 @@ package org.blue.webframework.exception;
 
 /**
  * 业务异常,业务层的异常
- * @author Long
+ * @author Lilongwu
  *
  */
 public class BusinessException extends BaseException {

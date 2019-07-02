@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.RedirectView;
 /**
  * 自定义跳转
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class BlueRedirectView extends RedirectView {
@@ -27,6 +27,7 @@ public class BlueRedirectView extends RedirectView {
 			// 相对路径，转换为全路径
 			targetUrl = ServerHelper.getFullpath(request, targetUrl);
 		}
+		//重定向
 		super.sendRedirect(request, response, targetUrl, http10Compatible);
 	}
 }

@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * 公众号
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class OfficialWeixinHelper extends WeixinHelper {

@@ -8,7 +8,7 @@ import com.opensymphony.oscache.web.filter.ExpiresRefreshPolicy;
 /**
  * 查询缓存器
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class QueryCache extends BaseCache implements org.apache.ibatis.cache.Cache {

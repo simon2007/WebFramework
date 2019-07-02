@@ -6,7 +6,7 @@ import com.opensymphony.oscache.web.filter.ExpiresRefreshPolicy;
 
 /**
  * 
- * @author long
+ * @author Lilongwu
  *
  */
 public class BaseCache {

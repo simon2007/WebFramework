@@ -2,6 +2,7 @@ package org.blue.webframework.sys.attach.service.impl;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
@@ -13,7 +14,6 @@ import org.blue.webframework.sys.attach.model.Attach;
 import org.blue.webframework.sys.attach.service.AttachService;
 import org.blue.webframework.sys.attach.vo.AttachVo;
 import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
-import org.blue.webframework.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,35 +26,35 @@ public class AttachServiceImpl implements AttachService {
 	private SiteParameterService siteParameterService;
 	
 	@Override
-	public AttachVo uploadFile(long accountId,  MultipartFile multipartFile) throws Exception {
-		String filePath =  String.valueOf(accountId);
+	public AttachVo uploadFile(int accountId,  MultipartFile multipartFile) throws Exception {
+		String filePath =  getUploadPrefix(accountId);
 		String contentType=multipartFile.getContentType().toLowerCase(Locale.getDefault());
+		
 		if(contentType.contains("image"))
-			filePath+="/images";
+			filePath+="/images/";
 		else if(contentType.contains("audio"))
-			filePath+="/audio";
+			filePath+="/audio/";
 		else if(contentType.contains("video"))
-				filePath+= "/video";
+				filePath+= "/video/";
 		else if(contentType.contains("text"))
-			filePath+="/text";
+			filePath+="/text/";
 		else
-			filePath+="/files";
+			filePath+="/files/";
 		
 		if (multipartFile.getSize() == 0)
 			throw new BusinessException("002");
 		
-		String uploadPrefix=siteParameterService.getParamValue("upload_prefix","upload/") ;
-		
 
-		File file = new File(uploadPrefix + filePath);
+
+		File file = new File( filePath);
 		if (!file.exists())
 			file.mkdirs();
 
 		String fileName = multipartFile.getOriginalFilename();
 		String fileExtName = fileName.substring(fileName.lastIndexOf('.'));
 		String fileFullPath = filePath + Calendar.getInstance().getTimeInMillis() + new Random().nextInt(100000) + fileExtName;
+		multipartFile.transferTo(new File(fileFullPath));
 
-		ImageUtil.copyImage(multipartFile.getBytes(),uploadPrefix + fileFullPath);
 
 		Attach attach=new Attach();
 		attach.setFilePath(fileFullPath);
@@ -63,7 +63,16 @@ public class AttachServiceImpl implements AttachService {
 		attach.setRemoveTag(false);
 		attach.setAccountId(accountId);
 		attachMapper.insert(attach);
-		return null;
+		
+		AttachVo vo=new AttachVo();
+		vo.setFilePath(fileFullPath);
+		vo.setId(attach.getId());
+		vo.setAddDate(new Date());
+		vo.setAttachType(contentType);
+		vo.setName(fileName);
+		vo.setAccountId(accountId);
+		vo.setId(attach.getId());
+		return vo;
 	}
 
 	@Override
@@ -71,6 +80,23 @@ public class AttachServiceImpl implements AttachService {
 		attachMapper.dropTable();
 		attachMapper.createTable();
 		
+	}
+
+	@Override
+	public String getUploadPrefix() {
+		return siteParameterService.getParamValue("upload_prefix","upload/") ;
+	}
+
+	@Override
+	public String getUploadPrefix(int accountId) {
+		String filePath =  String.valueOf(accountId);
+		return getUploadPrefix() + filePath;
+	}
+
+	@Override
+	public String getUrl(int attachId) {
+		Attach attach= attachMapper.selectByPrimaryKey(attachId);
+		return attach.getFilePath();
 	}
 
 }

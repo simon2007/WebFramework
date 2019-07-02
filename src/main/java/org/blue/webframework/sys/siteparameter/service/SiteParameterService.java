@@ -40,6 +40,7 @@ public interface SiteParameterService {
 	 */
 	public int saveSiteParameter(SiteParameterVo siteParameterVo);
 
+
 	/**
 	 * 根据网站参数主键删除网站参数信息.<br>
 	 * 
@@ -61,17 +62,11 @@ public interface SiteParameterService {
 
 
 	/**
-	 * 
-	 * @param paramName
-	 * @param value
+	 * 添加与修改网站参数记录
+	 * @param paramName 参数名
+	 * @param value 参数值
 	 */
 	void putParamValue(String paramName, int value);
-	/**
-	 * 
-	 * @param paramName
-	 * @param value
-	 * @param comment
-	 */
 	void putParamValue(String paramName, int value,String comment);
 	void putParamValue(String paramName, long value);
 	void putParamValue(String paramName, long value,String comment);
@@ -79,38 +74,38 @@ public interface SiteParameterService {
 	void putParamValue(String paramName, String value,String comment);
 	void putParamValue(String paramName, Date value);
 	void putParamValue(String paramName, Date value,String comment);
+
 	/**
 	 * 获取参数
-	 * @param paramName
-	 * @param defaultValue
+	 * @param paramName 参数名
+	 * @param defaultValue 默认值
 	 * @return
 	 */
 	public int getParamValue(String paramName, int defaultValue);
 	
 	/**
 	 * 获取参数
-	 * @param paramName
-	 * @param defaultValue
+	 * @param paramName 参数名
+	 * @param defaultValue 默认值
 	 * @return
 	 */
 	public long getParamValue(String paramName, long defaultValue);
 	
 	/**
 	 * 获取参数
-	 * @param paramName
-	 * @param defaultValue
+	 * @param paramName 参数名
+	 * @param defaultValue 默认值
 	 * @return
 	 */
 	public Date getParamValue(String paramName, Date defaultValue);
-	
 
 	Page<SiteParameterVo> getParametersAsPage(String value,int page,int pageSize);
 	void recreateTable();
 
 	/**
 	 * 获取参数
-	 * @param paramName
-	 * @param defaultValue
+	 * @param paramName 参数名
+	 * @param defaultValue 默认值
 	 * @return
 	 */
 	public boolean getParamValue(String paramName, boolean defaultValue);

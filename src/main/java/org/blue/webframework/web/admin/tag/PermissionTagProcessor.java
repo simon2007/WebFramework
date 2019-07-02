@@ -33,8 +33,8 @@ public class PermissionTagProcessor extends AbstractElementTagProcessor {
 	protected void doProcess(final ITemplateContext context, final IProcessableElementTag tag,
 			final IElementTagStructureHandler structureHandler) {
 
-		Long roleId = ServerHelper.getCurrentRoleId();
-		Long accountId = ServerHelper.getCurrentAccountId();
+		Integer roleId = ServerHelper.getCurrentRoleId();
+		Integer accountId = ServerHelper.getCurrentAccountId();
 		String code = tag.getAttributeValue("code");
 		String action = tag.getAttributeValue("action");
 

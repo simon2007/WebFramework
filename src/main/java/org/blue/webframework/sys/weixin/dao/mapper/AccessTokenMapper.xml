@@ -14,16 +14,16 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from accesstoken
+    from sys_accesstoken
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from accesstoken
+    delete from sys_accesstoken
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <insert id="save" parameterType="org.blue.webframework.sys.weixin.model.AccessToken">
-    insert into accesstoken
+    insert into sys_accesstoken
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -54,7 +54,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.weixin.model.AccessToken">
-    update accesstoken
+    update sys_accesstoken
     <set>
       <if test="token != null">
         token = #{token,jdbcType=VARCHAR},
@@ -72,7 +72,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.weixin.model.AccessToken">
-    update accesstoken
+    update sys_accesstoken
     set token = #{token,jdbcType=VARCHAR},
       expirestime = #{expirestime,jdbcType=TIMESTAMP},
       addtime = #{addtime,jdbcType=TIMESTAMP},
@@ -82,13 +82,13 @@
   
   <!-- 删除旧的accesstoken -->
     <delete id="deleteOldAccesstoken" >
-    delete from accesstoken
+    delete from sys_accesstoken
         where  DATE_ADD(now(),INTERVAL -7 DAY) > expirestime
     </delete>
   
   <!-- accesstoken已经过期了，但是数据库没更新 -->
   <update id="letAccesstokenExpireByAppId" parameterType="java.lang.String">
-    update accesstoken
+    update sys_accesstoken
     set available =0
     where appId=#{appId,jdbcType=VARCHAR} and expirestime > NOW()
   </update>
@@ -97,29 +97,29 @@
   <select id="selectUsefullToken" resultMap="BaseResultMap" parameterType="java.lang.String">
     select 
     <include refid="Base_Column_List" />
-    from accesstoken
+    from sys_accesstoken
     where available=1 and appId=#{appId,jdbcType=VARCHAR} and expirestime > NOW() limit 1
   </select>
   
     <select id="getAppIdByAccessToken" resultType="string" parameterType="java.lang.String">
     select 
     appId
-    from accesstoken
+    from sys_accesstoken
     where token=#{accessToken,jdbcType=VARCHAR} order by expirestime desc limit 1
   </select>
 
 
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `accesstoken`
+		DROP TABLE IF EXISTS `sys_accesstoken`
 	</update>
 
 	<update id="truncateTable">
-		truncate table `accesstoken`
+		truncate table `sys_accesstoken`
 	</update>
 
 	<update id="createTable">
 
-		CREATE TABLE `accesstoken` (
+		CREATE TABLE `sys_accesstoken` (
   `id` INT(4) auto_increment ,
   `token` VARCHAR(160) NULL,
   `expirestime` TIMESTAMP NULL,

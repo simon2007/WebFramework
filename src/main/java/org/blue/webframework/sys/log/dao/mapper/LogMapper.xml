@@ -2,44 +2,59 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.blue.webframework.sys.log.dao.LogMapper">
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.log.model.Log">
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account_id" property="accountId" jdbcType="INTEGER" />
 		<result column="content" property="content" jdbcType="VARCHAR" />
 		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, user_id, content,createtime
+		id, account_id, content,createtime
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
-		from log
-		where id = #{id,jdbcType=BIGINT}
+		from sys_log
+		where id = #{id,jdbcType=INTEGER}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+	<select id="getAccountLogList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_log
+		<where>
+		account_id = #{accountId,jdbcType=INTEGER}
+		<if test="startDate !=null">
+			and createtime &gt;= #{startDate,jdbcType=TIMESTAMP} 
+		</if>
+		<if test="endDate !=null">
+			and createtime &lt;= #{endDate,jdbcType=TIMESTAMP} 
+		</if>
+		</where>
+		 order by id desc
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from
-		log
-		where id =#{id,jdbcType=BIGINT}
+		sys_log
+		where id =#{id,jdbcType=INTEGER}
 	</delete>
 	<insert id="insert" parameterType="org.blue.webframework.sys.log.model.Log" useGeneratedKeys="true"
 		keyProperty="id">
-		insert into log (user_id,		content		)
+		insert into sys_log (account_id,		content		)
 		values (
-		#{userId,jdbcType=BIGINT},#{content,jdbcType=VARCHAR})
+		#{accountId,jdbcType=INTEGER},#{content,jdbcType=VARCHAR})
 	</insert>
 	
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `log`
+		DROP TABLE IF EXISTS `sys_log`
 	</update>
 	
 	<update id="truncateTable">
-        truncate table `log`
+        truncate table `sys_log`
     </update>
     
 	<update id="createTable">
-CREATE TABLE `log`  (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(10) NULL DEFAULT NULL,
+CREATE TABLE `sys_log`  (
+  `id` int(32) NOT NULL AUTO_INCREMENT,
+  `account_id` int(32) NULL DEFAULT NULL,
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE

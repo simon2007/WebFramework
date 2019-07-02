@@ -22,7 +22,7 @@ class AccountServiceImpl implements AccountService {
 	private final String salt = "__honor__";
 
 	@Override
-	public String getOpenIdById(long userId) {
+	public String getOpenIdById(int userId) {
 		return accountMapper.getOpenIdById(userId);
 	}
 
@@ -57,7 +57,7 @@ class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public AccountVo getUserById(long userId) {
+	public AccountVo getUserById(int userId) {
 		Account account = accountMapper.selectByPrimaryKey(userId);
 		if (account == null)
 			return null;
@@ -81,12 +81,12 @@ class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public int delete(long userId) {
+	public int delete(int userId) {
 		return accountMapper.deleteByPrimaryKey(userId);
 	}
 
 	@Override
-	public void setEnable(long userId, boolean enable) {
+	public void setEnable(int userId, boolean enable) {
 		accountMapper.setEnable(userId, enable);
 
 	}
@@ -124,6 +124,9 @@ class AccountServiceImpl implements AccountService {
 		return model2Vo(accountPage);
 	}
 
+	/**
+	 * 获取根据MD5加密的密码
+	 */
 	private String getPasswordMd5(String password, String salt) {
 		if (password.length() % 2 == 0)
 			return StringHelper.string2MD5(salt + password);
@@ -140,12 +143,17 @@ class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public int resetPassword(String name, String oldPassword, String newPassword) {
+	public void resetPassword(String name, String oldPassword, String newPassword) {
+		// 根据用户名和密码查询用户数据
 		Account account = accountMapper.getByNameAndPassword(name, getPasswordMd5(oldPassword, salt));
 		if (account == null)
+			// 为null：抛出异常
 			throw new BusinessException("0001");
+
+		//新密码
 		account.setPassword(getPasswordMd5(newPassword, salt));
-		return accountMapper.updateByPrimaryKey(account);
+		// 更新密码
+		accountMapper.updateByPrimaryKey(account);
 	}
 
 	@Override

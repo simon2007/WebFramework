@@ -1,9 +1,10 @@
 package org.blue.webframework.sys.identifyingcode.dao;
 
 import org.blue.webframework.sys.identifyingcode.model.IdentifyingCode;
-
+import org.springframework.stereotype.Repository;
 import org.apache.ibatis.annotations.Param;
 
+@Repository
 public interface IdentifyingCodeMapper {
 
 	/**

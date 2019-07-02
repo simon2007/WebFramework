@@ -9,7 +9,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 /**
  * 异常的基类
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public abstract class BaseException extends RuntimeException {

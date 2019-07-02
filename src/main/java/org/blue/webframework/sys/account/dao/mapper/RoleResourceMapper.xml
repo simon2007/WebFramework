@@ -4,98 +4,131 @@
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.RoleResource">
-		<id column="id" property="id" jdbcType="BIGINT" />
-		<result column="role_id" property="roleId" jdbcType="BIGINT" />
-		<result column="resource_id" property="resourceId" jdbcType="BIGINT" />
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="resource_id" property="resourceId" jdbcType="INTEGER" />
 		<result column="operate" property="operate" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, role_id, resource_id,operate
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+
+	<!-- 根据id查询角色资源数据 -->
+	<!-- RoleResource selectByPrimaryKey(int id)-->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
-		from role_resource
-		where id = #{id,jdbcType=BIGINT}
+		from sys_role_resource
+		where id = #{id,jdbcType=INTEGER}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-		delete from role_resource
+
+	<!-- 根据id删除角色资源数据 -->
+	<!-- int deleteByPrimaryKey(int id)-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_role_resource
 		where id =
-		#{id,jdbcType=BIGINT}
+		#{id,jdbcType=INTEGER}
 	</delete>
+	
+	<!-- 插入角色信息 -->
+	<!-- int insert(RoleResource role)-->
 	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.RoleResource" useGeneratedKeys="true" keyProperty="id">
-		insert into role_resource ( role_id, resource_id,operate)
+		insert into sys_role_resource ( role_id, resource_id,operate)
 		values
-		(#{roleId,jdbcType=BIGINT},#{resourceId,jdbcType=BIGINT},#{operate,jdbcType=VARCHAR})
+		(#{roleId,jdbcType=INTEGER},#{resourceId,jdbcType=INTEGER},#{operate,jdbcType=VARCHAR})
 	</insert>
 
+	<!-- 根据id更新角色资源 -->
+	<!-- int updateByPrimaryKeySelective(RoleResource roleResource)-->
 	<update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.RoleResource">
-		update role_resource
+		update sys_role_resource
 		<set>
 			<if test="roleId != null">
-				role_id=#{roleId,jdbcType=BIGINT},
+				role_id=#{roleId,jdbcType=INTEGER},
 			</if>
 			<if test="resourceId != null">
-				resource_id=#{resourceId,jdbcType=BIGINT},
+				resource_id=#{resourceId,jdbcType=INTEGER},
 			</if>
 			<if test="operate != null">
 				operate=#{operate,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where id = #{id,jdbcType=BIGINT}
+		where id = #{id,jdbcType=INTEGER}
 	</update>
 
+	<!-- 根据操作、角色id获取匹配的角色资源数-->
+	<!-- int getCount(@Param("roleId") int roleId,
+	                  @Param("operate")String operate,
+	                  @Param("resourceId")int resourceId)-->
 	<select id="getCount" resultType="java.lang.Integer">
-		select count(1) from role_resource
+		select count(1) from sys_role_resource
 		where
-		resource_id=#{resourceId,jdbcType=BIGINT}
+		resource_id=#{resourceId,jdbcType=INTEGER}
 		and operate=#{operate,jdbcType=VARCHAR}
 		and role_id =
-		#{roleId,jdbcType=BIGINT}
+		#{roleId,jdbcType=INTEGER}
 	</select>
 
+	<!-- 根据资源编码、操作、角色id查询匹配的角色资源数 -->
+	<!-- int getCountWidthCode(@Param("roleId") int roleId,
+	                           @Param("operate")String operate,
+	                           @Param("resourceCode")String resourceCode)-->
 	<select id="getCountWidthCode" resultType="java.lang.Integer">
-		select count(1) from role_resource inner join
-		resource on resource.id = role_resource.resource_id
+		select count(1) from sys_role_resource inner join
+		sys_resource on sys_resource.id = sys_role_resource.resource_id
 		where
-		resource.code=#{resourceCode,jdbcType=VARCHAR}
+		sys_resource.code=#{resourceCode,jdbcType=VARCHAR}
 		and
 		operate=#{operate,jdbcType=VARCHAR}
 		and role_id =
-		#{roleId,jdbcType=BIGINT}
+		#{roleId,jdbcType=INTEGER}
 	</select>
 
+	<!-- 根据角色id、操作、资源编码模糊查找匹配的角色资源数-->
+	<!-- int getCountWidthName(@Param("roleId")int roleId,
+	                           @Param("operate") String operate,
+	                           @Param("resourceName") String resourceName)-->
 	<select id="getCountWidthName" resultType="java.lang.Integer">
-		select count(1) from role_resource inner join
-		resource on resource.id = role_resource.resource_id
-		where role_id = #{roleId,jdbcType=BIGINT}
+		select count(1) from sys_role_resource inner join
+		sys_resource on sys_resource.id = sys_role_resource.resource_id
+		where role_id = #{roleId,jdbcType=INTEGER}
 		and
 		operate=#{operate,jdbcType=VARCHAR}
 		and #{resourceName,jdbcType=VARCHAR} like
 		CONCAT(resource.name,'.%')
 	</select>
 
+	<!-- 根据资源id、操作、角色id删除角色资源数据 -->
+	<!-- int delete(@Param("roleId") int roleId,
+	                @Param("operate")String operate,
+	                @Param("resourceId")int resourceId)-->
 	<delete id="delete">
-		delete role_resource
-		where resource_id=#{resourceId,jdbcType=BIGINT}
+		delete sys_role_resource
+		where resource_id=#{resourceId,jdbcType=INTEGER}
 		and
 		operate=#{operate,jdbcType=VARCHAR}
-		and role_id = #{roleId,jdbcType=BIGINT}
+		and role_id = #{roleId,jdbcType=INTEGER}
 	</delete>
 
+	<!-- 删除表 -->
+	<!-- int dropTable()-->
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `role_resource`
+		DROP TABLE IF EXISTS `sys_role_resource`
 	</update>
 
+	<!-- 清空表 -->
+	<!-- int truncateTable()-->
 	<update id="truncateTable">
-		truncate table `role_resource`
+		truncate table `sys_role_resource`
 	</update>
 
+	<!-- 创建表 -->
+	<!-- int createTable()-->
 	<update id="createTable">
-		CREATE TABLE `role_resource` (
-		`id` bigint(10) NOT NULL AUTO_INCREMENT,
-		`role_id` bigint(10) NULL DEFAULT NULL COMMENT '角色id',
-		`resource_id` bigint(10) NULL DEFAULT NULL COMMENT '资源id',
+		CREATE TABLE `sys_role_resource` (
+		`id` int(32) NOT NULL AUTO_INCREMENT,
+		`role_id` int(32) NULL DEFAULT NULL COMMENT '角色id',
+		`resource_id` int(32) NULL DEFAULT NULL COMMENT '资源id',
 		`operate` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '操作',
 		PRIMARY KEY (`id`) USING BTREE
 		)

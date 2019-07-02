@@ -4,33 +4,45 @@
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
   <resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.Group" >
-    <id column="id" property="id" jdbcType="BIGINT" />
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, enable
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+
+  <!-- 根据id查询该组数据 -->
+  <!-- Group selectByPrimaryKey(int id) -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from `group`
-    where id = #{id,jdbcType=BIGINT}
+    from `sys_group`
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from `group`
-    where id = #{id,jdbcType=BIGINT}
+
+  <!-- 根据id删除数据 -->
+  <!-- Group selectByPrimaryKey(int id) -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from `sys_group`
+    where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <!-- 插入数据 -->
+  <!-- int insert(Group group); -->
   <insert id="insert" parameterType="org.blue.webframework.sys.account.model.Group" useGeneratedKeys="true"
 		keyProperty="id">
-    insert into `group` ( name, 
+    insert into `sys_group` ( name, 
       enable
       )
     values (#{name,jdbcType=VARCHAR},#{enable,jdbcType=BIT})
   </insert>
+
+  <!-- 插入数据 -->
+  <!-- int insertSelective(Group group) -->
   <insert id="insertSelective" parameterType="org.blue.webframework.sys.account.model.Group" useGeneratedKeys="true"
 		keyProperty="id">
-    insert into `group`
+    insert into `sys_group`
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="name != null" >
         name,
@@ -44,39 +56,55 @@
       #{enable,jdbcType=BIT}
     </trim>
   </insert>
+
+  <!-- 根据id更新组数据 -->
+  <!-- int updateByPrimaryKeySelective(Group group) -->
   <update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.Group" >
-    update `group`
+    update `sys_group`
     <set >
       <if test="name != null" >
         name=#{name,jdbcType=VARCHAR},
       </if>
       enable=#{enable,jdbcType=BIT}
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 根据id更新组数据 -->
+  <!-- int updateByPrimaryKey(Group group); -->
   <update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.account.model.Group" >
-    update `group`
+    update `sys_group`
     set name=#{name,jdbcType=VARCHAR},
       enable=#{enable,jdbcType=BIT}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 根据id查询是否启用该用户 -->
+  <!-- int setEnable(@Param("id") int id,
+                     @Param("enable")boolean enable); -->
   <update id="setEnable">
-   update `group`
+   update `sys_group`
     set enable=#{enable,jdbcType=BIT}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
-  
+
+  <!-- 删除表 -->
+  <!-- int dropTable() -->
   	<update id="dropTable">
-  DROP TABLE IF EXISTS `group`
+  DROP TABLE IF EXISTS `sys_group`
 	</update>
-	
+
+  <!-- 清空表 -->
+  <!-- int truncateTable() -->
 	<update id="truncateTable">
-        truncate table `group`
+        truncate table `sys_group`
     </update>
-    
+
+  <!-- 创建表 -->
+  <!-- int createTable() -->
   <update id="createTable">
-CREATE TABLE `group`  (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sys_group`  (
+  `id` int(32) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户组名',
   `enable` bit(1) NULL DEFAULT NULL COMMENT '是否启用',
   PRIMARY KEY (`id`) USING BTREE

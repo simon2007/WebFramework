@@ -9,10 +9,10 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.apache.ibatis.plugin.Interceptor;
 import org.blue.webframework.exception.BaseException;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -32,11 +32,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 
 
 
-
+@ImportAutoConfiguration(PageHelperAutoConfiguration.class)
 @EnableAsync
 @EnableScheduling
 @EnableTransactionManagement
@@ -113,7 +113,6 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 
 		sqlSessionFactoryBean.setMapperLocations(getMyBatisMapperLocations(mapperLocations).toArray(new Resource[0]));
 
-		sqlSessionFactoryBean.setPlugins(new Interceptor[] { createPageHelper() });
 		sqlSessionFactoryBean.setConfigurationProperties(createMyBatisConfigProperties());
 		org.apache.ibatis.logging.LogFactory.useLog4JLogging();
 		return sqlSessionFactoryBean;
@@ -131,11 +130,7 @@ public class BlueBootApplication extends SpringBootServletInitializer {
 		return properties;
 	}
 
-	protected PageHelper createPageHelper() throws IOException {
-		PageHelper pageHelper = new PageHelper();
-		pageHelper.setProperties(loadProperties("classpath:properties/pageHeper.properties"));
-		return pageHelper;
-	}
+
 
 	protected List<Resource> getMyBatisMapperLocations(String locationPattern) throws IOException {
 		List<Resource> ret = new ArrayList<Resource>();

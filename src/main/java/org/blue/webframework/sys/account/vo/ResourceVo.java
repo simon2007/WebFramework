@@ -1,17 +1,17 @@
 package org.blue.webframework.sys.account.vo;
 
 public class ResourceVo {
-	private long id;
+	private int id;
 	private String name;
 	private String code;
 	private String comment;
 	private String operates;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

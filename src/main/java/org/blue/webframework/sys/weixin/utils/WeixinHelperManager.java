@@ -9,7 +9,7 @@ import org.blue.webframework.sys.weixin.dao.AccessTokenMapper;
 /**
  * 多微信管理
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class WeixinHelperManager {

@@ -4,7 +4,7 @@ package org.blue.webframework.sys.identifyingcode.service;
 
 /**
  * 验证码服务，包括短信验证码，email验证码
- * @author Long
+ * @author Lilongwu
  *
  */
 public interface IdentifyingCodeService {

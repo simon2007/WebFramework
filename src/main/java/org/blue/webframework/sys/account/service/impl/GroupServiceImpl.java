@@ -30,10 +30,13 @@ class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public GroupVo getById(long id) {
+	public GroupVo getById(int id) {
+		//根据用户组id查询该组数据
 		Group group = groupMapper.selectByPrimaryKey(id);
+		//判断是否为null
 		if(group==null)
 			return null;
+		//非null，返回用户组数据
 		return model2Vo(group);
 	}
 
@@ -56,8 +59,6 @@ class GroupServiceImpl implements GroupService {
 	public void recreateTable() {
 		groupMapper.dropTable();
 		 groupMapper.createTable();
-
-		 
 	}
 
 }

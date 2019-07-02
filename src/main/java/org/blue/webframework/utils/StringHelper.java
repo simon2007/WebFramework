@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * 字符串帮助类
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public final class StringHelper {

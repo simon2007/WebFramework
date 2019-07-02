@@ -7,24 +7,24 @@ public class RoleResource implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private long id;
-	private long roleId;
+	private int id;
+	private int roleId;
 	private String operate;
-	private long resourceId;
+	private int resourceId;
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public long getRoleId() {
+	public int getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(long roleId) {
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
 
@@ -36,11 +36,11 @@ public class RoleResource implements Serializable{
 		this.operate = operate;
 	}
 
-	public long getResourceId() {
+	public int getResourceId() {
 		return resourceId;
 	}
 
-	public void setResourceId(long resourceId) {
+	public void setResourceId(int resourceId) {
 		this.resourceId = resourceId;
 	}
 

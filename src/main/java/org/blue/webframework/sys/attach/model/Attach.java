@@ -3,7 +3,7 @@ package org.blue.webframework.sys.attach.model;
 import java.util.Date;
 
 public class Attach {
-	private Long id;
+	private int id;
 
     private String name;
 
@@ -15,14 +15,14 @@ public class Attach {
 
     private boolean removeTag;
 
-    private Long accountId;
+    private int accountId;
 
     private Date addDate;
     private String attachType;
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -56,10 +56,10 @@ public class Attach {
 	public void setRemoveTag(boolean removeTag) {
 		this.removeTag = removeTag;
 	}
-	public Long getAccountId() {
+	public int getAccountId() {
 		return accountId;
 	}
-	public void setAccountId(Long accountId) {
+	public void setAccountId(int accountId) {
 		this.accountId = accountId;
 	}
 	public Date getAddDate() {

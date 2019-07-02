@@ -16,31 +16,29 @@
 		<result column="subscribe" jdbcType="INTEGER" property="subscribe" />
 		<result column="updateTime" jdbcType="TIMESTAMP" property="updateTime" />
 	</resultMap>
-	    <!-- 启用缓存 -->
-  <cache  type="org.blue.webframework.cache.QueryCache"/>
+	<!-- 启用缓存 -->
+	<cache type="org.blue.webframework.cache.QueryCache" />
 	<sql id="Base_Column_List">
 		id,openId, appId, nickName, sex,province,city,country,headImgUrl,unionId,subscribe,updateTime
 	</sql>
-	<select id="selectByOpenIdAndAppId" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
+	<select id="selectByOpenIdAndAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from weixinuser
+		from sys_weixinuser
 		where appId = #{appId,jdbcType=VARCHAR} and
 		openId=#{openId,jdbcType=VARCHAR} limit 1
 	</select>
 
-	<select id="selectByUnionIdAndAppId" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
+	<select id="selectByUnionIdAndAppId" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from weixinuser
+		from sys_weixinuser
 		where unionId = #{unionId,jdbcType=VARCHAR} and
 		appId=#{appId,jdbcType=VARCHAR} limit 1
 	</select>
 
 	<insert id="save" parameterType="org.blue.webframework.sys.weixin.model.WeixinUser">
-		insert into weixinuser
+		insert into sys_weixinuser
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="nickName != null">
 				nickName,
@@ -94,7 +92,7 @@
 	</insert>
 
 	<update id="updateByAppIdOpenIdSelective" parameterType="org.blue.webframework.sys.weixin.model.WeixinUser">
-		update weixinuser
+		update sys_weixinuser
 		<set>
 			<if test="nickName != null">
 				nickName = #{nickName,jdbcType=VARCHAR},
@@ -125,23 +123,23 @@
 	</update>
 
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `weixinuser`
+		DROP TABLE IF EXISTS `sys_weixinuser`
 	</update>
 
 	<update id="truncateTable">
-		truncate table `weixinuser`
+		truncate table `sys_weixinuser`
 	</update>
 
 	<update id="createTable">
 
-		CREATE TABLE `weixinuser` (
-  `id` INT(4) auto_increment ,
-  `nickName` VARCHAR(160) NULL,
-  `sex` BIT(1) NULL,
-  `addtime` TIMESTAMP NULL default CURRENT_TIMESTAMP(0),
-  `appId` VARCHAR(32) NULL,
-  PRIMARY KEY (`id`))
-		) ENGINE = InnoDB AUTO_INCREMENT		= 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
+		CREATE TABLE `sys_weixinuser` (
+		`id` INT(4) auto_increment ,
+		`nickName` VARCHAR(160) NULL,
+		`sex` BIT(1) NULL,
+		`addtime` TIMESTAMP NULL default CURRENT_TIMESTAMP(0),
+		`appId` VARCHAR(32) NULL,
+		PRIMARY KEY (`id`))
+		) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT
 		= Dynamic;
 
 	</update>

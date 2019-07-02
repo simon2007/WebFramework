@@ -15,6 +15,9 @@
 	<sql id="Base_Column_List">
 		id, name, value, comment, REMOVE_TAG
 	</sql>
+
+	<!-- 根据id查询网站记录 -->
+	<!-- SiteParameter selectByPrimaryKey(int paramId)-->
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer"
 		useCache="true">
 		select
@@ -22,6 +25,9 @@
 		from site_parameter
 		where id = #{id,jdbcType=INTEGER}
 	</select>
+
+	<!-- 根据标签是否存在及参数名查询参数值 -->
+	<!-- String getParamValueByName(String paramName)-->
 	<!-- 将if 判断去掉了 标签是针对JAVABEAN或者MAP的，String不能用标签 -->
 	<select id="getParamValueByName" parameterType="java.lang.String"
 		resultType="java.lang.String">
@@ -29,17 +35,24 @@
 		name = #{name,jdbcType=VARCHAR}
 	</select>
 
+	<!-- 根据参数名查询网站记录 -->
+	<!-- SiteParameter selectByName(String paramName)-->
 	<select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from site_parameter where remove_tag=0 and name = #{name,jdbcType=VARCHAR}
 	</select>
 
+	<!-- 根据id删除参数 -->
+	<!-- int deleteByPrimaryKey(int paramId)-->
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		update site_parameter set
 		remove_tag=1
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
+
+	<!-- 插入网站参数记录 -->
+	<!-- int insert(SiteParameter record)-->
 	<insert id="insert"
 		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
 		insert into
@@ -50,6 +63,9 @@
 		#{comment,jdbcType=VARCHAR},
 		#{removeTag,jdbcType=INTEGER})
 	</insert>
+
+	<!-- 插入网站参数记录 -->
+	<!-- int insertSelective(SiteParameter record)-->
 	<insert id="insertSelective"
 		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
 		insert into site_parameter
@@ -83,6 +99,9 @@
 
 		</trim>
 	</insert>
+
+	<!-- 根据id修改网站参数数据 -->
+	<!-- int updateByPrimaryKeySelective(SiteParameter record)-->
 	<update id="updateByPrimaryKeySelective"
 		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
 		update site_parameter
@@ -103,6 +122,9 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+
+	<!-- 根据id修改网站参数数据 -->
+	<!-- int updateByPrimaryKey(SiteParameter record)-->
 	<update id="updateByPrimaryKey"
 		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
 		update site_parameter
@@ -114,11 +136,15 @@
 		id = #{id,jdbcType=INTEGER}
 	</update>
 
+	<!-- 根据标签是否存在查询参数名与参数值 -->
+	<!-- List<SiteParameter> querySiteParameterList()-->
 	<select id="querySiteParameterList" resultMap="BaseResultMap">
 		select name, value
 		from site_parameter where remove_tag = 0
 	</select>
 
+	<!--  -->
+	<!-- int modifySiteParameterValueByName(SiteParameter makeSiteParameter)-->
 	<update id="modifySiteParameterValueByName"
 		parameterType="org.blue.webframework.sys.siteparameter.model.SiteParameter">
 		update site_parameter set value = #{value,jdbcType=VARCHAR} where

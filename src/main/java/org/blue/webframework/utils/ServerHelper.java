@@ -10,7 +10,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * 服务
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class ServerHelper {
@@ -67,9 +67,9 @@ public class ServerHelper {
 		return request.getSession();
 	}
 
-	public static final String CurrentAccountKey = "__currentAccount__";
+	public static final String CurrentAccountKey = "currentAccount";
 
-	public static Long getCurrentAccountId() {
+	public static Integer getCurrentAccountId() {
 		HttpSession session = getSession();
 		return getCurrentAccountId(session);
 	}
@@ -88,26 +88,31 @@ public class ServerHelper {
 	 * @param session
 	 * @return 用户id
 	 */
-	public static Long getCurrentAccountId(HttpSession session) {
+	public static Integer getCurrentAccountId(HttpSession session) {
 		AccountVo account = getCurrentAccount(session);
 		if (account == null)
 			return null;
 		return account.getId();
 	}
 
-	public static Long getCurrentRoleId(HttpSession session) {
+	public static Integer getCurrentRoleId(HttpSession session) {
 		AccountVo account = getCurrentAccount(session);
 		if (account == null)
 			return null;
 		return account.getRoleId();
 	}
 
-	public static Long getCurrentRoleId() {
+	public static Integer getCurrentRoleId() {
 		HttpSession session = getSession();
 
 		return getCurrentRoleId(session);
 	}
 
+	/**
+	 * 从session中获取用户数据
+	 * @param session
+	 * @return 用户名
+	 */
 	public static String getCurrentCurrentAccountName(HttpSession session) {
 		AccountVo account = getCurrentAccount(session);
 		if (account == null)

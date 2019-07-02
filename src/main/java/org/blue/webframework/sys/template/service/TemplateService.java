@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * 模板类
- * @author Long
+ * @author Lilongwu
  *
  */
 public interface TemplateService {

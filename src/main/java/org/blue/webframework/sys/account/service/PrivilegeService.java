@@ -1,7 +1,7 @@
 package org.blue.webframework.sys.account.service;
 /**
  * 权限
- * @author long
+ * @author Lilongwu
  *
  */
 public interface PrivilegeService {
@@ -12,7 +12,7 @@ public interface PrivilegeService {
 	 * @param operate 操作
 	 * @param resourceId 资源id
 	 */
-	void grantAccount(long accountId,String operate,long resourceId);
+	void grantAccount(int accountId,String operate,int resourceId);
 	
 	/**
 	    * 给账号授权
@@ -20,61 +20,61 @@ public interface PrivilegeService {
 	 * @param operate 操作
 	 * @param resourceCode 资源编码
 	 */
-	void grantAccount(long accountId,String operate,String resourceCode);
+	void grantAccount(int accountId,String operate,String resourceCode);
 	
 	/**
 	 * 给角色授权 
-	 * @param roleId
-	 * @param operate
-	 * @param resourceId
+	 * @param roleId 角色id
+	 * @param operate 操作
+	 * @param resourceId 资源id
 	 */
-	void grantRole(long roleId,String operate,long resourceId);
+	void grantRole(int roleId,String operate,int resourceId);
 	
 	/**
 	 * 给角色授权 
-	 * @param roleId
-	 * @param operate
-	 * @param resourceCode
+	 * @param roleId 角色id
+	 * @param operate 操作
+	 * @param resourceCode 资源编码
 	 */
-	void grantRole(long roleId,String operate,String resourceCode);
+	void grantRole(int roleId,String operate,String resourceCode);
 
 	/**
 	 * 判断账户是否有权限
-	 * @param accountId
-	 * @param operate
-	 * @param resourceCode
+	 * @param accountId 账户id
+	 * @param operate 操作
+	 * @param resourceCode 资源编码
 	 * @return
 	 */
-	boolean hasAccountPermission(long accountId, String operate, String resourceCode);
+	boolean hasAccountPermission(int accountId, String operate, String resourceCode);
 	
 	/**
 	 * 判断账户是否有权限
-	 * @param accountId
-	 * @param operate
-	 * @param resourceName
+	 * @param accountId 账户id
+	 * @param operate 操作
+	 * @param resourceName 资源名
 	 * @return
 	 */
-	boolean hasAccountPermissionWithName(long accountId, String operate, String resourceName);
+	boolean hasAccountPermissionWithName(int accountId, String operate, String resourceName);
 	
 	/**
 	 * 判断角色是否有权限
-	 * @param roleId
-	 * @param operate
-	 * @param resourceCode
+	 * @param roleId 角色id
+	 * @param operate 操作
+	 * @param resourceCode 资源编码
 	 * @return
 	 */
-	boolean hasRolePermission(long roleId,String operate,String resourceCode);
+	boolean hasRolePermission(int roleId,String operate,String resourceCode);
 	
 	/**
 	 * 判断角色是否有权限
-	 * @param roleId
-	 * @param operate
-	 * @param resourceName
+	 * @param roleId 角色id
+	 * @param operate 操作
+	 * @param resourceName 资源名
 	 * @return
 	 */
-	boolean hasRolePermissionWithName(long roleId,String operate,String resourceName);
+	boolean hasRolePermissionWithName(int roleId,String operate,String resourceName);
 	
 	void recreateTable();
-	void revokeAccount(long accountId,String operate,long resourceId);
-	void revokeRole(long roleId,String operate,long resourceId);
+	void revokeAccount(int accountId,String operate,int resourceId);
+	void revokeRole(int roleId,String operate,int resourceId);
 }

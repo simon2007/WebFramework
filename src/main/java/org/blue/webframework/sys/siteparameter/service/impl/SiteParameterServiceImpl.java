@@ -224,32 +224,42 @@ class SiteParameterServiceImpl implements SiteParameterService {
 
 	@Override
 	public void putParamValue(String paramName, String value) {
+		//根据参数名查询网站记录
 		SiteParameter siteParameter = siteParameterMapper.selectByName(paramName);
 		if (siteParameter == null) {
+			//为null值，则此前没有记录
 			siteParameter = new SiteParameter();
 			siteParameter.setName(paramName);
 			siteParameter.setValue(value);
 			siteParameter.setRemoveTag(false);
+			//执行插入数据
 			siteParameterMapper.insert(siteParameter);
 		} else {
+			//非null，此前已有该记录
 			siteParameter.setValue(value);
+			//执行修改
 			siteParameterMapper.updateByPrimaryKeySelective(siteParameter);
 		}
 	}
 
 	@Override
 	public void putParamValue(String paramName, String value, String comment) {
+		//根据参数名查询网站记录
 		SiteParameter siteParameter = siteParameterMapper.selectByName(paramName);
 		if (siteParameter == null) {
+			//为null值，则此前没有记录
 			siteParameter = new SiteParameter();
 			siteParameter.setName(paramName);
 			siteParameter.setValue(value);
 			siteParameter.setRemoveTag(false);
 			siteParameter.setComment(comment);
+			//执行插入数据
 			siteParameterMapper.insert(siteParameter);
 		} else {
+			//非null，此前已有该记录
 			siteParameter.setValue(value);
 			siteParameter.setComment(comment);
+			//执行修改
 			siteParameterMapper.updateByPrimaryKeySelective(siteParameter);
 		}
 	}

@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 
 /**
  * http请求服务
- * @author Long
+ * @author Lilongwu
  *
  */
 public interface HttpService {

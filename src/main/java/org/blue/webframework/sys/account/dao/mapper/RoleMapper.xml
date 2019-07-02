@@ -4,31 +4,43 @@
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
   <resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.Role" >
-    <id column="id" property="id" jdbcType="BIGINT" />
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, enable
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+
+  <!-- 根据id查询角色数据 -->
+  <!-- Role selectByPrimaryKey(int id) -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from Role
-    where id = #{id,jdbcType=BIGINT}
+    from sys_Role
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from Role
-    where id = #{id,jdbcType=BIGINT}
+
+  <!-- 根据id删除角色数据 -->
+  <!-- int deleteByPrimaryKey(int id) -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_Role
+    where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <!-- 插入角色数据 -->
+  <!-- int insert(Role role) -->
   <insert id="insert" parameterType="org.blue.webframework.sys.account.model.Role" useGeneratedKeys="true" keyProperty="id">
-    insert into Role ( name, 
+    insert into sys_Role ( name, 
       enable
       )
     values (#{name,jdbcType=VARCHAR},#{enable,jdbcType=BIT})
   </insert>
+
+  <!-- 插入角色数据 -->
+  <!-- int insertSelective(Role role) -->
   <insert id="insertSelective" parameterType="org.blue.webframework.sys.account.model.Role" useGeneratedKeys="true"	keyProperty="id">
-    insert into Role
+    insert into sys_Role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="name != null" >
         name,
@@ -42,44 +54,59 @@
       #{enable,jdbcType=BIT}
     </trim>
   </insert>
+
+  <!-- 根据id更新角色数据 -->
+  <!-- int updateByPrimaryKeySelective(Role role) -->
   <update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.Role" >
-    update Role
+    update sys_Role
     <set >
       <if test="name != null" >
         name=#{name,jdbcType=VARCHAR},
       </if>
       enable=#{enable,jdbcType=BIT}
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 根据id更新角色数据 -->
+  <!-- int updateByPrimaryKeySelective(Role role) -->
   <update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.account.model.Role" >
-    update Role
+    update sys_Role
     set name=#{name,jdbcType=VARCHAR},
       enable=#{enable,jdbcType=BIT}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 根据id设置是否启用权限 -->
+  <!-- int setEnable(@Param("id") int id,
+                     @Param("enable")boolean enable) -->
   <update id="setEnable">
-   update Role
+   update sys_Role
     set enable=#{enable,jdbcType=BIT}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
-  
-  
+
+  <!-- 删除表 -->
+  <!-- int dropTable() -->
   	<update id="dropTable">
-		DROP TABLE IF EXISTS `Role`
+		DROP TABLE IF EXISTS `sys_Role`
 	</update>
-	
+
+  <!-- 清空表 -->
+  <!-- int truncateTable() -->
 	<update id="truncateTable">
-        truncate table `Role`
+        truncate table `sys_Role`
     </update>
-    
+
+  <!-- 创建表 -->
+  <!-- int createTable() -->
 	<update id="createTable">
-CREATE TABLE `Role`  (
-  `id` bigint(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sys_Role`  (
+  `id` int(32) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色名',
   `enable` bit(1) NULL DEFAULT NULL COMMENT '是否启用',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
-	
+
 	</update>
 </mapper>

@@ -2,25 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.blue.webframework.sys.attach.dao.AttachMapper">
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.attach.model.Attach">
-		<id column="id" property="id" jdbcType="BIGINT" />
+		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
 		<result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
 		<result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
-		<result column="DESC" property="desc" jdbcType="VARCHAR" />
+		<result column="attachDesc" property="attachDesc" jdbcType="VARCHAR" />
 		<result column="REMOVE_TAG" property="removeTag" jdbcType="BIT" />
 		<result column="Account_ID" property="accountId" jdbcType="VARCHAR" />
 		<result column="ADD_DATE" property="addDate" jdbcType="TIMESTAMP" />
 
 	</resultMap>
 	<sql id="Base_Column_List">
-		ID, NAME, FILE_TYPE, FILE_PATH, DESC, REMOVE_TAG, AccountID, ADD_DATE
+		ID, NAME, FILE_TYPE, FILE_PATH, attachDesc, REMOVE_TAG, account_id, ADD_DATE
 	</sql>
 
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
-		from attach
-		where ID = #{id,jdbcType=BIGINT}
+		from sys_attach
+		where ID = #{id,jdbcType=INTEGER}
 	</select>
 
 
@@ -28,7 +28,7 @@
 		parameterType="org.blue.webframework.sys.attach.model.Attach">
 		select
 		<include refid="Base_Column_List" />
-		from attach
+		from sys_attach
 		<where>
 			<if test="name != null">
 				and NAME = #{name,jdbcType=VARCHAR},
@@ -40,13 +40,13 @@
 				and FILE_PATH = #{filePath,jdbcType=VARCHAR},
 			</if>
 			<if test="attachDesc != null">
-				and ATTACH_DESC = #{attachDesc,jdbcType=VARCHAR},
+				and attachDesc = #{attachDesc,jdbcType=VARCHAR},
 			</if>
 			<if test="removeTag != null">
 				and REMOVE_TAG = #{removeTag,jdbcType=BIT},
 			</if>
 			<if test="accountId != null">
-				and Account_ID = #{accountId,jdbcType=BIGINT},
+				and Account_ID = #{accountId,jdbcType=INTEGER},
 			</if>
 			<if test="addDate != null">
 				and ADD_DATE = #{addDate,jdbcType=TIMESTAMP},
@@ -55,26 +55,25 @@
 		</where>
 	</select>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-		delete from attach
-		where ID = #{id,jdbcType=BIGINT}
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_attach
+		where ID = #{id,jdbcType=INTEGER}
 	</delete>
 
 
-	<insert id="insert" parameterType="org.blue.webframework.sys.attach.model.Attach">
-		insert into attach ( NAME,
-		FILE_TYPE, FILE_PATH, DESC,
-		REMOVE_TAG, Account_ID, ADD_DATE
+	<insert id="insert" parameterType="org.blue.webframework.sys.attach.model.Attach" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_attach ( NAME,
+		FILE_TYPE, FILE_PATH, attachDesc,
+		REMOVE_TAG, Account_ID
 		)
 		values (#{name,jdbcType=VARCHAR},
-		#{fileType,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR},
-		#{removeTag,jdbcType=BIT}, #{AccountId,jdbcType=BIGINT},
-		#{addDate,jdbcType=TIMESTAMP}
+		#{fileType,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{attachDesc,jdbcType=VARCHAR},
+		#{removeTag,jdbcType=BIT}, #{accountId,jdbcType=INTEGER}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="org.blue.webframework.sys.attach.model.Attach"
 		useGeneratedKeys="true" keyProperty="attachId">
-		insert into attach
+		insert into sys_attach
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="name != null">
 				NAME,
@@ -85,16 +84,15 @@
 			<if test="filePath != null">
 				FILE_PATH,
 			</if>
-			<if test="desc != null">
-				ATTACH_DESC,
+			<if test="attachDesc != null">
+				attachDesc,
 			</if>
 			<if test="removeTag != null">
 				REMOVE_TAG,
 			</if>
-			<if test="AccountId != null">
-				Account_ID,
+			<if test="accountId != null">
+				account_id,
 			</if>
-			ADD_DATE
 
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -108,22 +106,21 @@
 			<if test="filePath != null">
 				#{filePath,jdbcType=VARCHAR},
 			</if>
-			<if test="desc != null">
-				#{desc,jdbcType=VARCHAR},
+			<if test="attachDesc != null">
+				#{attachDesc,jdbcType=VARCHAR},
 			</if>
 			<if test="removeTag != null">
 				#{removeTag,jdbcType=BIT},
 			</if>
-			<if test="AccountId != null">
-				#{AccountId,jdbcType=BIGINT},
+			<if test="accountId != null">
+				#{accountId,jdbcType=INTEGER},
 			</if>
-			now()
 
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective"
 		parameterType="org.blue.webframework.sys.attach.model.Attach">
-		update attach
+		update sys_attach
 		<set>
 
 			<if test="name != null">
@@ -135,14 +132,14 @@
 			<if test="filePath != null">
 				FILE_PATH = #{filePath,jdbcType=VARCHAR},
 			</if>
-			<if test="desc != null">
-				DESC = #{desc,jdbcType=VARCHAR},
+			<if test="attachDesc != null">
+				attachDesc = #{attachDesc,jdbcType=VARCHAR},
 			</if>
 			<if test="removeTag != null">
 				REMOVE_TAG = #{removeTag,jdbcType=BIT},
 			</if>
 			<if test="accountId != null">
-				Account_id = #{accountId,jdbcType=BIGINT},
+				Account_id = #{accountId,jdbcType=INTEGER},
 			</if>
 
 			<if test="addDate != null">
@@ -150,43 +147,43 @@
 			</if>
 
 		</set>
-		where ID = #{id,jdbcType=BIGINT}
+		where ID = #{id,jdbcType=INTEGER}
 	</update>
 
 
 
 	<update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.attach.model.Attach">
-		update attach
+		update sys_attach
 		set NAME = #{name,jdbcType=VARCHAR},
 		FILE_TYPE = #{fileType,jdbcType=VARCHAR},
 		FILE_PATH = #{filePath,jdbcType=VARCHAR},
-		DESC = #{desc,jdbcType=VARCHAR},
+		attachDesc = #{attachDesc,jdbcType=VARCHAR},
 		REMOVE_TAG = #{removeTag,jdbcType=INTEGER},
 		Account_ID = #{accountId,jdbcType=VARCHAR},
 		ADD_DATE = #{addDate,jdbcType=TIMESTAMP}
-		where ID = #{id,jdbcType=BIGINT}
+		where ID = #{id,jdbcType=INTEGER}
 	</update>
 
 
 
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `attach`
+		DROP TABLE IF EXISTS `sys_attach`
 	</update>
 
 	<update id="truncateTable">
-		truncate table `attach`
+		truncate table `sys_attach`
 	</update>
 
 	<update id="createTable">
-		CREATE TABLE `attach` (
-		`id` bigint(20) NOT NULL AUTO_INCREMENT,
+		CREATE TABLE `sys_attach` (
+		`id` INT(32) NOT NULL AUTO_INCREMENT,
 		`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-		`file_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+		`file_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		`file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		`file_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
 		`add_date` TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
-		`desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-		`account_id` bigint(20) NULL DEFAULT NULL,
+		`attachDesc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+		`account_id` INT(32) NULL DEFAULT NULL,
 		`remove_tag` bit(1) NULL DEFAULT b'1',
 		PRIMARY KEY (`id`) USING BTREE
 		) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT

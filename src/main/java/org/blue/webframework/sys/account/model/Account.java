@@ -11,12 +11,12 @@ public class Account implements Serializable{
 	private String avatar;
 	private Date createdTime;
 	private boolean enable;
-	private long groupId;
-	private long id;
+	private int groupId;
+	private int id;
 	private String name;
 	private String openId;
 	private String password;
-	private long roleId;
+	private int roleId;
 
 	/**
 	 * 头像
@@ -34,11 +34,11 @@ public class Account implements Serializable{
 		return enable;
 	}
 
-	public long getGroupId() {
+	public int getGroupId() {
 		return groupId;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -54,7 +54,7 @@ public class Account implements Serializable{
 		return password;
 	}
 
-	public long getRoleId() {
+	public int getRoleId() {
 		return roleId;
 	}
 
@@ -70,11 +70,11 @@ public class Account implements Serializable{
 		this.enable = enable;
 	}
 
-	public void setGroupId(long groupId) {
+	public void setGroupId(int groupId) {
 		this.groupId = groupId;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -90,8 +90,9 @@ public class Account implements Serializable{
 		this.password = password;
 	}
 
-	public void setRoleId(long roleId) {
+	public void setRoleId(int roleId) {
 		this.roleId = roleId;
 	}
+
 
 }

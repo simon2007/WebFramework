@@ -34,7 +34,7 @@ class ResourceServiceImpl implements ResourceService{
 
 	private Resource vo2Model(ResourceVo resoureVo) {
 		Resource resource = new Resource();
-		System.err.println(resoureVo.getId());
+		
 		resource.setId(resoureVo.getId());
 		resource.setName(resoureVo.getName());
 		resource.setCode(resoureVo.getCode());
@@ -46,16 +46,19 @@ class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public void add(ResourceVo resourceVo) {
+		//转换为model
 		Resource resource=vo2Model(resourceVo);
+		//执行添加
 		resourceMapper.insert(resource);
-		System.err.println(resource.getId());
+		//封装id
 		resourceVo.setId(resource.getId());
 	}
 
 	@Override
-	public ResourceVo selectById(Long id) {
+	public ResourceVo selectById(int id) {
+		//根据id查询资源信息
 		Resource resource=resourceMapper.selectByPrimaryKey(id);
-
+		//返回
 		return model2Vo(resource);
 	}
 

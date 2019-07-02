@@ -4,7 +4,7 @@
 	<!-- 启用缓存 -->
 	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.account.model.Resource">
-		<id column="id" property="id" jdbcType="BIGINT" />
+		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="code" property="code" jdbcType="VARCHAR" />
 		<result column="comment" property="comment" jdbcType="VARCHAR" />
@@ -13,35 +13,44 @@
 	<sql id="Base_Column_List">
 		id, name, code,comment,operates
 	</sql>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+	
+	<!-- 根据id查询信息 -->
+	<!-- Resource selectByPrimaryKey(int id)-->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
-		from Resource
-		where id = #{id,jdbcType=BIGINT}
+		from sys_Resource
+		where id = #{id,jdbcType=INTEGER}
 	</select>
-
+	<!-- 根据资源编码查询信息 -->
+	<!-- Resource selectByCode(String resourceCode)-->
 	<select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select
 		<include refid="Base_Column_List" />
-		from Resource
+		from sys_Resource
 		where code = #{code,jdbcType=VARCHAR}
 	</select>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-		delete from Resource
+	<!-- 根据id删除数据 -->
+	<!-- int deleteByPrimaryKey(int id)-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_Resource
 		where id =
-		#{id,jdbcType=BIGINT}
+		#{id,jdbcType=INTEGER}
 	</delete>
 
 	<!-- 插入资源信息 -->
 	<!-- int insert(Resource resource)-->
 	<insert id="insert" parameterType="org.blue.webframework.sys.account.model.Resource" useGeneratedKeys="true" keyProperty="id">
-		insert into Resource ( name,code,comment,operates)
+		insert into sys_Resource ( name,code,comment,operates)
 		values
 		(#{name,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{comment,jdbcType=VARCHAR},#{operates,jdbcType=VARCHAR})
 	</insert>
+
+	<!-- 插入资源信息 -->
+	<!-- int insertSelective(Resource resource)-->
 	<insert id="insertSelective" parameterType="org.blue.webframework.sys.account.model.Resource" useGeneratedKeys="true" keyProperty="id">
-		insert into Resource
+		insert into sys_Resource
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="name != null">
 				name,
@@ -71,8 +80,11 @@
 			</if>
 		</trim>
 	</insert>
+
+	<!-- 根据id更新资源数据 -->
+	<!-- int updateByPrimaryKeySelective(Resource resource)-->
 	<update id="updateByPrimaryKeySelective" parameterType="org.blue.webframework.sys.account.model.Resource">
-		update Resource
+		update sys_Resource
 		<set>
 			<if test="name != null">
 				name=#{name,jdbcType=VARCHAR},
@@ -87,28 +99,38 @@
 				operates=#{operates,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where id = #{id,jdbcType=BIGINT}
+		where id = #{id,jdbcType=INTEGER}
 	</update>
+
+	<!-- 根据id更新资源数据 -->
+	<!-- int updateByPrimaryKey(Resource resource)-->
 	<update id="updateByPrimaryKey" parameterType="org.blue.webframework.sys.account.model.Resource">
-		update Resource
+		update sys_Resource
 		set name=#{name,jdbcType=VARCHAR},
 		code=#{code,jdbcType=VARCHAR},
 		comment=#{comment,jdbcType=VARCHAR},
 		operates=#{operates,jdbcType=VARCHAR}
 		where id=
-		#{id,jdbcType=BIGINT}
+		#{id,jdbcType=INTEGER}
 	</update>
+
+	<!-- 删除表 -->
+	<!-- int dropTable();-->
 	<update id="dropTable">
-		DROP TABLE IF EXISTS `resource`
+		DROP TABLE IF EXISTS `sys_resource`
 	</update>
 
+	<!-- 清空表 -->
+	<!-- int dropTable();-->
 	<update id="truncateTable">
-		truncate table `resource`
+		truncate table `sys_resource`
 	</update>
 
+	<!-- 创建表 -->
+	<!-- int createTable();-->
 	<update id="createTable">
-		CREATE TABLE `resource` (
-		`id` bigint(10) NOT NULL AUTO_INCREMENT,
+		CREATE TABLE `sys_resource` (
+		`id` int(32) NOT NULL AUTO_INCREMENT,
 		`name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源名',
 		`code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '资源编码',
 		`comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',

@@ -3,7 +3,7 @@ package org.blue.webframework.sys.attach.vo;
 import java.util.Date;
 
 public class AttachVo {
-	private Long id;
+	private int id;
 
     private String rootId;
 
@@ -17,14 +17,23 @@ public class AttachVo {
 
     private boolean removeTag;
 
-    private Long userId;
+    private int accountId;
 
-    private Date addDate;
+    private String image;
+    
+    
+    public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	private Date addDate;
     private String attachType;
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getRootId() {
@@ -63,11 +72,11 @@ public class AttachVo {
 	public void setRemoveTag(boolean removeTag) {
 		this.removeTag = removeTag;
 	}
-	public Long getUserId() {
-		return userId;
+	public int getAccountId() {
+		return accountId;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setAccountId(int accountId) {
+		this.accountId = accountId;
 	}
 	public Date getAddDate() {
 		return addDate;
@@ -81,8 +90,7 @@ public class AttachVo {
 	public void setAttachType(String attachType) {
 		this.attachType = attachType;
 	}
-    
-    
+
     
     
 }

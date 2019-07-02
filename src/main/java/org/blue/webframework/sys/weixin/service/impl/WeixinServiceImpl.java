@@ -320,7 +320,7 @@ class WeixinServiceImpl implements WeixinService {
 	 * 发送客服消息
 	 */
 	@Override
-	public void sendCustomMessageByCustId(long userId, String msgtype, JSONObject content) {
+	public void sendCustomMessageByCustId(int userId, String msgtype, JSONObject content) {
 		try {
 
 			String serverName = getServerName();
@@ -351,7 +351,7 @@ class WeixinServiceImpl implements WeixinService {
 	}
 
 	@Override
-	public void sendCustomMessageByUserId(String accessToken, long userId, String msgtype, JSONObject content) {
+	public void sendCustomMessageByUserId(String accessToken, int userId, String msgtype, JSONObject content) {
 		try {
 
 			String appId = accessTokenMapper.getAppIdByAccessToken(accessToken);

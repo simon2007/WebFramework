@@ -4,7 +4,7 @@ package org.blue.webframework.exception;
 /**
  * 界面异常,界面层的异常
  * 
- * @author Long
+ * @author Lilongwu
  *
  */
 public class UIException extends BaseException {
