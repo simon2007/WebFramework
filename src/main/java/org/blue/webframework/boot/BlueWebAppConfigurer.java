@@ -39,13 +39,17 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafView;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
-public class BlueWebAppConfigurer implements WebMvcConfigurer {
+@EnableWebSocket
+public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigurer{
 	Logger logger = LogManager.getLogger(getClass());
 
 	@Override
@@ -109,9 +113,9 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 		String url = getClass().getProtectionDomain().getCodeSource().getLocation().toString();
 
 		if (url.contains(".jar"))
-			templateResolver.setPrefix("classpath:/META-INF/resources/WEB-INF/thymeleaf/");
+			templateResolver.setPrefix("classpath:/META-INF/resources/");
 		else
-			templateResolver.setPrefix("/WEB-INF/thymeleaf/");
+			templateResolver.setPrefix("/");
 
 		templateResolver.setSuffix(".html");
 		templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -135,9 +139,6 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/images/**").addResourceLocations("/static/images/");
-		registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
-		registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
 		registry.addResourceHandler("/" + getUploadPrefix() + "**").addResourceLocations("file:" + getUploadPrefix());
 	}
 
@@ -249,6 +250,12 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer {
 			multipartResolver.setMaxUploadSize((int) maxUploadDataSizeFile.toBytes());
 		}
 		return multipartResolver;
+	}
+
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+
+		
 	}
 
 }

@@ -1,24 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.blue.webframework</groupId>
+
+	<groupId>org.blue</groupId>
 	<artifactId>webframework</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
-    <name>webframework Maven Webapp</name>
-    <url>http://maven.apache.org</url>
-	<version>0.0.1.${maven.build.timestamp}</version>
-	<packaging>war</packaging>
+
+	<name>webframework</name>
+
 	<properties>
-		<!-- spring版本号 -->
-
-		<java.version>1.8</java.version>
-
-		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+			<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<log4j2.version>2.6</log4j2.version>
 		<javax-jaxb.version>2.2.8</javax-jaxb.version>
-
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>com.ronghe.investigation.boot.CriminalInvestigationBootApplication</start-class>
 	</properties>
 
 	<parent>
@@ -28,13 +24,18 @@
 
 	</parent>
 
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-websocket</artifactId>
 
+</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -49,7 +50,8 @@
 
 			<exclusions>
 				<!-- 发布到tomcat服务器 -->
-				<!-- exclusion> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-tomcat</artifactId> </exclusion -->
+				<!-- exclusion> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-tomcat</artifactId> 
+					</exclusion -->
 
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
@@ -80,37 +82,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- spring boot mybatis -->
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-
-
-		<!-- log -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>opensymphony</groupId>
-			<artifactId>oscache</artifactId>
-			<version>2.4.1</version>
-		</dependency>
-
-
-<dependency>
-    <groupId>com.github.pagehelper</groupId>
-    <artifactId>pagehelper-spring-boot-starter</artifactId>
-    <version>1.2.12</version>
-</dependency>
-
-
-
 		<!-- emailService -->
 		<dependency>
 			<groupId>com.sun.mail</groupId>
@@ -127,24 +98,6 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.54</version>
-		</dependency>
-		<!--处理2003 excel -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.16</version>
-		</dependency>
-		<!--处理2007 excel -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.16</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>1.4</version>
 		</dependency>
 
 		<dependency>
@@ -163,9 +116,35 @@
 			<artifactId>pinyin4j</artifactId>
 			<version>2.5.1</version>
 		</dependency>
+		<!-- log -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
 
+
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>oscache</artifactId>
+			<version>2.4.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+
+
+		<!-- spring boot mybatis -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.3.2</version>
+		</dependency>
 	</dependencies>
-
 	<repositories>
 		<repository>
 			<id>oss-snapshots-repo</id>
@@ -186,128 +165,4 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
-	<build>
-		<finalName>Investigatigation</finalName>
-		<plugins>
-
-
-			<plugin>
-				<groupId>com.idfconnect.devtools</groupId>
-				<artifactId>idfc-proguard-maven-plugin</artifactId>
-				<version>1.0.1</version>
-				<executions>
-					<execution>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>obfuscate</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-				<options>
-					<repackageclasses>com.idfconnect.sample.obfuscated</repackageclasses>
-				</options>
-				<inputFileFilter>**.class</inputFileFilter>
-				<dontattach>false</dontattach>
-					<inputFile>${project.build.outputDirectory}</inputFile>
-					<excludeManifests>false</excludeManifests>
-	                <excludeMavenDescriptor>false</excludeMavenDescriptor>
-		             <outputArtifacts>
-			             <outputArtifact>
-				             <file>${project.build.finalName}/WEB-INF/lib/${project.build.finalName}.jar</file>
-							<type>jar</type>
-			             </outputArtifact>
-		             </outputArtifacts>
-
-
-
-
-					<libraryJarPaths>
-						<!-- Include main JAVA library required. -->
-						<libraryJarPath>${java.home}/lib/jce.jar</libraryJarPath>
-					</libraryJarPaths>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>net.sf.proguard</groupId>
-						<artifactId>proguard-base</artifactId>
-						<version>5.3.3</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-
-			<!-- war -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-				<archiveClasses>true</archiveClasses>
-				
-					<archive>
-						<manifest>
-							<mainClass>com.ronghe.investigation.boot.CriminalInvestigationBootApplication</mainClass>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>WEB-INF/lib</classpathPrefix>
-						</manifest>
-					</archive>
-
-					<webResources>
-						<resource>
-							<!-- 元配置文件的目录，相对于pom.xml文件的路径 -->
-							<directory>src/main/webapp/WEB-INF</directory>
-
-							<!-- 是否过滤文件，也就是是否启动auto-config的功能 -->
-							<filtering>true</filtering>
-
-							<!-- 目标路径 -->
-							<targetPath>WEB-INF</targetPath>
-							
-
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
-
-
-
-
-		</plugins>
-		<resources>
-			<!-- 打包时将jsp文件拷贝到META-INF目录下 -->
-			<resource>
-				<!-- 项目中要处理的目录 -->
-				<!-- 指定resources插件处理哪个目录下的资源文件 -->
-				<directory>src/main/webapp</directory>
-				<!-- 打包之后要放在什么位置 -->
-				<!--注意此次必须要放在此目录下才能被访问到 -->
-				<targetPath>META-INF/resources</targetPath>
-				<includes>
-					<include>**/**</include>
-				</includes>
-				<excludes>
-					<exclude>**/.svn</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/**</include>
-				</includes>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>**/.svn</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/**.xml</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
-		</resources>
-
-	</build>
 </project>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.blue.webframework.sys.region.dao.RegionMapper">
+	<!-- 启用缓存 -->
+	<cache type="org.blue.webframework.cache.QueryCache" />
 	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.region.model.Region">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="NAME" property="name" jdbcType="VARCHAR" />
 		<result column="name_en" property="name_en" jdbcType="VARCHAR" />
 		<result column="pid" property="pid" jdbcType="INTEGER" />
-		
-
 	</resultMap>
 	<sql id="Base_Column_List">
 		ID, NAME, name_en,pid
@@ -27,16 +27,16 @@
 		<include refid="Base_Column_List" />
 		from sys_region
 		<where>
+
 			<if test="name != null">
-				and NAME = #{name,jdbcType=VARCHAR},
+				and NAME = #{name,jdbcType=VARCHAR}
 			</if>
 			<if test="name_en != null">
-				and NAME_en = #{name_en,jdbcType=VARCHAR},
+				and NAME_en = #{name_en,jdbcType=VARCHAR}
 			</if>
 			<if test="pid >0">
-				and pid = #{pid,jdbcType=INTEGER},
+				and pid = #{pid,jdbcType=INTEGER}
 			</if>
-			
 		</where>
 		order by id asc
 	</select>

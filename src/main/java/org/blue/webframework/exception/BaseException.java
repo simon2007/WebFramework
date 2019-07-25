@@ -26,7 +26,7 @@ public abstract class BaseException extends RuntimeException {
 		if (messageSource != null)
 			return messageSource;
 		messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasenames("messages/messages", "errorcodes/errorcode");
+		messageSource.setBasenames("messages/messages", "errorcodes/errorcode","messages/sys_messages", "errorcodes/sys_errorcode");
 		messageSource.setDefaultEncoding("utf-8");
 
 		return messageSource;

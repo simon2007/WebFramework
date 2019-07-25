@@ -19,7 +19,8 @@ public class WebApiResultConverter extends FastJsonHttpMessageConverter {
 
 	public WebApiResultConverter() {
 		FastJsonConfig fastJsonConfig=new FastJsonConfig();
-		fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullListAsEmpty,SerializerFeature.WriteNullStringAsEmpty);
+		fastJsonConfig.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect,SerializerFeature.WriteMapNullValue,
+				                             SerializerFeature.WriteNullListAsEmpty,SerializerFeature.WriteNullStringAsEmpty);
 
 		fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
 		setFastJsonConfig(fastJsonConfig);
@@ -32,10 +33,8 @@ public class WebApiResultConverter extends FastJsonHttpMessageConverter {
 		{
 			ResultModel model = new ResultModel();
 			model.setData(value);
-
 			model.setCode("0");
 			model.setMessage("操作成功");
-
 			value=model;
 		}
 		super.writeInternal(value, httpOutputMessage);

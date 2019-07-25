@@ -1,6 +1,8 @@
 package org.blue.webframework.sys.region.model;
 
-public class Region {
+import java.io.Serializable;
+
+public class Region implements Serializable{
 	private int id;
 	private String name;
 	private String name_en;

@@ -1,5 +1,6 @@
 package org.blue.webframework.sys.account.dao;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.blue.webframework.sys.account.model.Account;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import com.github.pagehelper.Page;
  * 处理用户数据的持久层
  */
 @Repository
-public interface AccountMapper {
+public interface AccountMapper{
 
 	/**
 	 * 根据条件查询所有匹配的账户数据

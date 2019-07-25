@@ -23659,7 +23659,7 @@ public class RegionServiceImpl implements RegionService {
 
 	@Override
 	public List<Region> getAll() {
-		return regionMapper.selectAllList(null);
+		return getRegionList(1);
 	}
 
 	@Override
@@ -23667,6 +23667,13 @@ public class RegionServiceImpl implements RegionService {
 		regionMapper.dropTable();
 		regionMapper.createTable();
 		
+	}
+
+	@Override
+	public List<Region> getRegionList(int rootId) {
+		Region region=new Region();
+		region.setPid(rootId);
+		return regionMapper.selectAllList(region);
 	}
 
 }

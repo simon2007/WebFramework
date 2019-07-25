@@ -204,7 +204,6 @@
 		and
 		password=#{password,jdbcType=VARCHAR}
 		and enable=1
-
 	</select>
 
 	<!-- 删除表account用户表 -->
