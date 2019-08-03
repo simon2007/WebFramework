@@ -6,8 +6,8 @@ import org.blue.webframework.exception.BusinessException;
 import org.blue.webframework.sys.account.dao.AccountMapper;
 import org.blue.webframework.sys.account.model.Account;
 import org.blue.webframework.sys.account.service.AccountService;
+import org.blue.webframework.sys.account.utils.Argon2Utils;
 import org.blue.webframework.sys.account.vo.AccountVo;
-import org.blue.webframework.utils.StringHelper;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
@@ -19,7 +19,6 @@ class AccountServiceImpl implements AccountService {
 	@Resource
 	private AccountMapper accountMapper;
 
-	private final String salt = "__honor__";
 
 	@Override
 	public String getOpenIdById(int userId) {
@@ -67,7 +66,7 @@ class AccountServiceImpl implements AccountService {
 	@Override
 	public int add(AccountVo accountVo, String password) {
 		Account account = vo2Model(accountVo);
-		account.setPassword( getPasswordMd5(password, salt));
+		account.setPassword( Argon2Utils.encode(password));
 		int ret = accountMapper.insert(account);
 		accountVo.setId(account.getId());
 
@@ -124,36 +123,33 @@ class AccountServiceImpl implements AccountService {
 		return model2Vo(accountPage);
 	}
 
-	/**
-	 * 获取根据MD5加密的密码
-	 */
-	private String getPasswordMd5(String password, String salt) {
-		if (password.length() % 2 == 0)
-			return StringHelper.string2MD5(salt + password);
-		else
-			return StringHelper.string2MD5(salt + password + salt);
-	}
 
 	@Override
 	public AccountVo getByNameAndPassword(String name, String password) {
-		Account account = accountMapper.getByNameAndPassword(name, getPasswordMd5(password, salt));
+		Account account = accountMapper.getByName(name);
 		if (account == null)
 			throw new BusinessException("0001");
+		
+		if( Argon2Utils.verify(password, account.getPassword()))
 		return model2Vo(account);
+		throw new BusinessException("0001");
 	}
 
 	@Override
 	public void resetPassword(String name, String oldPassword, String newPassword) {
 		// 根据用户名和密码查询用户数据
-		Account account = accountMapper.getByNameAndPassword(name, getPasswordMd5(oldPassword, salt));
+		Account account = accountMapper.getByName(name);
 		if (account == null)
 			// 为null：抛出异常
 			throw new BusinessException("0001");
 
+		if( Argon2Utils.verify(oldPassword, account.getPassword()))
+		{
 		//新密码
-		account.setPassword(getPasswordMd5(newPassword, salt));
+		account.setPassword(Argon2Utils.encode(newPassword));
 		// 更新密码
 		accountMapper.updateByPrimaryKey(account);
+		}
 	}
 
 	@Override

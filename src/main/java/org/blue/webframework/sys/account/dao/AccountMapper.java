@@ -76,12 +76,11 @@ public interface AccountMapper{
 	String getOpenIdById(int userId);
 
 	/**
-	 * 根据用户名和密码查询用户数据
+	 * 根据用户名查询用户数据
 	 * @param name 用户名
-	 * @param password 密码
 	 * @return 匹配的用户数据，如果没有匹配的数据，则返回null
 	 */
-	Account getByNameAndPassword(@Param("name")String name,@Param("password") String password);
+	Account getByName(@Param("name")String name);
 
 	/**
 	 * 如果存在account表，
