@@ -1,6 +1,5 @@
 package org.blue.webframework.sys.account.dao;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.blue.webframework.sys.account.model.Account;
 import org.springframework.stereotype.Repository;

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blue.webframework.sys.news.dao.NewsMapper">
+	<resultMap id="BaseResultMap" type="org.blue.webframework.sys.news.model.News">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="TEXT" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="publishTime" property="publishTime" jdbcType="TIMESTAMP" />
+		<result column="account_id" property="accountId" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, type, title,content,createTime,updateTime,publishTime,account_id,status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_news
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="getAccountNewsList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_news
+		<where>
+		account_id = #{accountId,jdbcType=INTEGER}
+		<if test="startDate !=null">
+			and createtime &gt;= #{startDate,jdbcType=TIMESTAMP} 
+		</if>
+		<if test="endDate !=null">
+			and createtime &lt;= #{endDate,jdbcType=TIMESTAMP} 
+		</if>
+		</where>
+		 order by createtime desc
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_news
+		where id =#{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="org.blue.webframework.sys.news.model.News" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into sys_news (type, title,content,updateTime,publishTime,account_id,status)
+		values (
+		#{type,jdbcType=BIT},#{title,jdbcType=VARCHAR},#{content,jdbcType=TEXT},#{updateTime,jdbcType=TIMESTAMP},#{publishTime,jdbcType=TIMESTAMP}
+		,#{accountId,jdbcType=INTEGER},#{status,jdbcType=INTEGER})
+	</insert>
+	
+	<update id="dropTable">
+		DROP TABLE IF EXISTS `sys_news`
+	</update>
+	
+	<update id="truncateTable">
+        truncate table `sys_news`
+    </update>
+    
+	<update id="createTable">
+CREATE TABLE `sys_news`  (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `type` bit(3) NULL DEFAULT NULL COMMENT '类型：1前台公告，2前台新闻，3后台公告，4后台公告',
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
+  `createTime` timestamp(0)  DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp(0)  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  `publishTime` timestamp(0) NULL DEFAULT NULL COMMENT '发布时间',
+  `account_id` int(10) NULL DEFAULT NULL COMMENT '用户id',
+  `status` bit(2) NULL DEFAULT 0 COMMENT '状态0未发布，1已发布，2已删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `I_type_status`(`type`, `publishTime`, `status`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+	</update>
+</mapper>
