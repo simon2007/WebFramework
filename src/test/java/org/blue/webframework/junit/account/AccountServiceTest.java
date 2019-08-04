@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Date;
 
 import org.blue.webframework.junit.SpringTestBase;
-import org.blue.webframework.junit.SpringTestRollBackBase;
 import org.blue.webframework.sys.account.service.AccountService;
+import org.blue.webframework.sys.account.vo.AccountLoginVo;
 import org.blue.webframework.sys.account.vo.AccountVo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class AccountServiceTest extends SpringTestBase {
 
 		accountService.add(admin, "hello123");
 		System.out.println("id=" + admin.getId());
-		AccountVo dbUserVo = accountService.getUserById(admin.getId());
+		AccountVo dbUserVo = accountService.getAccountById(admin.getId());
 		assertNotNull(dbUserVo);
 		assertEquals(dbUserVo.getName(), admin.getName());
 		assertEquals(dbUserVo.getGroupId(), admin.getGroupId());
@@ -64,7 +64,7 @@ public class AccountServiceTest extends SpringTestBase {
 
 		accountService.update(user);
 		System.err.println("user.getId()=" + user.getId());
-		AccountVo dbUserVo = accountService.getUserById(user.getId());
+		AccountVo dbUserVo = accountService.getAccountById(user.getId());
 		System.err.println("dbUserVo.getName()=" + dbUserVo.getName());
 		System.err.println("user.getName()=" + user.getName());
 
@@ -87,7 +87,10 @@ public class AccountServiceTest extends SpringTestBase {
 
 		accountService.add(admin, "hello123");
 
-		AccountVo dbUserVo = accountService.getByNameAndPassword(admin.getName(), "hello123");
+		AccountLoginVo accoutLoginVo=new AccountLoginVo();
+		accoutLoginVo.setName(admin.getName());
+		accoutLoginVo.setPassword("hello123");
+		AccountVo dbUserVo = accountService.login(accoutLoginVo);
 		assertNotNull(dbUserVo);
 		assertEquals(dbUserVo.getName(), admin.getName());
 		assertEquals(dbUserVo.getGroupId(), admin.getGroupId());
@@ -123,9 +126,10 @@ public class AccountServiceTest extends SpringTestBase {
 
 		accountService.add(admin, "hello123");
 
-		String name = admin.getName();
-		String password = "hello123";
-		AccountVo result = accountService.getByNameAndPassword(name, password);
+		AccountLoginVo accoutLoginVo=new AccountLoginVo();
+		accoutLoginVo.setName(admin.getName());
+		accoutLoginVo.setPassword("hello123");
+		AccountVo result = accountService.login(accoutLoginVo);
 		System.err.println("result=" + result);
 
 	}

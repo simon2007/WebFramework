@@ -1,6 +1,6 @@
 package org.blue.webframework.sys.identifyingcode.service.impl;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
@@ -73,12 +73,11 @@ class IdentifyingCodeServiceImpl implements IdentifyingCodeService {
 
 	@Override
 	public void sendEmail(String email, String templetId) {
-		int codeLength = siteParameterService.getParamValue("indentifying_code_length", 4);
 		int aliveTime = siteParameterService.getParamValue("indentifying_code_alive_time", 900);
 		String emailTemplateName = siteParameterService.getParamValue("indentifying_email_template", "/pcview/email");
 		String emailSubject = siteParameterService.getParamValue("indentifying_email_template", "验证码");
 
-		String checkCode = randomNumeric(codeLength);
+		String checkCode = generateRandomCode();
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("code", checkCode);
@@ -109,8 +108,15 @@ class IdentifyingCodeServiceImpl implements IdentifyingCodeService {
 		return identifyingCodeMapper.createTable();
 	}
 
-	public Image getImageyCode(String code) {
-		return ImagCodeHelper.getImageyCode(code);
+	public BufferedImage getImageyCode(String code,int width,int height) {
+		return ImagCodeHelper.getImageyCode(code,width,height);
+	}
+
+	@Override
+	public String generateRandomCode() {
+		int codeLength = siteParameterService.getParamValue("indentifying_code_length", 4);
+		String checkCode = randomNumeric(codeLength);
+		return checkCode;
 	}
 
 }

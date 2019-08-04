@@ -1,5 +1,7 @@
 package org.blue.webframework.sys.account.service;
 
+import org.blue.webframework.sys.account.vo.AccountLoginVo;
+import org.blue.webframework.sys.account.vo.AccountPasswordResetVo;
 import org.blue.webframework.sys.account.vo.AccountVo;
 
 import com.github.pagehelper.Page;
@@ -22,7 +24,7 @@ public interface AccountService {
 	 * @param userId
 	 * @return
 	 */
-	AccountVo getUserById(int userId);
+	AccountVo getAccountById(int userId);
 	
 	/**
 	 * 新增用户
@@ -71,24 +73,47 @@ public interface AccountService {
 	Page<AccountVo> getList(AccountVo account,int pageIndex,int pageSize);
 
 	/**
-	 * 根据用户名和密码获取用户信息
-	 * @param name 用户名
-	 * @param password 密码
+	 * 登录
+	 * @param accountLoginVo 登录
 	 * @return 用户信息
 	 */
-	AccountVo getByNameAndPassword(String name, String password);
+	AccountVo login(AccountLoginVo accountLoginVo);
 	
 	/**
 	 * 重置密码
-	 * @param name
-	 * @param oldPassword
-	 * @param newPassword
 	 * @return
 	 */
-	void resetPassword(String name, String oldPassword,String newPassword);
+	void resetPassword(AccountPasswordResetVo accountPasswordResetVo);
 	
 	/**
 	 * 创建用户表
 	 */
 	void recreateTable();
+	
+	
+	/**
+	 * 获取token
+	 * @param account
+	 * @return
+	 */
+	String getUserToken(AccountVo account);
+	
+	int getAccountIdFromToken(String token);
+	
+	/**
+	 * 获取用户名
+	 * @param token
+	 * @return
+	 */
+	String getNameFromToken(String token);
+	
+	int getRoleIdFromToken(String token);
+	
+	int getGroupIdFromToken(String token);
+	/**
+	 * 
+	 * @param token
+	 * @return
+	 */
+	AccountVo getAccountFromToken(String token);
 }

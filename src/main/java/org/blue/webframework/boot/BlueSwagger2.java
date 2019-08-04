@@ -1,6 +1,8 @@
 package org.blue.webframework.boot;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,9 +25,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @ConditionalOnProperty(prefix="swagger",name = "enabled", havingValue = "true")
 public class BlueSwagger2 {
-	// 是否开启swagger，正式环境一般是需要关闭的，可根据springboot的多环境配置进行设置
-	@Value(value = "${swagger.enabled:false}")
-	Boolean swaggerEnabled;
+
+	Logger logger=LogManager.getLogger(getClass());
+	@Value(value = "${swagger.basePackage:org}")
+	String basePackage;
 
 	/**
 	 * 创建API应用 appinfo()增加API相关信息
@@ -38,21 +41,27 @@ public class BlueSwagger2 {
 	@ConditionalOnMissingBean
 	public Docket createRestApi() {
 		Docket docket = new Docket(DocumentationType.SWAGGER_2);
-		docket.enable(swaggerEnabled);
+
 		docket.apiInfo(apiInfo());
+		docket.groupName("资源管理");
+		docket.select();
+		
 		ApiSelectorBuilder builder = docket.select();
 		if (StringUtils.isNotBlank(getBasePackage()))
 			builder.apis(RequestHandlerSelectors.basePackage(getBasePackage()));// 为当前包下controller生成API文档
 		builder.apis(RequestHandlerSelectors.withClassAnnotation(Api.class)); // 为有@Api注解的Controller生成API文档
 		builder.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)); // 为有@ApiOperation注解的方法生成API文档
-		builder.paths(PathSelectors.any()).build();
+		docket=builder.paths(PathSelectors.any()).build();
 		docket.pathMapping("/");
+		
 
+		logger.info("createRestApi");
 		return docket;
 	}
 
 	protected String getBasePackage() {
-		return null;
+		logger.info("basePackage="+basePackage);
+		return basePackage;
 	}
 
 	/**

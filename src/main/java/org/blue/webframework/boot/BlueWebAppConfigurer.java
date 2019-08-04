@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.blue.webframework.framework.BlueExceptionHandler;
-import org.blue.webframework.framework.result.WebApiResultConverter;
 import org.blue.webframework.sys.account.service.PrivilegeService;
 import org.blue.webframework.sys.attach.service.AttachService;
 import org.blue.webframework.utils.StringHelper;
@@ -25,13 +24,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.DateFormatter;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -71,11 +67,7 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 
 	}
 
-	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 
-		converters.add(0, new WebApiResultConverter());
-	}
 
 	@Bean
 	public SpringTemplateEngine thymeleafEngine() {
@@ -140,6 +132,7 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/" + getUploadPrefix() + "**").addResourceLocations("file:" + getUploadPrefix());
+		
 	}
 
 	@Override
@@ -153,20 +146,7 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 		return new DateFormatter("yyyy-MM-dd HH:mm:ss");
 	}
 
-	@Override
-	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		/* 是否通过请求Url的扩展名来决定media type */
-		configurer.favorPathExtension(true)
-				/* 不检查Accept请求头 */
-				.ignoreAcceptHeader(true).parameterName("mediaType")
-				/* 设置默认的media yype */
-				.defaultContentType(MediaType.TEXT_HTML)
-				/* 请求以.html结尾的会被当成MediaType.TEXT_HTML */
-				.mediaType("html", MediaType.TEXT_HTML)
-				/* 请求以.json结尾的会被当成MediaType.APPLICATION_JSON */
-				.mediaType("json", MediaType.APPLICATION_JSON_UTF8).mediaType("xml", MediaType.APPLICATION_XML);
 
-	}
 
 	@Resource
 	protected PrivilegeService privilegeService;

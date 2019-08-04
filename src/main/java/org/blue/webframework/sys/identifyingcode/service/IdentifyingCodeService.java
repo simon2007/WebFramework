@@ -1,6 +1,6 @@
 package org.blue.webframework.sys.identifyingcode.service;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 /**
  * 验证码服务，包括短信验证码，email验证码
@@ -36,9 +36,14 @@ public interface IdentifyingCodeService {
 	int recreateTable();
 	
 	/**
-	 * 生成验证码
+	 * 生成随机验证码
+	 * @return
+	 */
+	String generateRandomCode();
+	/**
+	 * 生成验证码图
 	 * @param code
 	 * @return
 	 */
-	Image getImageyCode(String code);
+	BufferedImage getImageyCode(String code,int width,int height);
 }
