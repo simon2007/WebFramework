@@ -225,7 +225,7 @@
 		`group_id` int(32) NULL DEFAULT NULL COMMENT '用户组id',
 		`role_id` int(32) NULL DEFAULT NULL COMMENT '角色id',
 		`name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录名',
-		`password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
+		`password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
 		`openId` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信的openid',
 		`enable` bit(1) NULL DEFAULT NULL COMMENT '是否启用',
 		`avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',

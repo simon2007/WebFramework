@@ -31,9 +31,7 @@ public class QueryCache extends BaseCache implements org.apache.ibatis.cache.Cac
 
 	@Override
 	public void putObject(Object key, Object value) {
-		if (refreshPolicy != null)
-			put(key, value, refreshPolicy);
-
+		put(key, value, refreshPolicy);
 	}
 
 	@Override
