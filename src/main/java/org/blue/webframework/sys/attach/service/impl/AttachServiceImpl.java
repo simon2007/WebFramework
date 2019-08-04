@@ -14,6 +14,7 @@ import org.blue.webframework.sys.attach.model.Attach;
 import org.blue.webframework.sys.attach.service.AttachService;
 import org.blue.webframework.sys.attach.vo.AttachVo;
 import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,9 @@ public class AttachServiceImpl implements AttachService {
 	private AttachMapper attachMapper;
 	@Resource
 	private SiteParameterService siteParameterService;
+	
+	@Value("file.uploadDir:upload")
+	private String uploadDir;
 	
 	@Override
 	public AttachVo uploadFile(int accountId,  MultipartFile multipartFile) throws Exception {
@@ -84,7 +88,7 @@ public class AttachServiceImpl implements AttachService {
 
 	@Override
 	public String getUploadPrefix() {
-		return siteParameterService.getParamValue("upload_prefix","upload/") ;
+		return uploadDir ;
 	}
 
 	@Override

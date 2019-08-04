@@ -3,6 +3,7 @@ package org.blue.webframework.boot;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,9 +21,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
+@ConditionalOnProperty(prefix="swagger",name = "enabled", havingValue = "true")
 public class BlueSwagger2 {
 	// 是否开启swagger，正式环境一般是需要关闭的，可根据springboot的多环境配置进行设置
-	@Value(value = "${swagger.enabled}")
+	@Value(value = "${swagger.enabled:false}")
 	Boolean swaggerEnabled;
 
 	/**

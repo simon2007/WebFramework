@@ -5,7 +5,7 @@
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="type" property="type" jdbcType="INTEGER" />
 		<result column="title" property="title" jdbcType="VARCHAR" />
-		<result column="content" property="content" jdbcType="TEXT" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
 		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
 		<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="publishTime" property="publishTime" jdbcType="TIMESTAMP" />
@@ -46,7 +46,7 @@
 		keyProperty="id">
 		insert into sys_news (type, title,content,updateTime,publishTime,account_id,status)
 		values (
-		#{type,jdbcType=BIT},#{title,jdbcType=VARCHAR},#{content,jdbcType=TEXT},#{updateTime,jdbcType=TIMESTAMP},#{publishTime,jdbcType=TIMESTAMP}
+		#{type,jdbcType=BIT},#{title,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{publishTime,jdbcType=TIMESTAMP}
 		,#{accountId,jdbcType=INTEGER},#{status,jdbcType=INTEGER})
 	</insert>
 	
@@ -63,7 +63,7 @@ CREATE TABLE `sys_news`  (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` bit(3) NULL DEFAULT NULL COMMENT '类型：1前台公告，2前台新闻，3后台公告，4后台公告',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
+  `content` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `createTime` timestamp(0)  DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp(0)  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   `publishTime` timestamp(0) NULL DEFAULT NULL COMMENT '发布时间',

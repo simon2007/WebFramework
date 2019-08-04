@@ -199,16 +199,16 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 		// resolvers.add(new BlueExceptionHandler());
 	}
 
-	@Value("${file.location}")
+	@Value("${file.location:tmp}")
 	private String location;
 
-	@Value("${file.maxUploadSizePerFile}")
+	@Value("${file.maxUploadSizePerFile:10MB}")
 	private String maxUploadSizePerFile;
 
-	@Value("${file.maxInMemorySize}")
+	@Value("${file.maxInMemorySize:5MB}")
 	private String maxInMemorySize;
 
-	@Value("${file.maxUploadSizeFile}")
+	@Value("${file.maxUploadSizeFile:50MB}")
 	private String maxUploadSizeFile;
 
 	@Resource
