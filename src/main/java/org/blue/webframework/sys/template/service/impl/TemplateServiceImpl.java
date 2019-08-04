@@ -60,7 +60,7 @@ class TemplateServiceImpl implements TemplateService {
 
 	@Override
 	public String processUrlTemplate(String url, Map<String, Object> data) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

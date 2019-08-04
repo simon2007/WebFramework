@@ -401,7 +401,7 @@ String openid="";
 
 	@Override
 	public WeixinMessageVo recvMessage(String openId, UserWeixinMessageVo inMsg) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
