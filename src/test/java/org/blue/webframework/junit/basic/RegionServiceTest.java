@@ -1,17 +1,15 @@
 package org.blue.webframework.junit.basic;
 
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.imageio.stream.FileImageInputStream;
 
 import org.blue.webframework.junit.SpringTestBase;
-import org.blue.webframework.sys.region.model.Region;
 import org.blue.webframework.sys.pinyin.service.PinyinService;
+import org.blue.webframework.sys.region.model.Region;
 import org.blue.webframework.sys.region.service.RegionService;
 import org.junit.Test;
 

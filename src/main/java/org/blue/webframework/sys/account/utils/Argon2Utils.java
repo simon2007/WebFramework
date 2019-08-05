@@ -4,7 +4,11 @@ import java.nio.charset.StandardCharsets;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-
+/**
+   *  密码检验
+ * @author Administrator
+ *
+ */
 public class Argon2Utils {
 	public static String encode(String text) {
 		Argon2 argon2 = Argon2Factory.create();

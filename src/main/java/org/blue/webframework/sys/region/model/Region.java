@@ -3,6 +3,10 @@ package org.blue.webframework.sys.region.model;
 import java.io.Serializable;
 
 public class Region implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
 	private String name_en;

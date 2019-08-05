@@ -47,22 +47,19 @@ public class BlueSwagger2 {
 		docket.select();
 		
 		ApiSelectorBuilder builder = docket.select();
-		if (StringUtils.isNotBlank(getBasePackage()))
-			builder.apis(RequestHandlerSelectors.basePackage(getBasePackage()));// 为当前包下controller生成API文档
+		logger.info("basePackage="+basePackage);
+		if (StringUtils.isNotBlank(basePackage))
+			builder.apis(RequestHandlerSelectors.basePackage(basePackage));// 为当前包下controller生成API文档
 		builder.apis(RequestHandlerSelectors.withClassAnnotation(Api.class)); // 为有@Api注解的Controller生成API文档
 		builder.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)); // 为有@ApiOperation注解的方法生成API文档
 		docket=builder.paths(PathSelectors.any()).build();
 		docket.pathMapping("/");
 		
-
 		logger.info("createRestApi");
 		return docket;
 	}
 
-	protected String getBasePackage() {
-		logger.info("basePackage="+basePackage);
-		return basePackage;
-	}
+
 
 	/**
 	 * 创建改API的基本信息（这些基本信息会展示在文档页面中） 访问地址： http://项目实际地址/swagger-ui.html

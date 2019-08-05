@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.blue.webframework.junit.SpringTestRollBackBase;
 import org.blue.webframework.sys.email.service.EmailService;
 import org.blue.webframework.sys.siteparameter.service.SiteParameterService;
-import org.junit.Before;
 import org.junit.Test;
 
 public class EmailServiceTest extends SpringTestRollBackBase {

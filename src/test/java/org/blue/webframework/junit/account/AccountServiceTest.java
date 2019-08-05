@@ -55,7 +55,7 @@ public class AccountServiceTest extends SpringTestBase {
 		user.setRoleId(1);
 
 		Integer row = accountService.add(user, "future123");
-		System.err.println("userId=" + user.getId());
+		System.err.println("userId=" + user.getId()+" row="+row);
 
 		user.setName("user1");
 		user.setGroupId(2);
@@ -155,5 +155,18 @@ public class AccountServiceTest extends SpringTestBase {
 	public void getList() {
 		Page<AccountVo> list = accountService.getList(0, 10);
 		System.out.println(list.get(0));
+	}
+	
+	@Test
+	public void getTokenTest()
+	{
+		AccountVo account=new AccountVo();
+		account.setId(123);
+		String token=accountService.getUserToken(account);
+		Assert.assertNotNull(token);
+		
+		System.out.print(token);
+		
+		Assert.assertEquals(account.getId(), accountService.getAccountIdFromToken(token));
 	}
 }
