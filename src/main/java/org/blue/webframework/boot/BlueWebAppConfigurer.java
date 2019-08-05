@@ -24,10 +24,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.DateFormatter;
+import org.springframework.http.MediaType;
 import org.springframework.util.unit.DataSize;
+import org.springframework.web.accept.HeaderContentNegotiationStrategy;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -67,7 +70,23 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 
 	}
 
+	@Override
+	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+		/* 是否通过请求Url的扩展名来决定media type */
+		configurer.favorPathExtension(true);
+				/* 不检查Accept请求头 */
+		configurer.ignoreAcceptHeader(true);
+		configurer.parameterName("mediaType");
+				/* 设置默认的media yype */
+		configurer.defaultContentType(MediaType.TEXT_HTML);
+				/* 请求以.html结尾的会被当成MediaType.TEXT_HTML */
+		configurer.mediaType("html", MediaType.TEXT_HTML);
+				/* 请求以.json结尾的会被当成MediaType.APPLICATION_JSON */
+		configurer.mediaType("json", MediaType.APPLICATION_JSON_UTF8);
+		configurer.mediaType("xml", MediaType.APPLICATION_XML);
+		configurer.defaultContentTypeStrategy(new HeaderContentNegotiationStrategy());
 
+	}
 
 	@Bean
 	public SpringTemplateEngine thymeleafEngine() {
@@ -132,7 +151,7 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/" + getUploadPrefix() + "**").addResourceLocations("file:" + getUploadPrefix());
-		
+
 	}
 
 	@Override
