@@ -1,5 +1,6 @@
 package org.blue.webframework.boot;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -136,13 +137,6 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 
 	}
 
-	protected String getUploadPrefix() {
-		try {
-			return attachService.getUploadPrefix();
-		} catch (Exception e) {
-			return "upload/";
-		}
-	}
 	/* ******************************************************************* */
 	/* GENERAL CONFIGURATION ARTIFACTS */
 	/* Static Resources, i18n Messages, Formatters (Conversion Service) */
@@ -150,7 +144,16 @@ public class BlueWebAppConfigurer implements WebMvcConfigurer , WebSocketConfigu
 
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/" + getUploadPrefix() + "**").addResourceLocations("file:" + getUploadPrefix());
+		
+		logger.debug("upload " + attachService.getUploadDir());
+		
+		File file=new File(attachService.getUploadDir());
+		if(!file.exists())
+			file.mkdirs();
+		logger.debug("upload " + file.getAbsolutePath());
+
+		
+		registry.addResourceHandler("/"+attachService.getUploadUri()+"**").addResourceLocations("file:" +file.getAbsolutePath().replace('\\', '/') + "/");
 
 	}
 

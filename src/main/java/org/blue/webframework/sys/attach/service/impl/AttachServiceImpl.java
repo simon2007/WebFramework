@@ -26,12 +26,15 @@ public class AttachServiceImpl implements AttachService {
 	@Resource
 	private SiteParameterService siteParameterService;
 	
-	@Value("file.uploadDir:upload")
+	@Value("${file.uploadUri:upload/}")
+	private String uploadUri;
+	
+	@Value("${file.uploadDir:upload/}")
 	private String uploadDir;
 	
 	@Override
 	public AttachVo uploadFile(int accountId,  MultipartFile multipartFile) throws Exception {
-		String filePath =  getUploadPrefix(accountId);
+		String filePath =  String.valueOf(accountId);
 		String contentType=multipartFile.getContentType().toLowerCase(Locale.getDefault());
 		
 		if(contentType.contains("image"))
@@ -50,18 +53,18 @@ public class AttachServiceImpl implements AttachService {
 		
 
 
-		File file = new File( filePath);
+		File file = new File(uploadDir, filePath);
 		if (!file.exists())
 			file.mkdirs();
 
 		String fileName = multipartFile.getOriginalFilename();
 		String fileExtName = fileName.substring(fileName.lastIndexOf('.'));
 		String fileFullPath = filePath + Calendar.getInstance().getTimeInMillis() + new Random().nextInt(100000) + fileExtName;
-		multipartFile.transferTo(new File(fileFullPath));
+		multipartFile.transferTo(new File(uploadDir,fileFullPath));
 
 
 		Attach attach=new Attach();
-		attach.setFilePath(fileFullPath);
+		attach.setFilePath(uploadUri+fileFullPath);
 		attach.setFileType(contentType);
 		attach.setName(fileName);
 		attach.setRemoveTag(false);
@@ -69,7 +72,7 @@ public class AttachServiceImpl implements AttachService {
 		attachMapper.insert(attach);
 		
 		AttachVo vo=new AttachVo();
-		vo.setFilePath(fileFullPath);
+		vo.setFilePath(uploadUri+fileFullPath);
 		vo.setId(attach.getId());
 		vo.setAddDate(new Date());
 		vo.setAttachType(contentType);
@@ -87,14 +90,25 @@ public class AttachServiceImpl implements AttachService {
 	}
 
 	@Override
-	public String getUploadPrefix() {
+	public String getUploadDir() {
 		return uploadDir ;
 	}
 
 	@Override
-	public String getUploadPrefix(int accountId) {
+	public String getUploadDir(int accountId) {
 		String filePath =  String.valueOf(accountId);
-		return getUploadPrefix() + filePath;
+		return getUploadDir() + filePath;
+	}
+	
+	public String getUploadUri()
+	{
+		return uploadUri;
+	}
+	
+	public String getUploadUri(int accountId)
+	{
+		String filePath =  String.valueOf(accountId);
+		return getUploadUri() + filePath;
 	}
 
 	@Override
