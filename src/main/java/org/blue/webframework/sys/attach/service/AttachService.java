@@ -1,7 +1,6 @@
 package org.blue.webframework.sys.attach.service;
 
 import org.blue.webframework.sys.attach.vo.AttachVo;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 附件
@@ -9,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
  *
  */
 public interface AttachService {
-	public AttachVo uploadFile(int accountId,  MultipartFile multipartFile) throws Exception;
 
 	public String getUploadDir();
 	public String getUploadDir(int accountId);
@@ -20,4 +18,6 @@ public interface AttachService {
 	public void recreateTable();
 
 	public String getUrl( int attachId);
+
+	public void insert(AttachVo vo);
 }
